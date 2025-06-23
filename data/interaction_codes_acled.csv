@@ -1,0 +1,45 @@
+interaction_code,interaction_description,interaction_simple
+10,SOLE STATE FORCES ACTION (e.g. base establishment by state forces; remote violence involving state military with no reported casualties; non-violent military operations),Sole State Forces Action
+11,STATE FORCES VERSUS STATE FORCES (e.g. military infighting; battles between a military and mutinous forces; arrests of military officials),State Forces Versus State Forces
+12,STATE FORCES VERSUS REBELS (e.g. civil war violence between state forces and a rebel actor),State Forces Versus Rebels
+13,STATE FORCES VERSUS POLITICAL MILITIA (e.g. violence between state forces and unidentified armedgroups; violence between police and political party militias),State Forces Versus Political Militia
+14,STATE FORCES VERSUS IDENTITY MILITIA (e.g. military engagement with a communal militia),State Forces Versus Identity Militia
+15,STATE FORCES VERSUS RIOTERS (e.g. suppression of a violent demonstration by police or military),State Forces Versus Rioters
+16,STATE FORCES VERSUS PROTESTERS (e.g. suppression of a peaceful demonstration by police or military),State Forces Versus Protesters
+17,STATE FORCES VERSUS CIVILIANS (e.g. state repression of civilians; arrests by police),State Forces Versus Civilians
+18,STATE FORCES VERSUS EXTERNAL/OTHER FORCES (e.g. inter-state conflict; state engagement with private security forces or a UN operation; strategic developments between a regime and the UN or another external actor),State Forces Versus External
+20,SOLE REBEL ACTION (e.g. base establishment; remote violence involving rebel groups with no reported target; accidental detonation by a rebel group),Sole Rebel Action
+22,REBELS VERSUS REBELS (e.g. rebel infighting; violence between rebel groups and their splinter movements),Rebels Versus Rebels
+23,REBELS VERSUS POLITICAL MILITIA (e.g. civil war violence between rebels and a pro-government militia; violence between rebels and unidentified armed groups),Rebels Versus Political Militia
+24,REBELS VERSUS IDENTITY MILITIA (e.g. violence between rebels and local security providers),Rebels Versus Identity Militia
+25,REBELS VERSUS RIOTERS (e.g. spontaneous violence against a rebel group; a violent demonstration engaging a rebel group),Rebels Versus Rioters
+26,REBELS VERSUS PROTESTERS (e.g. violence against protesters by rebels),Rebels Versus Protesters
+27,REBELS VERSUS CIVILIANS (e.g. rebel targeting of civilians [a strategy commonly used in civil war]),Rebels Versus Civilians
+28,REBELS VERSUS OTHERS (e.g. civil war violence between rebels and an allied state military; rebel violence against a UN operation),Rebels Versus Others
+30,SOLE POLITICAL MILITIA ACTION (e.g. remote violence by an unidentified armed group with no reported target; accidental detonation by a political militia; strategic arson as intimidation by a political party),Sole Political Militia Action
+33,POLITICAL MILITIA VERSUS POLITICAL MILITIA (e.g. inter-elite violence),Political Militia Versus Political Militia
+34,POLITICAL MILITIA VERSUS IDENTITY MILITIA (e.g. violence between communal militia and an unidentified armed group; violence between political militia and local security providers),Political Militia Versus Identity Militia
+35,POLITICAL MILITIA VERSUS RIOTERS (e.g. violent demonstration against a political militia; spontaneous violence against a political militia),Political Militia Versus Rioters
+36,POLITICAL MILITIA VERSUS PROTESTERS (e.g. suppression of a peaceful demonstration by a political militia),Political Militia Versus Protesters
+37,POLITICAL MILITIA VERSUS CIVILIANS (e.g. out-sourced state repression carried out by pro-government militias; civilian targeting by political militias or unidentified armed groups),Political Militia Versus Civilians
+38,POLITICAL MILITIA VERSUS OTHERS (e.g. violence between private security forces and unidentified armed groups; violence between pro-government militia and external state military forces),Political Militia Versus Others
+40,SOLE IDENTITY MILITIA ACTION (e.g. destruction of property by a communal militia; establishment of a local security militia),Sole Identity Militia Action
+44,IDENTITY MILITIA VERSUS IDENTITY MILITIA (e.g. inter-communal violence),Identity Militia Versus Identity Militia
+45,IDENTITY MILITIA VERSUS RIOTERS (e.g. violent demonstration against an identity militia; spontaneous violence against an identity militia),Identity Militia Versus Rioters
+46,IDENTITY MILITIA VERSUS PROTESTERS (e.g. suppression of a peaceful demonstration by  an identity militia),Identity Militia Versus Protesters
+47,"IDENTITY MILITIA VERSUS CIVILIANS (e.g. civilian targeting, especially in the context of inter-communal violence)",Identity Militia Versus Civilians
+48,IDENTITY MILITIA VERSUS OTHER (e.g. external state military engaging in violence against a communal militia),Identity Militia Versus Other
+50,SOLE RIOTER ACTION (e.g. one-sided violent demonstration; spontaneous arson),Sole Rioter Action
+55,RIOTERS VERSUS RIOTERS (e.g. two-sided violent demonstration in which both sides engage in violence),Rioters Versus Rioters
+56,RIOTERS VERSUS PROTESTERS (e.g. two-sided demonstration in which only one side engages in violence),Rioters Versus Protesters
+57,RIOTERS VERSUS CIVILIANS (e.g. violent demonstration in which civilians are injured/killed; spontaneous violence in which civilians are targeted by a mob),Rioters Versus Civilians
+58,RIOTERS VERSUS OTHERS (e.g. mob violence against regional or international operation),Rioters Versus Others
+60,SOLE PROTESTER ACTION (e.g. one-sided peaceful protest),Sole Protester Action
+66,PROTESTERS VERSUS PROTESTERS (e.g. two-sided peaceful protest),Protesters Versus Protesters
+67,PROTESTERS VERSUS CIVILIANS (e.g. peaceful protesters engaging civilians),Protesters Versus Civilians
+68,PROTESTERS VERSUS OTHER (e.g. suppression of a peaceful demonstration by private security forces),Protesters Versus Other
+70,SOLE CIVILIAN ACTION (e.g. one-sided strategic development),Sole Civilian Action
+77,CIVILIANS VERSUS CIVILIANS (e.g. peaceful interactions between civilians recorded as ‘Strategic developments’),Civilians Versus Civilians
+78,OTHER ACTOR VERSUS CIVILIANS (e.g. regional or international operation targeting civilians; private security forces targeting civilians),Other Actor Versus Civilians
+80,SOLE OTHER ACTION (e.g. strategic developments involving international or regional operations; remote violence by external military forces with no reported target; non-violent external military operations),Sole Other Action
+88,"OTHER VERSUS OTHER (e.g. clashes between foreign state forces, international missions, or private security forces)",Other Versus Other

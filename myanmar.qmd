@@ -1,0 +1,484 @@
+---
+title: "Myanmar -- Government response capacity and conflict trends"
+author: "Risk Anticipation Hub"
+date-modified: "10 September 2024"
+toc: true
+toc-location: left
+toc-depth: 4
+format: 
+  html:
+    page-layout: full
+    code-tools: true
+    self-contained: true
+---
+
+
+
+
+```{css, echo=FALSE}
+
+#TOC::before {
+  content: "";
+  display: block;
+  height: 100px;
+  margin: 1em 10px 10px 10px;
+  background-image: url("./plots/UNDP-Logo-Blue-Large-Transparent.png");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+```
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      fig.width = 10.5)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(patchwork)
+library(scales)
+library(broom)
+library(treemapify)
+library(kableExtra) 
+library(janitor)
+library(treemapify)
+library(ggnewscale) 
+library(sf)
+
+`%out%` <- Negate(`%in%`)
+options(scipen = 100)
+theme_set(theme_light())
+
+range_wna <- function(x){(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))}
+
+myanmar <- readRDS(here("data", "acled_filtered.rds")) |> 
+  filter(country == "Myanmar")
+
+myanmar_adm1 <- st_read(here("data", 
+                             "mmr_polbnda2_adm1_mimu_250k", 
+                             "mmr_polbnda2_adm1_mimu_250k.shp"), 
+                        quiet = TRUE) |> 
+  rename(state = ST, 
+        admin1_pcode = ST_PCODE) |> st_as_sf()
+
+
+```
+
+<br><br><br>
+
+## Background and current situation
+
+WRITE NEW DOCUMENT
+You have used this as working
+
+The current conflict is very linear and concerned with the control of the road network. The highway network was constructed to link military garrisons, important [natural resources](https://adamsmithinternational.com/projects/governance-of-myanmars-extractive-industries/) (gems, ores, oil and gas), border crossings and, now, narcotics factories important to funding the war effort. The Tatmadaw have never been in full of Myanmar's territory and their ability to project power is now deeply compromised and, consequently, so is their economy. 
+
+Typhoon Yagi affected Mandalay, Naypyitaw, Bago and Shan East. Many of these areas are predominantly Bamar and still under Tatmadaw control. There are two major IDP sites -- in Meiktila, south of Mandalay, and Taunggyi, north of Loikaw -- that are within the flood-affected areas. The current IDP population was, almost entirely, displaced due to conflict, with only around 15,000 persons having been displaced by natural disasters. IDPs have gathered in sites far from conflict, though accessing some of them will prove challenging ass they are behind the main front. 
+
+[Overland trade](https://thediplomat.com/2024/09/myanmars-border-trade-with-china-and-thailand-has-collapsed/) with China has fallen by 41% and by 87% with Thailand; the border crossing with India remains closed. Rebel groups are now preparing to siege Sittwe and Mandalay, the last major garrison before Naypyitaw. 
+
+Should the fall of the Tatmadaw seem imminent, all attempts must be made, through all channels, to prevent a free-for-all. Unrealistic as it seems, a peace conference must be called before the final push to Naypyitaw. A situation where the Tatmadaw feels that it has been forced into a "last stand" must be avoided at almost any cost. 
+
+The Myanmar junta is uniquely sensitive to storms. [Public anger](https://www.hrw.org/report/2010/04/28/i-want-help-my-own-people/state-control-and-civil-society-burma-after-cyclone) at the mismanaged response to Cyclone Nargis (140,000 people died from a storm in the 21st century and aid to affected areas was blocked) weakened the Tatmadaw and contributed to the junta committing to the 2012 reforms. 
+
+In the summer right before elections in November 2015, massive floods and landslides affected Myanmar (132 dead, but 1.6 million displaced). The then-ruling party unprecedentedly asked for international aid, reforming the Ministry of Relief and Resettlement and the Emergency Operations Centre in the process in a bid to avoid another Nargis. The response was largely successful. 
+
+Nevertheless, the National League for Democracy was voted in. Recovery plans were not implemented due to lack of funds, institutional weakness and a lack of talented and trusted personnel. Despite this, the Tatmadaw is still likely to respond to typhoon Yagi in good faith, at least where no minorities are concerned. 
+
+<br>
+
+```{r}
+myanmar |> 
+  filter(year == 2015) |> 
+  filter(sub_event_type != "Peaceful protest") |> 
+  group_by(month = floor_date(event_date, "month")) |> 
+  summarise(events = n_distinct(event_id_cnty)) |> 
+  ggplot(aes(x = month, y = events)) + 
+  geom_line() + 
+  labs(title = "Number of monthly conflict events in 2015, excludes peaceful protests", 
+       x = "", y = "Number of events", 
+       caption = "Data source: www.acleddata.com")
+  
+```
+
+<br>
+
+Conflict fell in response to severe flooding in July 2015, but this had a limited and temporary effect. 
+
+<br><br><br>
+
+## Map
+
+[![](./plots/roads_conflict_grey_red_combined.png)](https://github.com/risk-anticipation-hub/conflict-trends-asia-pacific/raw/main/plots/roads_conflict_grey_red_combined.png)
+
+
+```{r eval=FALSE}
+mmr_garrisons <- tribble(~x, ~y, ~name,
+  96.0785, 19.7633, "Naypyitaw", 
+  96.0891, 21.9588, "Mandalay", 
+  96.1735, 16.8409, "Yangon", 
+  95.1536, 22.1216, "Monywa", 
+  92.8677, 20.1528, "Sittwe", 
+  #97.7525, 22.9665, "Lashio", 
+  97.6440, 16.4543, "Mawlaymine", 
+  96.4344, 18.9398, "Taungoo", 
+  94.7381, 16.7754, "Pathein", 
+  97.3939, 25.3868, "Myitkyina", 
+  97.4057, 27.3182, "Puta-O"
+) |> 
+  st_as_sf(coords = c("x", "y"), crs = 4326)
+
+mmr_borders <- tribble(~x, ~y, ~name,
+                       97.9103, 23.9933, "Muse", 
+                       94.3103, 24.2199, "Tamu", 
+                       # 98.4797285, 16.6952072, "Myawaddy",
+                       99.8989, 20.4521, "Tachileik"
+                       
+                       ) |> 
+  st_as_sf(coords = c("x", "y"), crs = 4326)
+
+road_shape <-  st_read(here("data", 
+                            "mmr_rdsl_mimu_250k", 
+                            "mmr_rdsl_mimu_250k.shp")) |>   
+  st_as_sf()
+
+mmr_idp_points <- read_csv(here("data", "event_data_mmr.csv")) |> 
+  mutate(figure = as.numeric(figure)) |> 
+  filter(!is.na(id)) |> 
+  group_by(y = latitude, x = longitude) |> 
+  summarise(IDPs = sum(figure)) |> 
+  st_as_sf(coords = c("x", "y"), crs = 4326)
+
+ 
+
+
+```
+
+```{r}
+mmr_floods <- st_read(here("data", "FL20240912MMR_SHP", "S1_20240903_20240923_FloodExtent.shp"))
+
+mmr_floods |> 
+  ggplot() + 
+  geom_sf(size = .1, colour = "grey60", fill = "#edf2f4", data = myanmar_adm1) + 
+  geom_sf(size = .1, colour = "blue", fill = "blue")
+```
+
+
+```{r warning=FALSE, eval=FALSE}
+
+
+roads_conflict_black_grey <- myanmar |> 
+  filter(event_date > "2021-01-31") |> 
+  ggplot() +
+  geom_sf(size = .1, colour = "grey60", fill = "#edf2f4", data = myanmar_adm1) + 
+  geom_sf(data = road_shape |> filter(Road_Type %out% c("Main")), 
+          linewidth = .12, colour = "#2b2d42", alpha = .9) +
+  geom_sf(data = road_shape |> filter(Road_Type %in% c("Main")), 
+          linewidth = .8, colour = "#2b2d42", alpha = .6) +
+  geom_sf(data = mmr_floods, size = .1, colour = "#00b4d8", fill = "#00b4d8") + 
+  geom_sf_text(data = mmr_garrisons, aes(geometry = geometry, label = name), 
+            size = 6.5, alpha = .8) + 
+  geom_point(data = mmr_garrisons, aes(geometry = geometry, label = name), 
+            size = 8, alpha = .8, pch = 15, alpha = .8, stat = "sf_coordinates",
+            colour = "#e09f3e") + 
+  geom_sf_text(data = mmr_borders, aes(geometry = geometry, label = name), 
+            size = 6.5, alpha = .8) + 
+  geom_point(data = mmr_borders, aes(geometry = geometry, label = name), 
+            size = 8, alpha = .8, pch = 15, alpha = .8, stat = "sf_coordinates",
+            colour = "#5f0f40") +
+  # Lashio
+  geom_point(aes(x = 97.7525, y = 22.9665), size = 8,
+             colour = "#e09f3e", pch = 15, alpha = .8) +
+  geom_text(aes(x = 97.7525, y = 22.9665), size = 6.5, label = "Lashio", colour = "seagreen") +
+  # Myawaddy
+  geom_point(aes(x = 98.4797285, y = 16.6952072), size = 8, 
+             colour = "#5f0f40", pch = 15, alpha = .8) +
+  geom_text(aes(x = 98.4797285, y = 16.6952072), size = 6.5, label = "Myawaddy", colour = "seagreen") + 
+  geom_text(aes(x = 97.2114, y = 19.6740), size = 6.5, label = "Loikaw", colour = "seagreen") +
+    # cities and border crossing legends
+  geom_point(aes(x = 99.1, y = 29.3), size = 10, 
+             colour = "#e09f3e", pch = 15, alpha = .8) +
+  geom_point(aes(x = 99.1, y = 29), size = 10, 
+             colour = "#5f0f40", pch = 15, alpha = .8) +
+  geom_point(aes(x = 99.1, y = 28.7), size = 10, 
+             colour = "#00b4d8", pch = 15, alpha = .8) +  
+  geom_text(aes(x = 99.1, y = 28.4), size = 10, label = "B",
+             colour = "seagreen", pch = 15, alpha = .8) +
+  geom_text(aes(x = 100.3, y = 29.3), size = 10, 
+             colour = "grey30", label = "Military command") +
+  geom_text(aes(x = 100.24, y = 29), size = 10, 
+             colour = "grey30", label = "Border crossing") +
+  geom_text(aes(x = 100.12, y = 28.7), size = 10, 
+             colour = "grey30", label = "Flooded area") +
+  geom_text(aes(x = 100.29, y = 28.4), size = 10, colour = "grey30", 
+            label = "Rebel-controlled") +
+  geom_point(data = mmr_idp_points, aes(geometry = geometry, size = IDPs), alpha = .5, stat = "sf_coordinates",
+            colour = "#335c67") + 
+  scale_size_continuous(range = c(.1, 50), breaks = c(0, 1000, 10000, 50000, 100000, 200000), labels = comma) +
+  # geom_sf_text(data = mmr_idp_points, aes(geometry = geometry, label = comma(IDPs)), 
+  #              size = 2, colour = "grey20", stat = "sf_coordinates", alpha = .7) + 
+  # plotting the actual data
+  new_scale('size') +
+  geom_point(aes(x = longitude, y = latitude , size = fatalities), colour = "#d90429", alpha = .2) + 
+  scale_size(range = c(.1, 20), breaks = c(0, 10, 50, 100, 150)) +
+  labs(size = "Fatalities") +
+  theme_void() + 
+  theme(plot.background = element_rect(fill = "white", colour = NA),
+        legend.position = c(0.03, 0.80), 
+        plot.title = element_text(size = 30, colour = "grey30"), 
+        plot.subtitle = element_text(size = 20, colour = "grey30"), 
+        strip.text = element_blank(), 
+        legend.text = element_text(size = 40, colour = "grey30"), 
+        legend.title = element_text(size = 40, colour = "grey30"), 
+        legend.key.width = unit(.8, "cm"),
+        legend.key.height = unit(.65, "cm"), 
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank(), 
+        plot.margin = unit(c(5, 3, 0, 3), "cm"), 
+        plot.caption = element_text(hjust = .5, size = 9.5)) + 
+  guides(
+    size = guide_legend(override.aes = list(alpha = 1, colour = "#d90429")) 
+  ) 
+
+ggsave(here("plots", "roads_conflict_grey_red_time.png"), dpi = 300, width = 23.4, 
+       height = 38.376, units = "in")
+
+ggsave(here("plots", "roads_conflict_grey_red_time_small.png"), dpi = 300, width = 16.5, 
+       height = 23.4, units = "in")
+
+title = "Violent conflict in Myanmar since the 1 February 2021 coup, plotted over road network",
+#       subtitle = "From 2021-02-01 to 2024-10-04. Road network in dark grey. Sources: acleddata.com, UN MIMU\nFighting, once more #dispersed throughout the road network, is now concentrated in and around major cities and garrisons.\nThe main front in Sagaing and #Mandalay is where rebels are trying to break through to Naypyitaw.", 
+#       caption = "The designations employed and the presentation of the material on this map do not imply the expression of any #opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city #or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any #warranty of any kind whatsoever, either express or implied.\nThe flooded area is based on a preliminary analysis and has not yet been #validated in the field. Please send ground feedback to UNOSAT."
+
+```
+
+
+```{r warning=FALSE, eval=FALSE}
+
+
+roads_conflict_black_grey <- 
+  acled_filtered |> 
+  filter(country == "Myanmar") |> 
+  filter(event_date > "2021-01-31") |> 
+  ggplot() +
+  geom_sf(size = .1, colour = "grey60", fill = "#edf2f4", data = myanmar_adm1) + 
+  geom_sf(data = road_shape |> filter(Road_Type %out% c("Main")), 
+          linewidth = .12, colour = "#2b2d42", alpha = .9) +
+  geom_sf(data = road_shape |> filter(Road_Type %in% c("Main")), 
+          linewidth = .8, colour = "#2b2d42", alpha = .6) +
+  geom_sf_text(data = mmr_garrisons, aes(geometry = geometry, label = name), 
+            size = 11, alpha = .8) + 
+  geom_point(data = mmr_garrisons, aes(geometry = geometry, label = name), 
+            size = 8, alpha = .8, pch = 15, alpha = .8, stat = "sf_coordinates",
+            colour = "#e09f3e") + 
+  geom_sf_text(data = mmr_borders, aes(geometry = geometry, label = name), 
+            size = 11, alpha = .8) + 
+  geom_point(data = mmr_borders, aes(geometry = geometry, label = name), 
+            size = 8, alpha = .8, pch = 15, alpha = .8, stat = "sf_coordinates",
+            colour = "#00b4d8") +
+  # Lashio
+  geom_point(aes(x = 97.7525, y = 22.9665), size = 8,
+             colour = "#e09f3e", pch = 15, alpha = .8) +
+  geom_text(aes(x = 97.7525, y = 22.9665), size = 11, label = "Lashio", colour = "seagreen") +
+  # Myawaddy
+  geom_point(aes(x = 98.4797285, y = 16.6952072), size = 8, 
+             colour = "#00b4d8", pch = 15, alpha = .8) +
+  geom_text(aes(x = 98.4797285, y = 16.6952072), size = 11, label = "Myawaddy", colour = "seagreen") + 
+  geom_text(aes(x = 97.2114, y = 19.6740), size = 11, label = "Loikaw", colour = "seagreen") +
+    # cities and border crossing legends
+  geom_point(aes(x = 99.1, y = 29.3), size = 10, 
+             colour = "#e09f3e", pch = 15, alpha = .8) +
+  geom_point(aes(x = 99.1, y = 29), size = 10, 
+             colour = "#00b4d8", pch = 15, alpha = .8) +
+  geom_text(aes(x = 99.1, y = 28.7), size = 10, label = "B",
+             colour = "seagreen", pch = 15, alpha = .8) +
+  geom_text(aes(x = 100.3, y = 29.3), size = 10, 
+             colour = "grey30", label = "Military command") +
+  geom_text(aes(x = 100.24, y = 29), size = 10, 
+             colour = "grey30", label = "Border crossing") +
+  geom_text(aes(x = 100.29, y = 28.7), size = 10, colour = "grey30", 
+            label = "Rebel-controlled") +
+  scale_size_continuous(range = c(.1, 50), breaks = c(0, 1000, 10000, 50000, 100000, 200000), labels = comma) +
+  # geom_sf_text(data = mmr_idp_points, aes(geometry = geometry, label = comma(IDPs)), 
+  #              size = 2, colour = "grey20", stat = "sf_coordinates", alpha = .7) + 
+  # plotting the actual data
+  new_scale('size') +
+  geom_point(aes(x = longitude, y = latitude , size = fatalities), colour = "#d90429", alpha = .2) + 
+  scale_size(range = c(.1, 20), breaks = c(0, 10, 50, 100, 150)) +
+  labs(size = "Fatalities", 
+       title = "Myanmar Civil War, plotted over road network", 
+       subtitle = "2021-02-01 to 2024-10-29. Source: www.accleddata.com",
+       caption = "The designations employed and the presentation of the material on this map do not imply the expression of any #opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city #or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any #warranty of any kind whatsoever, either express or implied.") +
+  theme_void() + 
+  theme(plot.background = element_rect(fill = "white", colour = NA),
+        legend.position = c(0.03, 0.80), 
+        plot.title = element_text(size = 35, colour = "grey30"), 
+        plot.subtitle = element_text(size = 25, colour = "grey30"), 
+        strip.text = element_blank(), 
+        legend.text = element_text(size = 40, colour = "grey30"), 
+        legend.title = element_text(size = 40, colour = "grey30"), 
+        legend.key.width = unit(1, "cm"),
+        legend.key.height = unit(.8, "cm"), 
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank(), 
+        plot.margin = unit(c(5, 3, 0, 3), "cm"), 
+        plot.caption = element_text(hjust = .5, size = 11)) +
+  guides(
+    size = guide_legend(override.aes = list(alpha = 1, colour = "#d90429")) 
+  ) 
+
+ggsave(here("plots", "roads_conflict_grey_no_idp.png"), dpi = 300, width = 23.4, 
+       height = 38.376, units = "in")
+
+#title = "Violent conflict in Myanmar since the 1 February 2021 coup, plotted over road network",
+#       subtitle = "From 2021-02-01 to 2024-10-04. Road network in dark grey. Sources: acleddata.com, UN MIMU\nFighting, once more #dispersed throughout the road network, is now concentrated in and around major cities and garrisons.\nThe main front in Sagaing and #Mandalay is where rebels are trying to break through to Naypyitaw.", 
+#       caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.\nThe flooded area is based on a preliminary analysis and has not yet been #validated in the field. Please send ground feedback to UNOSAT."
+
+```
+
+```{r fig.height=1.3, fig.width=8}
+
+fatalities_over_time <- acled_filtered |> 
+  filter(country == "Myanmar") |> 
+  filter(event_date > "2021-01-31") |> 
+  filter(event_date <= "2024-09-30") |> 
+  mutate(month = floor_date(event_date, unit = "month")) |> 
+  group_by(month) |> 
+  summarise(fatalities = sum(fatalities)) |> 
+  ggplot(aes(x = month, y = fatalities)) + 
+  geom_line(colour = "#F85441") +
+  scale_y_continuous(labels = comma) + 
+  theme_minimal() + 
+  labs(x = "", y = "", 
+       title = "Fatalities by month") + 
+  theme(plot.background = element_rect(fill = "grey98", colour = NA), 
+        panel.grid = element_line(linewidth = .1, colour = "grey30"),
+        axis.text.y = element_text(size = 8, colour = "#F85441"),
+        axis.text.x = element_text(size = 10, colour = "#F85441"),
+        plot.title = element_text(colour = "#F85441", size = 25))
+  
+```
+
+
+
+```{r warning=FALSE}
+roads_new_combined <- roads_conflict_black_grey + 
+  inset_element(fatalities_over_time, 
+                0.05, 0.825, .51, .9, 
+                align_to = "full")
+
+ggsave(here("plots", "roads_conflict_new_combined.png"), dpi = 300, width = 20.5, 
+       height = 44.376, units = "in")
+
+```
+
+```{r eval=FALSE}
+roads_conflict_simple <- myanmar |> 
+  filter(event_date > "2021-01-31") |> 
+  ggplot() +
+  geom_sf(colour = "#2b2d42", fill = "#edf2f4", data = myanmar_adm1) + 
+  geom_sf_text(data = myanmar_adm1, aes(geometry = geometry, label = state), 
+            size = 10.5, alpha = .8) +
+  geom_point(aes(x = 90, y = 26.7), size = 15, 
+             colour = "#00b4d8", pch = 15, alpha = .8) +
+  geom_text(aes(x = 91.2, y = 26.7), size = 13, 
+             colour = "grey30", label = "Flooded area") +
+  new_scale('size') +
+  geom_point(aes(x = longitude, y = latitude , size = fatalities), colour = "#d90429", alpha = .2) + 
+  scale_size(range = c(.1, 20), breaks = c(0, 10, 50, 100, 150)) +
+  labs(size = "Fatalities") +
+  theme_void() + 
+  theme(plot.background = element_rect(fill = "white", colour = NA),
+        legend.position = c(0.09, 0.80), 
+        plot.title = element_text(size = 30, colour = "grey30"), 
+        plot.subtitle = element_text(size = 20, colour = "grey30"), 
+        strip.text = element_blank(), 
+        legend.text = element_text(size = 40, colour = "grey30"), 
+        legend.title = element_text(size = 40, colour = "grey30"), 
+        legend.key.width = unit(1, "cm"),
+        legend.key.height = unit(.8, "cm"), 
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank(), 
+        plot.margin = unit(c(5, 3, 0, 3), "cm"), 
+        plot.caption = element_text(hjust = .5, size = 12)) + 
+  guides(
+    size = guide_legend(override.aes = list(alpha = 1, colour = "#d90429"))) +
+  labs(size = "Fatalities", 
+       title = "Myanmar Civil War, plotted over road network", 
+       subtitle = "2021-02-01 to 2024-10-29. Source: www.accleddata.com",
+       caption = "The designations employed and the presentation of the material on this map do not imply the expression of any #opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city #or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any #warranty of any kind whatsoever, either express or implied.")
+  
+
+ggsave(here("plots", "roads_conflict_simple.png"), dpi = 300, width = 23.4, 
+       height = 38.376, units = "in")
+
+```
+
+
+```{r fig.height=5.5, fig.width=10, eval=FALSE}
+actor_treemaps <- mmr_actors |> 
+  filter(event_date <= "2021-01-31") |> 
+  group_by(actor) |>
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities), 
+            .groups = "drop") |> 
+  mutate(pc = paste0(round(fatalities / sum(fatalities) * 100, digits = 2), "%")) |>
+  ggplot(aes(area = fatalities)) + 
+  geom_treemap(fill = "grey50", size = .1) +
+  geom_treemap_text(aes(label = pc), 
+                    colour = "white") +
+  labs(title = "% Fatalities by actor, pre-February 2021 coup", 
+       subtitle = "84 conflict actors between 2010 and 31 January 2021") + 
+  
+mmr_actors |> 
+  filter(event_date > "2021-01-31") |> 
+  group_by(actor) |>
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities), 
+            .groups = "drop") |> 
+  mutate(pc = paste0(round(fatalities / sum(fatalities) * 100, digits = 2), "%")) |>
+  ggplot(aes(area = fatalities)) + 
+  geom_treemap(fill = "grey30", size = .1) +
+  geom_treemap_text(aes(label = pc), 
+                    colour = "white") +
+  labs(title = "% Fatalities by actor, post-February 2021 coup", 
+       subtitle = "1,551 conflict actors in this period", 
+       caption = "Significant proliferation and fragmentation of conflict actors post-February 2021 coup.")
+  
+ 
+ggsave(here("plots", "actor_treemaps.png"), width = 29.7, height = 21, units = "cm", dpi = 300)  
+```
+
+
+```{r warning=FALSE, eval=FALSE}
+roads_new_combined <- roads_conflict_black_grey + 
+  inset_element(actor_treemaps, 
+                0.05, 0.05, .56, .19, 
+                align_to = "full") 
+
+ggsave(here("plots", "roads_conflict_grey_red_combined_no_title.png"), dpi = 300, width = 23.4, 
+       height = 38.376, units = "in")
+
+```
+
+
+
+
+
+```{r eval=FALSE}
+require(cowplot) 
+
+p1 <- ggdraw() + draw_image(here("plots", "Ethnologue_Map_Main_Spoken_Languages_of_MyanmarNeighbour_MIMU1300v03_7Jan2019_A1_1.png"))
+
+p2 <- ggdraw() + draw_image(here("plots", "roads_conflict_grey_no_idp.png"))
+
+combined <- plot_grid(p1, p2, ncol = 2, rel_widths = c(11512, 9932))
+
+ggsave(here("plots", "myanmar_composite.png"), dpi = 300, height = 11.7, 
+       width = 16.5, units = "in")
+
+
+```
+

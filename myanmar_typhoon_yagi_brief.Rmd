@@ -1,0 +1,89 @@
+---
+title: "**Myanmar -- Government response capacity and conflict trends**"
+author: "Risk Anticipation Hub"
+date: "10 September 2024"
+output:
+  pdf_document:
+    toc: no
+    number_sections: FALSE
+    toc_depth: 4
+urlcolor: blue
+linkcolor: red
+header-includes: 
+   \usepackage{fancyhdr}
+   \fancypagestyle{plain}{}
+   \pagestyle{fancy}
+   \fancyhead[R]{\includegraphics[width = .05\textwidth]{UNDP-Logo-Blue-Large-Transparent.png}}
+   \fancyhead[L]{}
+   \renewcommand{\headrulewidth}{0pt} 
+   \usepackage[dvipsnames]{xcolor}
+   \pagenumbering{gobble}
+
+---
+
+```{r data, include = FALSE, echo=FALSE}
+library(tidyverse)
+library(here)
+library(lubridate)
+library(patchwork)
+library(scales)
+library(broom)
+library(treemapify)
+library(kableExtra) 
+library(janitor)
+library(treemapify)
+library(ggnewscale)
+
+`%out%` <- Negate(`%in%`)
+options(scipen = 100)
+theme_set(theme_light())
+
+range_wna <- function(x){(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))}
+
+myanmar <- readRDS(here("data", "myanmar.rds"))
+
+
+```
+
+
+<br><br><br>
+
+The current conflict is very linear and concerned with the control of the road network. The highway network was constructed to link military garrisons, important [natural resources](https://adamsmithinternational.com/projects/governance-of-myanmars-extractive-industries/) (gems, ores, oil and gas), border crossings and, now, narcotics factories important to funding the war effort. The Tatmadaw have never been in full of Myanmar's territory and their ability to project power is now deeply compromised and, consequently, so is their economy. 
+
+Typhoon Yagi affected Mandalay, Naypyitaw, Bago and Shan East. Many of these areas are predominantly Bamar and still under Tatmadaw control. There are two major IDP sites -- in Meiktila, south of Mandalay, and Taunggyi, north of Loikaw -- that are within the flood-affected areas. The current IDP population was, almost entirely, displaced due to conflict, with only around 15,000 persons having been displaced by natural disasters. IDPs have gathered in sites far from conflict, though accessing some of them will prove challenging ass they are behind the main front. 
+
+[Overland trade](https://thediplomat.com/2024/09/myanmars-border-trade-with-china-and-thailand-has-collapsed/) with China has fallen by 41% and by 87% with Thailand; the border crossing with India remains closed. Rebel groups are now preparing to siege Sittwe and Mandalay, the last major garrison before Naypyitaw. 
+
+Should the fall of the Tatmadaw seem imminent, all attempts must be made, through all channels, to prevent a free-for-all. Unrealistic as it seems, a peace conference must be called before the final push to Naypyitaw. A situation where the Tatmadaw feels that it has been forced into a "last stand" must be avoided at almost any cost. 
+
+The Myanmar junta is uniquely sensitive to storms. [Public anger](https://www.hrw.org/report/2010/04/28/i-want-help-my-own-people/state-control-and-civil-society-burma-after-cyclone) at the mismanaged response to Cyclone Nargis (140,000 people died from a storm in the 21st century and aid to affected areas was blocked) weakened the Tatmadaw and contributed to the junta committing to the 2012 reforms. 
+
+In the summer right before elections in November 2015, massive floods and landslides affected Myanmar (132 dead, but 1.6 million displaced). The then-ruling party unprecedentedly asked for international aid, reforming the Ministry of Relief and Resettlement and the Emergency Operations Centre in the process in a bid to avoid another Nargis. The response was largely successful. 
+
+Nevertheless, the National League for Democracy was voted in. Recovery plans were not implemented due to lack of funds, institutional weakness and a lack of talented and trusted personnel. Despite this, the Tatmadaw is still likely to respond to typhoon Yagi in good faith, at least where no minorities are concerned. 
+
+With reference to the graph below, conflict fell in response to severe flooding in July 2015, but this had a limited and temporary effect.
+
+<br>
+
+```{r, echo=FALSE}
+myanmar |> 
+  filter(year == 2015) |> 
+  filter(sub_event_type != "Peaceful protest") |> 
+  group_by(month = floor_date(event_date, "month")) |> 
+  summarise(events = n_distinct(event_id_cnty)) |> 
+  ggplot(aes(x = month, y = events)) + 
+  geom_line() + 
+  labs(title = "Number of monthly conflict events in 2015, excludes peaceful protests", 
+       x = "", y = "Number of events", 
+       caption = "Data source: www.acleddata.com")
+  
+```
+
+<br>
+
+ 
+
+
+
+[![](./plots/roads_conflict_grey_red_time_small.png)](https://github.com/risk-anticipation-hub/conflict-trends-asia-pacific/raw/main/plots/roads_conflict_grey_red_time.png){width=720px}

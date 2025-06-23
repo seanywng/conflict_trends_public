@@ -1,0 +1,491 @@
+---
+title: "Viet Nam Post-Disaster Needs Assessment"
+author: "Risk Anticipation Hub"
+date: "28 November 2024"
+number-sections: true
+toc: true
+toc-location: left
+toc-depth: 4
+format: 
+  html:
+    page-layout: full
+    code-tools: true
+    self-contained: true
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, results = "asis",
+                      fig.width = 9.5)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(patchwork)
+library(scales)
+library(sf)
+library(broom)
+library(kableExtra) 
+library(ggrepel)
+library(widyr)
+library(janitor)
+library(readxl)
+library(viridis)
+
+`%out%` <- Negate(`%in%`)
+options(scipen = 100)
+theme_set(theme_light())
+
+range_wna <- function(x){(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))}
+```
+
+
+```{r}
+gazette <- read_excel(here("data", "vnm_adminboundaries_tabulardata.xlsx"), 
+           sheet = 2) |> 
+  clean_names()
+
+pdna <- read_excel(here("data", "0 Master DALA table Typhoon Yagi.xlsx"), 
+           sheet = 2) |> 
+  select(-15) |> 
+  clean_names() %>%  
+  mutate_at(vars(loss_billion_vnd, loss_million_usd, damage_billion_vnd, damage_million_usd, 
+                 needs_billion_vnd, needs_million_usd, 
+                 immediate_short_term_needs_billion_vnd, 
+                 immediate_short_term_needs_million_usd, 
+                 medium_term_needs_billion_vnd, 
+                 medium_term_needs_million_usd, 
+                 long_term_billion_vnd, 
+                 long_term_needs_million_usd), 
+            ~ as.numeric(.))
+
+damage <- read_excel(here("data", "Damage Data - VDDMA -Phu luc I Tong hop thiet hai bao so 3 theo NQ 143 -full translation.xlsx"), 
+           skip = 10) |> 
+  filter(!is.na(`DAMAGE INDICATORS`)) |> 
+  select(`DAMAGE INDICATORS`:`Thanh Hoá`) |> 
+  select(-`Tổng`) |> 
+  pivot_longer(cols = c(`Hà Giang`:`Thanh Hoá`), 
+               names_to = "adm1_vi", 
+               values_to = "value") |> 
+  mutate(adm1_vi = trimws(adm1_vi), 
+         adm1_vi = case_when(
+           # Govt spelled their provinces wrong lol
+                       str_detect(adm1_vi, "Thanh Hoá") ~ "Thanh Hóa", 
+                       str_detect(adm1_vi, "Hoà Bình") ~ "Hòa Bình", 
+                       TRUE ~ adm1_vi)) |> 
+  clean_names() |> 
+  left_join(gazette |> 
+              distinct(adm1_en, adm1_pcode, adm1_vi) |> 
+              mutate(adm1_vi = str_remove_all(adm1_vi, "TP. ")), 
+            by = "adm1_vi")  |> 
+  mutate(damage_indicators = str_remove_all(damage_indicators, "\\:")) |> 
+  filter(!is.na(value) | !is.na(unit)) |> 
+  mutate(value = as.numeric(value))
+
+vn_shape <- st_read(here("data", "vnm_adm_gov_20201027", "vnm_admbnda_adm1_gov_20201027.shp")) |> 
+  clean_names()
+
+yagi_adm1 <- c("VN101", "VN103", "VN104", "VN106", "VN107", "VN109", 
+              "VN111", "VN113", "VN115", "VN117", "VN201", "VN203", 
+              "VN205", "VN207", "VN209", "VN211", "VN213", "VN215", 
+              "VN217", "VN221", "VN225", "VN301", "VN302", "VN303", "VN305", "VN401")
+
+yagi_shape <- vn_shape |> filter(adm1_pcode %in% yagi_adm1)
+
+recovery14 <- c("VN221", "VN207", "VN203", "VN302", "VN201", "VN103", "VN301", 
+  "VN209", "VN205", "VN217", "VN225", "VN215", "VN211", "VN213")
+
+recovery_shape <- vn_shape |> filter(adm1_pcode %in% recovery14)
+
+
+hhd_size <- 309399 / 65479
+
+fx <- 24.4
+
+population <- read_csv(here("data", "vnm_admpop_adm1_2024.csv")) |> 
+  clean_names()
+
+```
+
+```{r}
+
+damage |> 
+  # The number of people affected is wrong 
+      filter(damage_indicators %in% c(
+        "Number of people affected")) |>    
+  vn_plot() 
+```
+
+
+```{r}
+vn_plot <- function(tbl) {
+  tbl |>
+    naniar::replace_with_na(list(value = 0)) |>
+    select(-adm1_vi, -adm1_en) |>
+    right_join(yagi_shape, by = "adm1_pcode") |>
+    st_as_sf() |>
+    ggplot() +
+    geom_sf(size = .1, aes(fill = value), colour = "grey80") +
+    geom_sf(size = .5, colour = "cornflowerblue", fill = NA, data = recovery_shape) +
+    geom_sf_text(aes(label = adm1_vi), size = 2) +
+    theme_void()}
+```
+
+```{r}
+vn_plot_alt <- function(tbl) {
+  tbl |>
+    naniar::replace_with_na(list(value = 0)) |>
+    select(-adm1_vi, -adm1_en) |>
+    right_join(yagi_shape, by = "adm1_pcode") |>
+    st_as_sf() |>
+    ggplot() +
+    geom_sf(size = .1, aes(fill = value), colour = "grey80") +
+    geom_sf(size = .5, colour = "cornflowerblue", fill = NA, data = recovery_shape) +
+    geom_sf_text(aes(label = adm1_vi), size = 2) +
+    ggthemes::theme_map() + 
+    theme(plot.caption = element_text(hjust = .5, size = 5)) + 
+    labs(subtitle = "Source: Viet Nam Disaster and Dyke Management Authority (VDDMA).\nProvinces outlined in blue are where recovery interventions are planned.", 
+                  caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the \nSecretariat of the United Nations concerning the legal statusof any country, territory, city or area or of its authorities, or concerning the \ndelimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.")}
+```
+
+```{r}
+
+damage |> 
+      filter(damage_indicators %in% c(
+        "Rice area")) |>    
+  vn_plot_alt() + 
+  scale_fill_viridis_c(direction = -1, labels = comma) +
+  labs(title = "Rice fields damaged", 
+       fill = "Hectares")
+
+ggsave(here("plots", "yagi_rice_fields.png"), width = 7, height = 5)
+```
+
+### DRR Infrastructure
+
+```{r}
+vsma <- read_excel(here("data", "vsma DRR infrastructure.xlsx"), 
+           skip = 2) |> 
+  setNames(c("type_of_incident", 
+             "adm1_en", 
+             "number_incidents", 
+             "length_m_damaged", 
+             "number_rehabilitate", 
+             "length_m_rehabilitate", 
+             "cost_vnd_million", 
+             "cost_usd_million"))
+
+vsma |> 
+  mutate(adm1_en = ifelse(adm1_en == "Hai Phong", 
+                          "Hai Phong city", 
+                          adm1_en)) |> 
+  filter(type_of_incident != "subtotal") %>%
+  mutate_at(vars(cost_usd_million, cost_vnd_million), 
+            ~ as.numeric(.)) |> 
+  group_by(adm1_en) |> 
+  summarise(number_incidents = sum(number_incidents, na.rm = TRUE), 
+            length_m_damaged = sum(length_m_damaged, na.rm = TRUE), 
+            length_m_rehabilitate = sum(length_m_rehabilitate, na.rm = TRUE), 
+            cost_vnd_million = sum(cost_vnd_million, na.rm = TRUE)) |> 
+  right_join(recovery_shape,
+            by = "adm1_en") |>
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(aes(fill = length_m_damaged)) + 
+  scale_fill_viridis(direction = -1) + 
+  geom_sf_text(aes(label = adm1_vi), size = 2)
+  
+    
+vsma |> 
+  filter(type_of_incident != "subtotal") |> 
+  group_by(type_of_incident) |> 
+  summarise(length_m_damaged = sum(length_m_damaged, na.rm = TRUE))
+  glimpse()
+```
+
+
+
+```{r}
+damage |> count(sector, damage_indicators)
+```
+
+
+```{r fig.height=8}
+
+
+
+damage |> 
+      filter(damage_indicators %in% c(
+        "Number of deaths", 
+        "Number of people affected", 
+        "Rice area", 
+        "Monetary damage", 
+        "DAMAGE TO FISHERIES"
+      )) 
+   
+  
+  damage |> 
+      filter(damage_indicators %in% c("Number of deaths")) |>    
+  vn_plot() + 
+  scale_fill_viridis_c(direction = -1, labels = comma, breaks = c(10, 50, 100, 130)) +
+  labs(title = "Number of deaths", 
+       fill = "Persons") +
+  
+
+damage |> 
+  filter(str_detect(damage_indicators, "Volume") & sector == "Transportation") |>
+      group_by(sector, adm1_en, adm1_vi, adm1_pcode) |>
+      summarise(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+      mutate(damage_indicators = "Total volume displaced", 
+         unit = "m3") |> 
+  vn_plot() + 
+  scale_fill_viridis_c(direction = -1, labels = comma) +
+  labs(title = "Volume of soil, stone displaced onto road network", 
+       fill = "M3")  +
+
+damage |> 
+  filter(damage_indicators == "Complete damage (over 70%)") |>
+  vn_plot() + 
+  scale_fill_viridis_c(direction = -1, labels = comma) +
+  labs(title = "Completely-damaged houses", 
+       fill = "Units") +
+
+
+damage |>
+      filter(sector == "Housing" & str_detect(damage_indicators, "\\%")) |>
+      group_by(sector, unit, adm1_en, adm1_vi, adm1_pcode) |>
+      summarise(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+      mutate(damage_indicators = "Damaged houses") |> 
+  vn_plot() + 
+  scale_fill_viridis_c(direction = -1, labels = comma) +
+  labs(title = "Damaged houses", 
+       fill = "Units") + 
+  
+damage |> 
+      filter(damage_indicators %in% c(
+        "Rice area")) |>    
+  vn_plot() + 
+  scale_fill_viridis_c(direction = -1, labels = comma) +
+  labs(title = "Rice fields damaged", 
+       fill = "Hectares") +
+  
+
+damage |> 
+      filter(damage_indicators %in% c(
+        "Monetary damage")) |>    
+  vn_plot() + 
+  scale_fill_viridis_c(direction = -1, 
+                       breaks = c(5000000, 10000000, 15000000, 
+                                  20000000, 24000000), 
+                       labels = comma) +
+  labs(title = "Monetary damage", 
+       fill = "Million VND") + 
+  
+  plot_layout(nrow = 3) + 
+  plot_annotation(title = "Impact of typhoon Yagi, selected indicators", 
+                  subtitle = "Source: Viet Nam Disaster and Dyke Management Authority (VDDMA).\nProvinces outlined in blue are where recovery interventions are planned.", 
+                  caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the \nSecretariat of the United Nations concerning the legal statusof any country, territory, city or area or of its authorities, or concerning the \ndelimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.") + 
+  theme(plot.caption = element_text(hjust = .5, size = 5))
+
+ 
+ggsave(here("plots", "yagi_impact_small_multiple.png"), width = 10, height = 13, units = "in")
+```
+
+
+```{r}
+damage |> 
+  filter(damage_indicators %in% c("Number of deaths", 
+                                  "Rice area", 
+                                  "Monetary damage", 
+                                  "Complete damage (over 70%)")) |> 
+  mutate(damage_indicators = str_replace_all(damage_indicators, 
+                                             "damage", 
+                                             "damaged houses")) |> 
+  select(-unit) |> 
+  rbind(damage |>
+      filter(sector == "Housing" & str_detect(damage_indicators, "\\%")) |>
+      group_by(sector, adm1_en, adm1_vi, adm1_pcode) |>
+      summarise(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+      mutate(damage_indicators = "Damaged houses"), 
+      damage |> 
+  filter(str_detect(damage_indicators, "Volume") & sector == "Transportation") |>
+      group_by(sector, adm1_en, adm1_vi, adm1_pcode) |>
+      summarise(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+      mutate(damage_indicators = "Total volume soil, stone displaced", 
+             sector = "Transportation")) |> 
+  mutate(recovery = ifelse(adm1_pcode %in% recovery14, 
+                           "Recovery", 
+                           "Non-recovery")) |> 
+  group_by(damage_indicators, recovery) |> 
+  summarise(
+    value = sum(value, na.rm = TRUE)
+  ) |>
+  pivot_wider(names_from = recovery, values_from = value) |> 
+  mutate(total = `Non-recovery` + `Recovery`, 
+         `% in Recovery` = Recovery / total) |> 
+  write_csv(here("data", "recovery_adm1_split.csv"))
+```
+
+```{r}
+damage |>
+      filter(sector == "Housing" & str_detect(damage_indicators, "\\%")) |>
+      group_by(sector, unit, adm1_en, adm1_vi, adm1_pcode) |>
+      summarise(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+      mutate(damage_indicators = "Damaged houses")
+```
+
+
+
+
+```{r}
+pdna |> 
+  replace_na(list(loss_billion_vnd = 0, 
+                  damage_billion_vnd = 0)) |> 
+  mutate(damage_losses_vnd = damage_billion_vnd + loss_billion_vnd) |> 
+  group_by(
+    sector
+  ) |> 
+  summarise(damage_losses_vnd = sum(damage_losses_vnd, na.rm = TRUE), 
+            needs_billion_vnd = sum(needs_billion_vnd, na.rm = TRUE)) |> 
+  filter(damage_losses_vnd > 0 | needs_billion_vnd > 0) |> 
+  mutate(sector = trimws(str_remove_all(sector, "[0-9]|\\."))) |> 
+  ggplot(aes(x = damage_losses_vnd, 
+             y = needs_billion_vnd)) + 
+  geom_point(size = 3, alpha = .5, colour = "blue") + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  scale_x_log10(breaks = c(10, 30, 100, 300, 1000, 3000, 10000)) + 
+  scale_y_log10(breaks = c(10, 30, 100, 300, 1000, 3000, 10000)) + 
+  geom_text(aes(label = sector), 
+            hjust = "inward", 
+            vjust = "inward") + 
+  labs(title = "Recovery needs are largely proportional to disaster impacts in targeted areas", 
+       x = "Damage and losses in billions VND", 
+       y = "Recovery needs in billions VND")
+
+ggsave(here("plots", "damage_needs_scatterplot.png"), width = 10, height = 6)
+```
+
+## Governance
+
+```{r}
+
+
+governance <- read_excel(here("data", "13 Governance DALA 27.11.xlsx"), 
+           skip = 7) |> 
+  slice(1:14) |> 
+  setNames(c("adm1_en", 
+             "damages_vnd", 
+             "damages_usd", 
+             "losses_vnd", 
+             "losses_usd", 
+             "needs_vnd", 
+             "needs_usd")) |> 
+  select(adm1_en:needs_usd) %>%
+  mutate_at(vars(-adm1_en), ~ as.numeric(.)) |> 
+  mutate(damage_losses_usd = damages_usd + losses_usd, 
+         damage_losses_vnd = damages_vnd + losses_vnd)
+
+
+```
+
+
+
+
+```{r}
+governance |> 
+  mutate(adm1_en = ifelse(adm1_en == "Hai Phong", 
+                          "Hai Phong city", 
+                          adm1_en)) |> 
+  pivot_longer(cols = -adm1_en,
+               names_to = "indicator", 
+               values_to = "value") |> 
+  filter(indicator %in% c("needs_vnd", "damage_losses_vnd")) |> 
+  mutate(indicator = recode(indicator, 
+                            "needs_vnd" = "Needs VND", 
+                            "damage_losses_vnd" = "Damage and Losses VND")) |> 
+  right_join(
+    recovery_shape,
+    by = "adm1_en"
+  ) |> 
+  st_as_sf() |> 
+  ggplot() + 
+  geom_sf(size = .1, aes(fill = value)) + 
+  scale_fill_viridis(direction = -1, 
+                     labels = number_format(suffix = "M", 
+                                            scale = 1/1000000)) + 
+  facet_wrap(~indicator) + 
+  theme_void() + 
+  theme(strip.background = element_rect(fill = "black"), 
+        strip.text = element_text(colour = "white", 
+                                  size = 10)) + 
+  labs(title = "Damage and losses and needs in the Governance sector", 
+       fill = "Million VND")
+
+
+ggsave(here("plots", "governance_needs_losses.png"), width = 7, height = 3)
+  
+```
+
+
+Nothing to plot unless the have the coordinates of each of the damaged stations. 
+
+```{r}
+read_excel(here("data", "12 DALA_DRR_CC.xlsx"))
+
+
+```
+
+
+```{r}
+tm_shape(land, xlim = c(75.31, 59.6) , ylim =c(29.4, 38.8)) + 
+  tm_raster("elevation", palette = terrain.colors(10)) + 
+tm_shape(afpakir_buffer |> st_make_valid(), col = "grey", alpha = .5) + 
+  tm_polygons() + 
+tm_shape(
+  acled_filtered |> 
+  filter(country %in% c("Afghanistan", "Pakistan", "Iran")) |> 
+  select(event_id_cnty, event_date, event_type, country, latitude, longitude, fatalities) |>
+  filter(!is.na(latitude) & !is.na(longitude)) |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+) + 
+  tm_bubbles(size = "fatalities") 
+
+afpakir_buffer |> class()
+```
+
+
+```{r}
+
+
+vn_shape |> 
+  ggplot() + 
+  geom_sf() + 
+  geom_sf_text(aes(label = adm1_vi), size = 2
+               )
+
+```
+
+
+```{r}
+damage |> 
+  filter(subtotal == FALSE)
+```
+
+```{r}
+
+tm_shape(land, xlim = c(75.31, 59.6) , ylim =c(29.4, 38.8)) + 
+  tm_raster("elevation", palette = terrain.colors(10)) + 
+tm_shape(afpakir_buffer |> st_make_valid(), col = "grey", alpha = .5) + 
+  tm_polygons() + 
+tm_shape(
+  acled_filtered |> 
+  filter(country %in% c("Afghanistan", "Pakistan", "Iran")) |> 
+  select(event_id_cnty, event_date, event_type, country, latitude, longitude, fatalities) |>
+  filter(!is.na(latitude) & !is.na(longitude)) |> 
+  st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
+) + 
+  tm_bubbles(size = "fatalities") 
+
+afpakir_buffer |> class()
+```
+

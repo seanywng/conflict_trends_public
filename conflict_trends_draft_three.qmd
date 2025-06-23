@@ -1,0 +1,874 @@
+---
+title: "Exploratory data analysis of Asia-Pacific political incident and conflict trends"
+author: "Risk Anticipation Hub"
+date: "30 August 2024"
+number-sections: true
+toc: true
+toc-location: left
+toc-depth: 4
+format: 
+  html:
+    page-layout: full
+    code-tools: true
+    self-contained: true
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, results = "asis",
+                      fig.width = 9.5)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(patchwork)
+library(scales)
+library(sf)
+library(broom)
+library(treemapify)
+library(kableExtra) 
+library(ggstream)
+library(ggrepel)
+library(ggcorrplot)
+library(tidytext)
+library(ggtext)
+library(widyr)
+library(ggraph)
+library(janitor)
+library(tidymodels)
+
+`%out%` <- Negate(`%in%`)
+options(scipen = 100)
+theme_set(theme_light())
+
+range_wna <- function(x){(x-min(x, na.rm = TRUE))/(max(x, na.rm = TRUE)-min(x, na.rm = TRUE))}
+```
+
+```{r data, include=FALSE, warning=FALSE}
+country_list <- c("Australia", "Afghanistan", "Bangladesh", "Bhutan", "Cambodia", 
+                  "China", "Fiji", "Hong Kong", "Japan", "India", "Indonesia", 
+                  "Iran",  "Laos", "Malaysia", "Maldives", "Mongolia", "Myanmar", 
+                  "Nepal", "New Zealand",  "North Korea", "Pakistan", "Papua New Guinea",
+                  "Philippines", "Singapore", "Solomon Islands", "South Korea", 
+                  "Sri Lanka", "Thailand", "Timor-Leste", "Vanuatu", "Vietnam")
+
+population <- read_csv(here("data", "wdi_all_countries_population.csv")) |> 
+  janitor::clean_names()  %>%
+  mutate(across(matches("_yr"), ~ as.numeric(.))) |> 
+  pivot_longer(cols = x2000_yr2000:x2023_yr2023, 
+               names_to = "year", 
+               values_to = "population") |>
+  mutate(year = str_sub(year, start = -4, end = -1), 
+         year = as.double(year)) |> 
+  rename(country = country_name) |> 
+  mutate(country = 
+           case_when(str_detect(country, "Korea, Rep.") ~ "South Korea",
+                             str_detect(country, "Korea, Dem. People's Rep.") ~ "North Korea", 
+                             str_detect(country, "Hong Kong SAR, China") ~ "Hong Kong", 
+                             str_detect(country, "Iran, Islamic Rep.") ~ "Iran", 
+                             str_detect(country, "Lao PDR") ~ "Laos", 
+                             country == "Viet Nam" ~ "Vietnam", 
+                             TRUE ~ country), 
+         country_iso = countrycode::countrycode(country,
+                                   origin = "country.name", 
+                                   destination = "iso3c")) |> 
+  filter(!is.na(country) & 
+           country %out% c("Data from database: World Development Indicators", 
+                           "Last Updated: 06/28/2024"))
+
+population_estimates <- crossing(country = population$country, year = 2000:2024) |> 
+ left_join(population |> 
+             select(year, country, population), 
+           by = c("year", "country")) |> 
+ group_by(country) %>% 
+ fill(population, .direction = "updown") 
+
+
+world_shape <- st_read(here("data", 
+                            "world-administrative-boundaries", 
+                            "world-administrative-boundaries.shp"), 
+                       quiet = TRUE)
+
+myanmar_adm1 <- st_read(here("data", 
+                             "mmr_polbnda2_adm1_mimu_250k", 
+                             "mmr_polbnda2_adm1_mimu_250k.shp"), 
+                        quiet = TRUE) |> 
+  rename(state = ST, 
+        admin1_pcode = ST_PCODE) |> st_as_sf()
+
+
+country_iso3_ap <- world_shape |> 
+  distinct(name, iso3) |> 
+  mutate(country = 
+           case_when(str_detect(name, "Democratic People's Republic of Korea") ~ "North Korea",
+                     name == "Republic of Korea" ~ "South Korea",
+                     str_detect(name, "Iran") ~ "Iran",
+                     str_detect(name, "Lao People's Democratic Republic") ~ "Laos", 
+                             name == "Viet Nam" ~ "Vietnam", 
+                             TRUE ~ name)) |> 
+  filter(country %in% country_list) |> 
+  arrange(country) 
+
+acled_filtered <- readRDS(here("data", "acled_filtered.rds"))
+
+most_events_list <- acled_filtered |> 
+  filter(event_type != "Protest") |> 
+  group_by(country) |> 
+  summarise(events = n()) |> 
+  arrange(desc(events)) |> 
+  pull(country)
+
+most_fatalities_list <- acled_filtered |> 
+  group_by(country) |> 
+  mutate(fatalities = as.numeric(fatalities)) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE)) |> 
+  arrange(desc(fatalities)) |> 
+  pull(country)
+
+actor_codes_acled <- tribble(
+  ~actor_code, ~description, 
+  1, "State Forces", 
+  2, "Rebel Groups", 
+  3, "Political Militias", 
+  4, "Identity Militias", 
+  5, "Rioters",
+  6, "Protesters", 
+  7, "Civilians", 
+  8, "Other Forces"
+)
+
+interaction_codes_acled <- read_csv(here("data", "interaction_codes_acled.csv"))
+
+acled_actors <- rbind(
+  acled_filtered |>
+    select(actor = actor1, actor_code = inter1, event_id_cnty),
+  acled_filtered |> 
+    select(actor = actor2, actor_code = inter2, event_id_cnty)) |> 
+  filter(!is.na(actor)) |> 
+  left_join(acled_filtered |> 
+              select(event_id_cnty, interaction, event_date, country, fatalities,
+                     sub_event_type, event_type), 
+            by = c("event_id_cnty"),
+            relationship = "many-to-many") |> 
+  mutate(event_date = as.Date(event_date, "%d %B %Y"), 
+         year = year(event_date), 
+         actor_code = as.double(actor_code)) |> 
+  left_join(actor_codes_acled |>
+              rename(actor_description = description), 
+            by = "actor_code", 
+            relationship = "many-to-many") 
+
+afpak_buffer <- st_read(here("data", "afpak_buffer", "afpak_buffer.shp")) |> st_as_sf()
+
+afir_buffer <- st_read(here("data", "afir_buffer", "afir_buffer.shp")) |> st_as_sf()
+
+mmr_buffer <- st_read(here("data", "mmr_buffer", "mmr_buffer.shp"))
+
+ind_pak_buffer <- st_read(here("data", "ind_pak_buffer", "ind_pak_buffer.shp"))
+
+kash_buffer <- st_read(here("data", "kash_buffer", "kash_buffer.shp"))
+
+mmr_shape <- world_shape |> filter(str_detect(name, "Myanmar")) 
+
+rak_cxb <- st_read(here("data", "mmr_border", "rak_cxb.shp"))
+
+indo_adm1_pop <- read_csv(here("data", "idn_admpop_adm1_2020_v2.csv")) |>
+  janitor::clean_names() |>
+  select(adm1_pcode, population = t_tl) |>
+  left_join(
+    readxl::read_excel(here(
+      "data", "idn_adminboundaries_tabulardata.xlsx"
+    ), sheet = 2) |>
+      clean_names() |>
+      select(adm1_pcode, adm1_en, area_sqkm),
+    by = "adm1_pcode"
+  )
+
+wdi_cleaning <- function(tbl) {
+  
+  tbl |> 
+    mutate(year = str_sub(year, start = -4, end = -1), 
+         year = as.double(year)) |> 
+    rename(country = country_name, 
+           indicator = series_name) |> 
+    mutate(country = 
+             case_when(str_detect(country, "Korea, Rep.") ~ "South Korea",
+                               str_detect(country, "Korea, Dem. People's Rep.") ~ "North Korea", 
+                               str_detect(country, "Hong Kong SAR, China") ~ "Hong Kong", 
+                               str_detect(country, "Iran, Islamic Rep.") ~ "Iran", 
+                               str_detect(country, "Lao PDR") ~ "Laos", 
+                               country == "Viet Nam" ~ "Vietnam", 
+                               TRUE ~ country), 
+           country_iso = countrycode::countrycode(country,
+                                     origin = "country.name", 
+                                     destination = "iso3c")) |> 
+    filter(!is.na(country) & 
+             !str_detect(country, "Data from database|Last Updated")) |> 
+    filter(country_iso %in% (country_iso3_ap |> pull(iso3)))
+    
+}
+
+wdi <- read_csv(here("data", "wdi_extract_Data.csv")) |> 
+  clean_names() %>%
+  mutate(across(matches("_yr"), ~ as.numeric(.))) |> 
+  pivot_longer(cols = x1994_yr1994:x2023_yr2023, 
+               names_to = "year", 
+               values_to = "value") |>
+  wdi_cleaning() |> 
+  mutate(indicator = case_when(
+    str_detect(indicator, "modeled ILO") ~ 
+      "Share of youth not in education, employment or training, total (% of youth population) (modeled ILO estimate)", 
+    str_detect(indicator, "completed upper secondary, population 25+, total (%)") ~ 
+      "Educational attainment, at least completed upper secondary, population 25+, total (%) (cumulative)",
+    str_detect(indicator, "% of export") ~ 
+      "Total debt service (% of exports of goods, services and primary income)", 
+    TRUE ~ indicator
+  )) |> 
+  rbind(
+    read_csv(here("data", "wdi_growth.csv")) |> 
+  clean_names() %>%
+  mutate(across(matches("_yr"), ~ as.numeric(.))) |> 
+  pivot_longer(cols = x2000_yr2000:x2023_yr2023, 
+               names_to = "year", 
+               values_to = "value") |>
+  wdi_cleaning()) |> 
+  mutate(indicator = str_replace_all(indicator, "Educational attainment, at least completed primary", 
+                                     "Completed primary"), 
+         indicator = str_replace_all(indicator, 
+                                     "Educational attainment, at least completed upper secondary", 
+                                     "Completed secondary"), 
+         indicator = str_replace_all(indicator, "Share of youth not in education, employment or training", 
+                                     "NEET")) |> 
+  rbind(
+    read_csv(here("data", "wdi_extract3.csv")) |> 
+      clean_names() |> 
+      mutate(across(matches("_yr"), ~ as.numeric(.))) |>
+      pivot_longer(cols = x2010_yr2010:x2023_yr2023, 
+               names_to = "year", 
+               values_to = "value") |>
+      wdi_cleaning()) 
+
+
+wdi <- wdi |> 
+  rbind(
+    wdi |> filter(indicator == "GDP per capita (current US$)") |>
+      filter(!is.na(value)) |>
+      group_by(country) |>
+      mutate(yoy = (lag(value, 1) - value) / value) |>
+      ungroup() |>
+      select(-value) |>
+      rename(value = yoy) |>
+      mutate(
+        series_code = str_replace(series_code, "CD", "PC"),
+        indicator = "GDP per capita growth yoy%"
+      )) 
+
+
+
+
+```
+
+
+
+
+# Introduction {#sec-introduction}
+
+This report documents observed conflict and political violence trends in the Asia-Pacific region over the past ten years, exploring trends relating to events, fatalities, conflict types and conflict actors using ACLED data[^1].
+
+[^1]: The primary dataset used is the Armed Conflict Location and Event Data (ACLED). The primary reason for privileging this source over UCDP’s Georeferenced Event Dataset is because ACLED has a wider diversity of sources and records a wider range of conflict events.
+
+This report is in line with ACLED's [metholodology](https://acleddata.com/knowledge-base/codebook/)[^2] and its categorization of conflict events, which encompasses protests, riots, battles, explosions and remote violence and strategic developments (such as arrests of key figures).
+
+[^2]: The ACLED codebook contains all the documentation, including coding decisions and explanations of all recorded variables
+
+These findings are intended to help UN personnel better understnd evolving conflict patterns, adapt strategies accordingly, and ancitipated political trends. 
+
+@fig-regionalgif below displays cumulative conflict events over the past 10 years (2014-2023).
+
+Major conflict-affected countries in the region are all quite clear: Afghanistan, Pakistan, Bangladesh, India, Thailand, Philippines and Myanmar, as are the "hotspots" within them (e.g. Kashmir) that account for some of these countries being on the list whilst not necessarily being considered to be in "in armed conflict" at the country level.
+
+<br>
+
+::: {#fig-regionalgif}
+
+[![](./plots/asia_pacific_event_types_grey.gif)](https://github.com/UNDP-CREW/conflict-trends-asia-pacific/raw/main/plots/asia_pacific_event_types_grey.gif)
+
+:::
+
+<br>
+
+Both the magnitude (number of events or fatalities, as displayed above) and the severity (events and fatalities per capita) provide important perspectives: India, for example, may have a very large number of conflict events, but as can be seen from @fig-percapita below, on a per-capita basis (in this case the denominator per 100,000 persons), it sits sin the middle of the pack.
+
+The plot below is of the number of events per 100,000 persons per annum against the number of conflict fatalities per 100,000 persons per annum. The number of events is represented by the size of each point and the color represents the total conflict fatalities experienced by each country over the past 10 years.
+
+<br>
+
+::: {#fig-percapita}
+
+```{r fig.height = 6}
+
+acled_filtered |>
+  filter(year < 2024 & year > 2013) |> 
+  group_by(country, year) |> 
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities, na.rm = TRUE), 
+            .groups = "drop") |> 
+  left_join(
+    population_estimates, 
+    by = c("country", "year")
+  ) |> 
+  mutate(events_100k = events / population * 100000, 
+         fatalities_100k = fatalities / population * 100000) |> 
+  group_by(country) |> 
+  summarise(events_100k = mean(events_100k, na.rm = TRUE), 
+            fatalities_100k = mean(fatalities_100k, na.rm = TRUE), 
+            events = sum(events), 
+            fatalities = sum(fatalities)) |> 
+  arrange(desc(events_100k)) |> 
+  ggplot(aes(x = events_100k + 0.01, 
+             y = fatalities_100k + 0.01)) + 
+  #geom_segment(aes(x = .04, xend = .02, y = 2, yend = 2), arrow = arrow(), 
+               #size = .1, lwd = 1.2, colour = "lightsteelblue", alpha = .1) + 
+  #geom_segment(aes(x = .6, xend = .6, y = 11, yend = 35), arrow = arrow(), 
+               #size = .1, lwd = 1.2, colour = "bisque3", alpha =.1) + 
+  geom_smooth(method = "lm",formula = y ~ splines::bs(x, 2), se = FALSE, lwd = 1) + 
+  geom_hline(yintercept = 0.01, lwd = .2, linetype = "dashed", alpha = .5) + 
+  geom_vline(xintercept = 0.01, lwd = .2, linetype = "dashed", alpha = .5) + 
+  geom_hline(yintercept = 1.01, lwd = .9, linetype = "dashed", alpha = .4, colour = "cornflowerblue") + 
+  geom_vline(xintercept = 1.01, lwd = .9, linetype = "dashed", alpha = .4, colour = "cornflowerblue") + 
+  geom_point(aes(colour = fatalities, 
+                 size = events), alpha = .8) + 
+  # geom_text(aes(label = country), vjust = "inward") +
+  ggrepel::geom_text_repel(aes(label = country), size = 3, vjust = "inward", 
+                           max.overlaps = 20) +
+  scale_x_log10(breaks=c(0.01, 0.11, 1.01, 2.01, 5.01, 10.01), labels=\(x) x-0.01) + 
+  scale_y_log10(breaks=c(0.01, 0.11, 0.31, 1.01, 3.01, 10.01, 50.01), labels=\(x) x-0.01) +
+  scale_size_continuous(range = c(1, 9), breaks = c(100, 1000, 10000, 100000), 
+                        labels = comma) + 
+  scale_colour_viridis_c(option = "magma", direction = -1, end = .85, labels = comma) + 
+  labs(x = "Mean Events per 100k per annum", 
+       y = "Mean Fatalities per 100k per annum", 
+       title = "Severity and lethality of political conflict in the Asia-Pacific, 2014-2023", 
+       subtitle = "Mean annual events and fatalities per country per 100,000 persons", 
+       caption = "Source: www.accleddata.com", 
+       size = "No. Events", 
+       colour = "Fatalities") + 
+  theme(plot.caption = element_text(hjust = .5))
+
+
+```
+
+:::
+
+<br>
+
+Whilst the immensity and diversity of the Asia-Pacific demand exceptions to every rule, we can identify a central tendency (the solid blue line) that most countries in the region seem to sit on. On one end of the line are disproportionately quiet autocracies (or their approximations) and on the other are countries where violence has spun out of state control.
+
+Myanmar and Afghanistan have separated themselves from this central curve as a consequence of open warfare. Philippines, Papua New Guinea and Pakistan are all at risk or could be at risk of doing the same in the past 10 years. 
+
+
+
+<br><br><br>
+
+## Conflict events and fatalities (summary tables)
+
+Looking back at a 10-year horizon (note that ACLED used to monitor a smaller set of countries) in @tbl-summary10, although the number of events is much higher than 10 years ago, the majority of countries have seen declines in the number of fatalities associated with political conflict. 
+
+<br>
+
+```{r}
+summary_stats <- acled_filtered |> 
+  group_by(country, year) |> 
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities, na.rm = TRUE), 
+            .groups = "drop")
+
+event_diff_spec_2014 <- summary_stats |> 
+  select(-fatalities) |> 
+  filter(year %in% c(2014, 2023)) |> 
+  pivot_wider(names_from = year, 
+              values_from = events, 
+              names_prefix = "events_") |> 
+  filter(!is.na(events_2014)) |> 
+  adorn_totals(where = "row") |>
+  mutate(event_diff_pc = round((events_2023 - events_2014) / events_2014 * 100, digits = 2)) |> 
+  filter(country != "Laos") |> 
+  mutate(country = fct_relevel(country, 
+                               c("Myanmar", "Nepal", "Sri Lanka", "Bangladesh", 
+                                 "Pakistan", "Thailand", "Vietnam", "Cambodia", "Total"))) |> 
+  arrange(country)
+
+fatalities_diff_spec_2014 <- summary_stats |>
+  select(-events) |>
+  filter(year %in% c(2014, 2023)) |>
+  pivot_wider(names_from = year,
+              values_from = fatalities,
+              names_prefix = "fatalities_") |>
+  filter(!is.na(fatalities_2014)) |>
+  adorn_totals(where = "row") |>
+  mutate(fatalities_diff_pc = 
+           round((fatalities_2023 - fatalities_2014) / fatalities_2014 * 100,
+                                    digits = 2)) |>
+  mutate(fatalties_diff_pc = ifelse(is.nan(fatalities_diff_pc), 0, fatalities_diff_pc)) |>
+  filter(country != "Laos") |> 
+  arrange(desc(fatalities_diff_pc))
+
+
+
+
+```
+
+<br>
+
+```{=html}
+<style>
+.table>tbody>tr>td{
+  padding: 1px;
+}
+</style>
+```
+
+```{r}
+#| label: tbl-summary10
+
+summary_stats |> 
+  select(-fatalities) |> 
+  filter(year %in% c(2014, 2023)) |> 
+  pivot_wider(names_from = year, 
+              values_from = events, 
+              names_prefix = "events_") |> 
+  filter(!is.na(events_2014)) |> 
+  adorn_totals(where = "row") |> 
+  mutate(event_diff_pc = round((events_2023 - events_2014) / events_2014 * 100, digits = 2)) |> 
+  left_join(
+    summary_stats |> 
+  select(-events) |> 
+  filter(year %in% c(2014, 2023)) |> 
+  pivot_wider(names_from = year, 
+              values_from = fatalities, 
+              names_prefix = "fatalities_") |> 
+  filter(!is.na(fatalities_2014)) |>
+    adorn_totals(where = "row") |>
+    mutate(fatalities_diff_pc = round((fatalities_2023 - fatalities_2014) / fatalities_2014 * 100, digits = 2)) |> 
+    mutate(fatalties_diff_pc = ifelse(is.nan(fatalities_diff_pc), 0, fatalities_diff_pc)), 
+  by = "country"
+  ) |> 
+  filter(country != "Laos") |> 
+  mutate(country = fct_relevel(country, c("Myanmar", "Nepal", "Sri Lanka", "Bangladesh", 
+                                 "Pakistan", "Thailand", "Vietnam", "Cambodia", "Total"))) |> 
+  arrange(country) |> 
+  select(country, events_2014, events_2023, `events_diff%` = event_diff_pc, 
+         fatalities_2014, fatalities_2023, `fatalities_diff%` = fatalities_diff_pc) %>% 
+  select_all(~ gsub("_", " ", .)) %>%
+  select_all(~ str_to_title(.)) |> 
+  kable(booktabs = TRUE, 
+        caption = "10 years of conflict: comparison 2014 and 2023", 
+        format.args = list(big.mark = ",")) |> 
+  kable_classic_2("striped", full_width = TRUE) |>
+  column_spec(4, color = "grey50", background = 
+                spec_color(event_diff_spec_2014$event_diff_pc[1:9], direction = -1, end = .95, 
+                           option = "plasma")) |> 
+  column_spec(7, color = "grey40", background =
+                spec_color(fatalities_diff_spec_2014$fatalities_diff_pc[1:9], 
+                                                           direction = -1, end = .95, 
+                           option = "plasma")) 
+```
+
+<br>
+
+Across a five-year horizon, with more countries included in the comparison, the number of events and fatalities is down in most countries, though regional totals remain elevated due to Myanmar.
+
+Afghanistan, Vietnam and Hong Kong saw the largest declines in events. Myanmar, Indonesia, Iran and Bangladesh have each experienced a significant increase in events in the past five years. 
+
+
+<br>
+
+```{r}
+#| label: tbl-summary5
+
+event_diff_spec_2019 <-
+  summary_stats |> 
+  select(-fatalities) |> 
+  filter(year %in% c(2019, 2023)) |> 
+  pivot_wider(names_from = year, 
+              values_from = events, 
+              names_prefix = "events_") |>
+  filter(!is.na(events_2019)) |>
+  adorn_totals(where = "row") |>
+  mutate(event_diff_pc = round((events_2023 - events_2019) / events_2019 * 100, digits = 2)) |> 
+  filter(country != "Laos") |> 
+  arrange(desc(event_diff_pc)) |> 
+  mutate(country = fct_relevel(country,
+                               c("Myanmar", "Indonesia", "North Korea", "Iran", 
+                                 "Bangladesh", "Japan", "South Korea", "Pakistan", 
+                                 "Thailand", "India", "Sri Lanka", "Mongolia", 
+                                 "Cambodia", "Nepal", "Malaysia", "Philippines", 
+                                 "China", "Vietnam", "Afghanistan", "Hong Kong", 
+                                 "Total")))
+
+
+fatalities_diff_spec_2019 <- summary_stats |>
+  select(-events) |>
+  filter(year %in% c(2019, 2023)) |>
+  pivot_wider(names_from = year,
+              values_from = fatalities,
+              names_prefix = "fatalities_") |>
+  filter(!is.na(fatalities_2019)) |>
+  adorn_totals(where = "row") |>
+  mutate(fatalities_diff_pc = 
+           round((fatalities_2023 - fatalities_2019) / fatalities_2019 * 100,
+                                    digits = 2)) |>
+  mutate(fatalities_diff_pc = ifelse(is.nan(fatalities_diff_pc), 0, fatalities_diff_pc)) |>
+  filter(country != "Laos") |> 
+  mutate(country = fct_relevel(country,
+                               c("Myanmar", "Indonesia", "North Korea", "Iran", 
+                                 "Bangladesh", "Japan", "South Korea", "Pakistan", 
+                                 "Thailand", "India", "Sri Lanka", "Mongolia", 
+                                 "Cambodia", "Nepal", "Malaysia", "Philippines", 
+                                 "China", "Vietnam", "Afghanistan", "Hong Kong", 
+                                 "Total"))) |> 
+  arrange(country)
+
+
+summary_stats |> 
+  select(-fatalities) |> 
+  filter(year %in% c(2019, 2023)) |> 
+  pivot_wider(names_from = year, 
+              values_from = events, 
+              names_prefix = "events_") |> 
+  filter(!is.na(events_2019)) |>
+  adorn_totals(where = "row") |>
+  mutate(event_diff_pc = round((events_2023 - events_2019) / events_2019 * 100, digits = 2)) |> 
+  left_join(
+    summary_stats |> 
+  select(-events) |> 
+  filter(year %in% c(2019, 2023)) |> 
+  pivot_wider(names_from = year, 
+              values_from = fatalities, 
+              names_prefix = "fatalities_") |> 
+  filter(!is.na(fatalities_2019)) |>
+    adorn_totals(where = "row") |>
+    mutate(fatalities_diff_pc = round((fatalities_2023 - fatalities_2019) / fatalities_2019 * 100, digits = 2)) |> 
+    mutate(fatalities_diff_pc = ifelse(is.nan(fatalities_diff_pc), 0, fatalities_diff_pc)), 
+  by = "country"
+  ) |> 
+  filter(country != "Laos") |> 
+  mutate(country = fct_relevel(country,
+                               c("Myanmar", "Indonesia", "North Korea", "Iran", 
+                                 "Bangladesh", "Japan", "South Korea", "Pakistan", 
+                                 "Thailand", "India", "Sri Lanka", "Mongolia", 
+                                 "Cambodia", "Nepal", "Malaysia", "Philippines", 
+                                 "China", "Vietnam", "Afghanistan", "Hong Kong", 
+                                 "Total"))) |> 
+  arrange(country) |> 
+  select(country, events_2019, events_2023, `events_diff%` = event_diff_pc, 
+         fatalities_2019, fatalities_2023, `fatalities_diff%` = fatalities_diff_pc) %>%
+  select_all(~ gsub("_", " ", .)) %>%
+  select_all(~ str_to_title(.)) |> 
+  kable(caption = "Five years of conflict: comparison 2019 and 2023", 
+        format.args = list(big.mark = ",")) |> 
+  kable_classic_2("striped", full_width = TRUE) |> 
+  column_spec(4, color = "grey40", background = 
+                spec_color(event_diff_spec_2019$event_diff_pc[1:21], direction = -1, end = .9, 
+                           option = "plasma")) |> 
+  column_spec(7, color = "grey40", background =
+                spec_color(fatalities_diff_spec_2019$fatalities_diff_pc[1:21], 
+                                                           direction = -1, end = .9, 
+                           option = "plasma"))
+```
+
+<br>
+
+
+
+To provide an additional layer of perspective on @tbl-summary10 and @tbl-summary5, both the number of events and the number of fatalities are plotted below in @fig-eventsfatalitiesline.
+
+For most countries, conflict fatalities are down or flat. This is in line with what we have observed in the ten-year and five-year horizons.
+
+Afghanistan, China, Vietnam, Cambodia, Laos, Philippines and the Solomon Islands have each seen a drastic fall in conflict events and fatalities over the past 10 years. Fatalities in Pakistan and Bangladesh were trending upwards, at the end of 2023.
+
+However, looking at the dark blue lines, indicating the number of events, it becomes clearer that the remaining countries all experience periodic spikes and troughs in conflict, periods of destabilisation and tightening. Clear examples of this are Iran and Thailand, where the waves of protest movements or elections are immediately visible. As are the effects of the state re-exerting control.
+
+<br>
+
+```{r}
+acled_filtered |>
+  filter(year >= 2019) |> 
+  group_by(month = floor_date(event_date, unit = "month")) |> 
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities, na.rm = TRUE)) |> 
+  filter(month != "2024-10-01") |> 
+  pivot_longer(cols = c(events, fatalities), 
+               names_to = "indicator", 
+               values_to = "value") |> 
+  mutate(indicator = str_to_title(indicator)) |> 
+  mutate(type = "Asia-Pacific", 
+         size = .1) |> 
+  rbind(
+    acled_filtered |>
+      filter(year >= 2019) |> 
+      filter(country == "Myanmar") |> 
+      group_by(month = floor_date(event_date, unit = "month")) |> 
+      summarise(events = n_distinct(event_id_cnty), 
+                fatalities = sum(fatalities, na.rm = TRUE)) |> 
+      filter(month != "2024-10-01") |> 
+      pivot_longer(cols = c(events, fatalities), 
+                   names_to = "indicator", 
+                   values_to = "value") |> 
+      mutate(indicator = str_to_title(indicator)) |> 
+      mutate(type = "only Myanmar",
+             size = .5)) |> 
+  filter(month > "2019-09-01") |> 
+  ggplot(aes(x = month, y = value)) + 
+  geom_vline(xintercept = as.numeric(as.Date("2021-08-15")), lwd = .1, 
+             colour = "azure4", 
+             linetype = "dashed") + 
+  geom_vline(xintercept = as.numeric(as.Date("2021-02-01")), lwd = .1, 
+             colour = "azure4", 
+             linetype = "dashed") +
+  geom_line(aes(colour = indicator), lwd = .8) + 
+  scale_colour_manual(values = c("Events" = "#264653", 
+                                 "Fatalities" = "#e76f51")) + 
+  scale_x_date(date_breaks = "1 year", 
+               date_labels = "%Y") + 
+  scale_y_continuous(labels = comma) + 
+  facet_wrap(~type) + 
+  theme(axis.text.x = element_text(hjust = 1, vjust = 0)) +
+  labs(x = "", y = "", 
+       title = "Asia-Pacific conflict events and fatalities",
+       subtitle = "First grey line is the Myanmar coup, second grey line is the Taliban victory in Afghanistan",
+       colour = "") + 
+  theme(strip.background = element_rect(fill = "black"), 
+        strip.text = element_text(size = 12), 
+        legend.position = "top")
+
+
+```
+
+```{r}
+acled_filtered |> 
+  filter(year == 2020) |> 
+  group_by(country) |> 
+  summarise(fatalities = sum(fatalities)) |> 
+  arrange(desc(fatalities))
+```
+
+
+
+```{r}
+
+acled_filtered |>
+  filter(year >= 2020) |> 
+  mutate(size = 1) |> 
+  group_by(month = floor_date(event_date, unit = "month"), size) |> 
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities, na.rm = TRUE)) |> 
+  filter(month != "2024-10-01") |> 
+  pivot_longer(cols = c(events, fatalities), 
+               names_to = "indicator", 
+               values_to = "value") |> 
+  mutate(indicator = str_to_title(indicator))|> 
+  ggplot(aes(x = month, y = value)) + 
+  geom_line(aes(colour = indicator)) + 
+  scale_colour_manual(values = c("Events" = "#264653", 
+                                 "Fatalities" = "#e76f51")) + 
+  scale_x_date(date_breaks = "6 months", 
+               date_labels = "%b %y") + 
+  scale_y_continuous(labels = comma) + 
+  theme(axis.text.x = element_text(angle = 20), 
+        hjust = 1, vjust = 0) +
+  labs(x = "", y = "", 
+       title = "Asia-Pacific conflict events and fatalities") + 
+  
+acled_filtered |>
+  filter(year >= 2020) |> 
+  filter(country == "Myanmar") |> 
+  mutate(size = .5) |> 
+  group_by(month = floor_date(event_date, unit = "month"), size) |> 
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities, na.rm = TRUE)) |> 
+  filter(month != "2024-10-01") |> 
+  pivot_longer(cols = c(events, fatalities), 
+               names_to = "indicator", 
+               values_to = "value") |> 
+  mutate(indicator = str_to_title(indicator)) |> 
+  ggplot(aes(x = month, y = value)) + 
+  geom_line(aes(colour = indicator)) + 
+  scale_colour_manual(values = c("Events" = "#264653", 
+                                 "Fatalities" = "#e76f51")) + 
+  scale_x_date(date_breaks = "6 months", 
+               date_labels = "%b %y") + 
+  theme(axis.text.x = element_text(angle = 20), 
+        hjust = 1, vjust = 0) +
+  labs(x = "", y = "", 
+       title = "Myanmar civil war") + 
+  plot_layout(guides = "collect")
+```
+
+2024 has been a year of tumult. Bangladesh, India, Indonesia, Japan, Kiribati, Mongolia, Pakistan, Solomon Islands, Sri Lanka and Taiwan held elections this year. Economic issues 
+
+
+had elections
+
+::: {#fig-eventsfatalitiesline}
+
+```{r fig.height=6.5}
+
+acled_filtered |> 
+  filter(year > 2013 & year <= 2025) |>
+  filter(country %in% most_fatalities_list) |> 
+  filter(country %out% c("Singapore", "Bhutan", "Fiji", "Maldives",
+                         "New Zealand", "Vanuatu")) |> 
+  group_by(country, year) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE),
+            events = n_distinct(event_id_cnty), 
+            .groups = "drop") |> 
+  pivot_longer(cols = c(fatalities, events), 
+               names_to = "indicator", 
+               values_to = "value") |> 
+  group_by(country, indicator) |> 
+  mutate(value_range = range_wna(value)) |> 
+  ungroup() |> 
+  mutate(date = as.Date(paste(year, 1, 1, sep="-"))) |> 
+  mutate(country = fct_relevel(country, most_fatalities_list), 
+         indicator = str_to_title(indicator)) |>
+  ggplot(aes(x = date, y = value)) + 
+  geom_smooth(aes(colour = indicator), 
+              se = FALSE) + 
+  facet_wrap(~ country, 
+             scales = "free_y") +
+  scale_y_continuous(labels = comma) +
+  scale_colour_manual(values = c("Events" = "#264653", 
+                                 "Fatalities" = "#e76f51")) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1), 
+        strip.background = element_rect(fill = "black"), 
+        legend.position = "top", 
+        legend.key.height = unit(.3, "cm")) + 
+  labs(title = "Number of political incidents and resulting fatalities by, 2014-2023", 
+       subtitle = "Events are in dark blue, fatalities in red. In descending order, by total number of fatalities.",
+       y = "Annual fatalities", 
+       x = "", 
+       colour = "")
+    
+```
+
+:::
+
+
+<br><br><br>
+
+## Event type streamgraphs
+
+```{r event-stream-data}
+event_stream_data <- acled_filtered |> 
+  mutate(quarter = floor_date(event_date, unit = "quarter")) |> 
+  group_by(country, event_type, quarter) |> 
+  summarise(events = n_distinct(event_id_cnty), 
+            fatalities = sum(fatalities, na.rm = TRUE), 
+            .groups = "drop") 
+
+event_type_streamgraph <- function(df, column_var) {
+  
+  column_var <- enquo(column_var)
+  
+  df |>
+    ggplot(aes(x = quarter, y = !!column_var, fill = event_type)) + 
+    geom_stream(aes(fill = event_type)) + 
+    scale_fill_manual(values = c(
+      "Battles" = "#9b2226",
+      "Violence against civilians" = "#001219",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) +
+    facet_wrap(~ country, scales = "free_y") + 
+    labs(fill = "", 
+         x = "") +
+    theme(legend.position = "top",
+          legend.key.width = unit(.3, "cm"), 
+          legend.key.height = unit(.3, "cm"),
+          legend.text = element_text(size = 5), 
+          axis.text.y = element_text(size = 4), 
+          axis.text.x = element_text(size = 4, angle = 30, hjust = 1, vjust = 1), 
+          strip.text = element_text(size = 7), 
+          strip.background = element_rect(fill = "black"), 
+          plot.title = element_text(size = 13), 
+          plot.subtitle = element_text(size = 11)) + 
+    guides(fill = guide_legend(nrow = 1))
+}
+
+```
+
+To add further context to our exploration of regional conflict trends, let us now consider event types. [ACLED](https://acleddata.com/knowledge-base/codebook/)[^3] categorises conflict events into protests, riots, battles, explosions and remote violence and strategic developments (such as arrests or new legislation). These are further still into 25 sub-types.
+
+[^3]: The ACLED codebook contains all the documentation, including coding decisions and explanations of all recorded variables
+
+The charts below are streamgraphs, where values over time -- in @fig-eventsstream below, the number of quarterly conflict events -- are represented by their respective area. Though there are negative values shown, the Y-axis values are absolute i.e. if a certain point in time is `+400` and `-400`, there were a total of 800 events. Streamgraphs are employed here despite this because spikes in violence (from elections, for instance) are much more visible than a traditional area graph.
+
+@fig-eventsstream shows the number of political incidents per quarter broken down by event type, sorted in order by the **number of political** incidents.
+
+It should be noted that in "stable" countries, the flavour of political conflict consists mainly of protests (which indicate widespread dissatisfaction but also that not all nonviolent means have been exhausted).
+
+The Thai people manifested their dissatisfaction has manifested in 2014 and in 2021. However, the Thai state responded by firmly clamping down on its citizenry in both instances, as can be seen from the swift decrease in events. This approach does not address the core issues behind the protests. Notably, the share of protests compared to violent political incidents seems to be worsening, possibly indicating that more actors (the state included) believe that nonviolent solutions have been exhausted.
+
+Bangladesh seems to have an outsized number of riots. Whilst protests are a natural feature of any democracy, riots are less so, given their disruptive and violent nature. Bangladesh seems to have a higher ratio of riots to protests than any other country except Papua New Guinea. This speaks to the inability of the state to maintain order and the ease of inciting the population to violence (which speaks to the existence of many instances of injustice and hurt to inflame). Political incidents in Bangladesh (as we will explore in later section) had been falling until they increased around 2018, around the time of the first quota reform protests.
+
+<br>
+
+::: {#fig-eventsstream}
+
+```{r fig.height = 7.5}
+
+event_stream_data |> 
+  mutate(country = fct_relevel(country, most_events_list)) |>
+  filter(country %out% c("Bhutan")) |> 
+  event_type_streamgraph(events) + 
+  labs(title = "Number of political incidents by event type over time", 
+       subtitle = "Data from 2014-01-01 to 2024-10-29, but not countries had full coverage during this period",
+       y = "Events by quarter")
+```
+
+:::
+
+<br>
+
+Myanmar and Afghanistan bear all the patterns of war. But what is surprising is the extent to which Philippine civil society has deteriorated due to damage from the drug war and the resulting political violence. When compared to other countries, their share of protests is very low, lower even than Cambodia. Even as the drug war operations ceased and killings began to drop off sharply, the flavour of political unrest in the Philippines seems deeply changed, with its participatory democracy suffering massive setbacks. They are, after all, the country of both the EDSA revolution and the dictator Marcos.
+
+Let's take a closer look at some countries of interest and narrow down from a ten-year horizon to a five-year one:
+
+<br>
+
+::: {#fig-eventsstream5}
+
+```{r fig.height = 6}
+
+#| label: fig-eventsstream5
+
+event_stream_data |> 
+  mutate(country = fct_relevel(country, most_events_list)) |>
+  filter(country %in% c("Myanmar", "Afghanistan", 
+                        "Philippines", "China", 
+                        "Indonesia", "Vietnam"
+                        ) & 
+           quarter >= "2019-01-01") |>  
+  event_type_streamgraph(events) + 
+  labs(title = "Number of political incidents by event type over time", 
+       subtitle = "Data from 2019-01-01 to 2024-10-29",
+       y = "Events per quarter") + 
+  theme(legend.position = "top", 
+        strip.text = element_text(size = 9)) 
+```
+:::
+
+<br>
+
+From the dramatic decrease in political activity starting in 2020, it would appear that the Vietnamese state has seized the opportunity to presented by COVID to advance state authority and solidify its hold on the country. China saw a more modest reduction in political incidents, and is undergoing an increase in unrest related to labour and wage issues.
+
+Indonesia is has also seen a large increase in political incidents driven by economic woes, increasing state authoritarianism and violations of human rights and environmental and land rights.
+
+In post-genocide Myanmar, with the longstanding civil war with ethnic and communal militias in the background, the population exploded in protests against the Tatmadaw's coup. However, nonviolent means were soon exhausted and the country is now in full civil war.
+
+With the victory of the Taliban, Afghanistan has seen a 96% reduction on conflict fatalities and a 83% drop in conflict events since 2019 levels. However, civil society has by no means recovered, nor does Afghanistan bear any of the hallmarks of a participatory democracy.
+
+<br><br><br>

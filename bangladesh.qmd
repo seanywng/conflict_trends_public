@@ -1,0 +1,339 @@
+---
+title: "Initial notes on conflict in Bangladesh"
+author: "Risk Anticipation Hub"
+date: "19 September 2024"
+toc: true
+toc-location: left
+toc-depth: 4
+format: 
+  html:
+    page-layout: full
+    code-tools: true
+    self-contained: true
+---
+
+```{css, echo=FALSE}
+
+#TOC::before {
+  content: "";
+  display: block;
+  height: 100px;
+  margin: 1em 10px 10px 10px;
+  background-image: url("./plots/UNDP-Logo-Blue-Large-Transparent.png");
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+```
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      fig.width = 9.5)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(patchwork)
+library(scales)
+library(sf)
+library(broom)
+library(treemapify)
+library(kableExtra) 
+library(ggstream)
+library(ggrepel)
+library(ggcorrplot)
+library(tidytext)
+library(ggtext)
+library(widyr)
+library(ggraph)
+library(janitor)
+
+`%out%` <- Negate(`%in%`)
+options(scipen = 100)
+theme_set(theme_light())
+
+bangladesh <- readRDS(here("data", "bangladesh.rds"))
+
+```
+
+
+
+
+## Bangladesh
+
+
+The recent 2024 protests are unique in recent history -- this is apparent from the spike in fatalities in the plots below, which took place almost entirely during Sheikh Hasina's rule -- her second premiership began on 6 January 2009, before ACLED began data collection in Bangladesh.  
+
+In the plots below, the first grey line marks the start of the 2018 quota reform protests, and consequently, movement. The second grey line marks the overturn of the 2018 decision (which was in favour of the protesters) by the Supreme Court. 
+
+However, it should be noted that in contrast to before the 2018 protests, Bangladesh used to have a much higher ratio of riots to protests, though deaths from riots and violence against civilians seem to be a prevalent part of its political landscape. 
+
+<br>
+
+```{r}
+bangladesh |> 
+  group_by(event_type, quarter = floor_date(event_date, unit = "quarter")) |> 
+  summarise(Events = n_distinct(event_id_cnty), 
+            Fatalities = sum(fatalities, na.rm = TRUE), 
+            .groups = "drop") |> 
+  pivot_longer(cols = c(Events, Fatalities), 
+               names_to = "type", 
+               values_to = "value") |>
+  ggplot(aes(x = quarter, y = value)) + 
+  geom_vline(aes(xintercept=as.numeric(as.Date(dmy("17/2/2018")))), linetype=4, colour="black", 
+             alpha = .5, size = .5) +
+  geom_vline(aes(xintercept=as.numeric(as.Date(dmy("1/4/2024")))), linetype=4, colour="black", 
+             alpha = .5, size = .5) +
+  geom_area(aes(fill = event_type), 
+            size = .75, 
+            alpha = .7) + 
+  facet_wrap(~ type, scales = "free_y", ncol = 1) + 
+  scale_y_continuous(labels = comma) + 
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y") + 
+  theme(strip.background = element_rect(fill = "black"), 
+        legend.position = "top") + 
+  labs(x = "", y = "",
+       title = "Conflict events and fatalities in Bangladesh, 2010-2024", 
+       fill = "") + 
+  guides(fill = guide_legend(nrow = 1))
+```
+
+<br>
+
+The driving forces behind these protests and riots is also clear. The plot below has, on the y-axis, words found in descriptions of protests and riots in Bangladesh and on the x-axis, the odds that a word is likely to appear in protest or riot descriptions. The plot has also been faceted to before and after the 2018 quota reform protests to examine if there has been a change in rhetoric and motivating factors behind public dissatisfaction. 
+
+Post-2018, whilst covid topics are predominant, so are words related to the incumbent: `resignation` and `government` are also prominent, in addition to `quota` and `reform`. Quota reform protests did spark larger-scale protests and brought additional grievances against the ruling administration to light. 
+
+<br>
+
+```{r}
+bangladesh_quota_words <- bangladesh |> 
+  filter(event_type %in% c("Protests", "Riots")) |> 
+  mutate(quota = ifelse(event_date <= "2018-02-17", "Pre-2018 protests", "Post-2018 protests")) |> 
+  select(event_id_cnty, notes, quota) |> 
+  unnest_tokens(word, notes) |> 
+  anti_join(stop_words, by = "word") |> 
+  filter(str_detect(word, "[a-z]")) |> 
+  filter(word %out% c("township", "district", "city", "village", 
+                      "region", "town", "coded", "province", "county", 
+                      "pradesh", "prefecture", "regency", 
+                      "barangay", "upazila", "january", "february", 
+                      "march", "april", "may",
+                        "june", "july", "august", "september", "october",
+                        "november", "december", 
+                        "report")) |> 
+  mutate(stem = SnowballC::wordStem(word, language = "porter"))   
+```
+
+```{r}
+bangladesh_quota_words |> 
+  count(word, quota, sort = TRUE) |> 
+  bind_tf_idf(quota, word, n) |> 
+  tidylo::bind_log_odds(quota, word, n) |> 
+  mutate(
+    word_group = case_when(
+      str_detect(
+        word,
+        "worker|arrear|wage|factori|union|kctu|picket|pension|affili|retire|commod|labor|price|cpi|employer|economic|financial|strike|owe|increase|inflation|company|salary|liveli|compensation")
+      ~ "economic",
+      str_detect(word, "tamil|hindu|nadu|indian") ~ "ethnic",
+      str_detect(word, "corona|lockdown|restrict|home|pandem") ~ "covid",
+      str_detect(word, "omni|congress|articl|law|legco|sabha")  ~ "legislation",
+      str_detect(word, "provin|local|farmer|skm|bku|regen|farm|tribal") ~ "rural",
+      str_detect(word, "resignation|awami|government|police|arrest") ~ "incumbent",
+      str_detect(word, "quota|reform") ~ "quota",
+      str_detect(word, "ransacked|editor|media") ~ "riots",
+      str_detect(word, "jei|ics|shibir|bombs|crude|azam") ~ "terrorism",
+      str_detect(word, "blockaders|hartal|ganatantra|bnp|elections") ~ "opposition", 
+      str_detect(word, 
+                 "military|coup|lese|maj|president|release|oli|kpk") 
+      ~ "state", 
+      str_detect(word, "student|university|youth|teacher|education|school") ~ "student", 
+     TRUE ~ "other"),
+    word_group = fct_relevel(word_group, 
+                             c("economic", "disobedience", "ethnic",   
+                               "legislation", "rural", "covid", "kashmir", 
+                               "press", "student", "state", "other"))
+  ) |>
+  filter(word %out% c("front", "conference", "demanding", 
+                      "including", "support", "demand", 
+                      "staged", "protest", "emerging", "sadar", 
+                      "demonstration", "movement", "people", 
+                      "brought", "leaving", "amid", "anti", 
+                      "rally")) |> 
+  arrange(desc(log_odds_weighted)) |> 
+  group_by(quota) |> 
+  slice(1:20) |> 
+  ungroup() |>
+  mutate(quota = fct_rev(quota)) |> 
+  ggplot(aes(x = log_odds_weighted, 
+             y = reorder_within(str_sub(word, 1, 25), 
+                                log_odds_weighted, 
+                                quota))) + 
+  geom_col(aes(fill = word_group)) + 
+  scale_fill_manual(values = c(
+    "state" = "#f8766d",
+    "ethnic" = "#00bf7d",
+    "covid" = "#d89000",
+    "opposition" = "#9590ff",
+    "terrorism" = "#39b600",
+    "kashmir" = "#e76bf3",
+    "riots" = "#00bfc4",
+    "incumbent" = "#7A0403FF",
+    "quota" = "#fde725ff",
+    "other" = "grey50"
+  )) +
+  scale_y_reordered() + 
+  facet_wrap(~ quota, scales = "free") + 
+  labs(title = "Descriptors of protests and riots in Bangladesh, 2010-2024", 
+       y = "", 
+       x = "Log-odds weighted", 
+       fill = "") + 
+  theme(strip.background = element_rect(fill = "black"))
+```
+
+
+```{r}
+bng_protests <- bangladesh |> 
+  filter(event_type %in% c("Protests", "Riots")) |> 
+  mutate(covid = ifelse(event_date >= "2020-03-11", "post-covid", "pre-covid")) |> 
+  select(event_id_cnty, notes, covid) |> 
+  unnest_tokens(word, notes) |> 
+  anti_join(stop_words, by = "word") |> 
+  filter(str_detect(word, "[a-z]")) |> 
+  filter(word %out% c("township", "district", "city", "village", 
+                      "region", "town", "coded", "province", "county", 
+                      "pradesh", "prefecture", "regency", 
+                      "barangay", "upazila", "january", "february", 
+                      "march", "april", "may",
+                        "june", "july", "august", "september", "october",
+                        "november", "december", 
+                        "report")) |> 
+  mutate(stem = SnowballC::wordStem(word, language = "porter")) 
+```
+
+
+```{r eval=FALSE}
+
+set.seed(234)
+
+protest_riot_network_graph_bangladesh <- bng_protests |>
+  filter(str_detect(event_id_cnty, "IDN")) |> 
+  # filter(covid == "post-covid") |> 
+  distinct(event_id_cnty, word) |> 
+  add_count(word) |> 
+  filter(n >= 100) |> 
+  pairwise_cor(word, event_id_cnty, sort = TRUE) |> 
+  filter(correlation >= .15) |> 
+  left_join(
+    acled_protests |> 
+      distinct(event_id_cnty, word) |> 
+      add_count(word) |> 
+      filter(n >= 100) |> 
+      pairwise_count(word, event_id_cnty, sort = TRUE), 
+    by = c("item1", "item2")
+  ) |> 
+  igraph::graph_from_data_frame() %>% 
+  ggraph(layout = "fr") + 
+  geom_edge_link(aes(alpha = correlation, edge_width = n), colour = "lightskyblue2", check_overlap = TRUE) +
+  scale_edge_width_continuous(range = c(.1, 2.5), trans = "log10") +
+  scale_alpha_continuous(range = c(0.01, 0.08)) +
+  geom_node_point(colour = "lightskyblue2", alpha = 0.2, size = .5) +
+  geom_node_text(aes(label = ifelse(name %in% 
+                                        c("myanmar", "laundering", "coronavirus",
+                                          "citizenship", "union", "load", "farm", 
+                                          "prices", "arrears", "palestine", "kashmir", 
+                                          "pension", "fukushima", "majeste",
+                                          "arrested", "oli", "manipur", "korea", 
+                                          "football", "rights", 
+                                          "incumbent", "drivers", "dispute", 
+                                          "papua", "kpk"),
+                                      str_to_title(name),
+                                      "")), 
+                 size = 4.3, 
+                 alpha = .7, 
+                 colour = "goldenrod2") + 
+  geom_node_text(aes(label = name), size = 1.5) + 
+  theme(legend.position = "none", 
+        plot.caption = element_text(hjust = .5)) + 
+  labs(title = "Network graph of protest descriptions in Indonesia 2014-2024", 
+       subtitle = "Line thickness indicates number of events involving those words, line transparency indicates the correlation between words. Selected words highlighted.", 
+       caption = "Source: www.acleddata.com")
+  
+
+ggsave(here("plots", "protest_network_graph_indonesia.png"), 
+       width = 11, height = 7, units = "in", dpi = 300)
+
+```
+
+
+<br><br><br>
+
+
+### Sub-national variations 
+
+```{r}
+bangladesh_admin2 <- bangladesh |>  
+  group_by(admin2) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE), 
+            events = n_distinct(event_id_cnty), 
+            .groups = "drop") |> 
+  arrange(desc(fatalities)) |> 
+  head(20) |> pull(admin2)
+```
+
+
+```{r}
+bangladesh_summary <- bangladesh |>  
+  mutate(quarter = floor_date(event_date, "quarter")) |> 
+  group_by(quarter, admin2) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE), 
+            events = n_distinct(event_id_cnty), 
+            .groups = "drop") |>
+  pivot_longer(cols = c(fatalities, events), 
+               names_to = "type", 
+               values_to = "value") |> 
+  mutate(admin2 = fct_relevel(admin2, bangladesh_admin2), 
+         type = fct_rev(type)) 
+
+bangladesh_summary |> 
+  filter(admin2 %in% c("Dhaka", "Chittagong", "Cox's Bazar", "Jessore")) |> 
+  ggplot(aes(x = quarter, y = value)) + 
+  geom_vline(aes(xintercept=as.numeric(quarter[c(145)])), linetype=4, colour="black", 
+             alpha = .5, 
+             size = .5) +
+  geom_line(aes(colour = type)) + 
+  facet_wrap(~admin2, scales = "free_y") + 
+  scale_x_date(date_breaks = "2 years", label = date_format("%Y")) + 
+  
+  theme(axis.text.x = element_text(size = 5), 
+        strip.background = element_rect(fill = "black")) + 
+  labs(title = "Top 4 districts (admin2) in Bangladesh, political incidents and resulting fatalities", 
+       subtitle = "Grey line marks Rohingya genocide", 
+       y = "", x = "")
+
+```
+
+<br>
+
+Whilst widespread protests and riots and Dhaka are well-known, Cox's Bazaar has also become one of the most dangerous places in Bangladesh. Fatalities per event there and Jessore seem to be higher than in other areas. The genocide and consequent flight of 700,000 Rohingya refugees have no doubt been destabilising for the entire region. 
+
+More testing is needed on how related unrest in Cox's Bazaar is to the rest of the country. 
+
+```{r}
+genocide_t_test <- bangladesh_summary |> 
+  mutate(rohingya = ifelse(quarter < "2017-08-25", 
+                           "pre_genocide", 
+                           "post_genocide")) |> 
+  filter(type == "fatalities") |> 
+  select(-type) |> 
+  group_by(admin2, rohingya) |> 
+  summarise(mean_value = mean(value, na.rm = TRUE), 
+            .groups = "drop") |> 
+  pivot_wider(values_from = mean_value, 
+              names_from = rohingya)  %>%
+  t.test(.$post_genocide, .$pre_genocide, data = .) |> 
+  broom::tidy()
+```
+

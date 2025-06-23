@@ -1,0 +1,6 @@
+---
+title: "Untitled"
+format: html
+---
+
+[![](./plots/asia_pacific_event_types_grey.gif)](https://github.com/risk-anticipation-hub/conflict-trends-asia-pacific/raw/main/plots/asia_pacific_event_types_grey.gif)

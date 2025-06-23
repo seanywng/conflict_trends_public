@@ -1,0 +1,57 @@
+---
+title: "Untitled"
+format: html
+---
+
+
+```{r}
+```
+
+
+```{Python}
+
+from pyspark.sql import SparkSession
+from pyspark.dbutils import DBUtils
+
+spark = SparkSession.builder.getOrCreate()
+dbutils = DBUtils(spark)
+
+database_host = dbutils.secrets.get(scope='warehouse_scope', key='database_host')
+database_port = dbutils.secrets.get(scope='warehouse_scope', key='database_port')
+user = dbutils.secrets.get(scope='warehouse_scope', key='user')
+password = dbutils.secrets.get(scope='warehouse_scope', key='password')
+
+# databases
+database_name_crd = "UNDP_DW_CRD"
+database_name_wb = "UNDP_CRD_CO_DW"
+
+url_crd = f"jdbc:sqlserver://{database_host}:{database_port};databaseName={database_name_crd};"
+url_wb = f"jdbc:sqlserver://{database_host}:{database_port};databaseName={database_name_wb};"
+
+# tables
+wbdf = "CRD_CO_WorldBank_Data"
+wbdim = "CRD_CO_WorldBank_DimSeries"
+wb_dimcountry = "CRD_CO_WorldBank_DimCountries"
+crd_kpi = "dbo.CRD_KPI" 
+dimkpi = "dbo.DimKPI" 
+dimcountry = "dbo.DimCountry"
+dimtm = "dbo.DimTime"
+
+```
+
+The `echo: false` option disables the printing of code (only output is displayed).
+
+
+```{r}
+library(DBI)
+library(RPostgres)
+library(odbc)
+
+con <- DBI::dbConnect(RPostgres::Postgres(),
+                      dbname = "UNDP_DW_CRD",
+                      host = "undp-cb-sqlmi-crd-dev.f1de0fd669a7.database.windows.net",
+                      user = "sqlMLAdmin",
+                      password = odbc::quote_value("=\\>a={}+&BG[,y_bf,x)"),
+                      port = 1433)
+```
+

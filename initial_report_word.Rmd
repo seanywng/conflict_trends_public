@@ -1,0 +1,698 @@
+---
+title: "Initial exploratory data analysis of ACLED-UCDP conflict trends"
+author: "Sean Ng"
+date: "13 June 2024"
+output:
+  word_document:
+    toc: yes
+always_allow_html: yes
+  
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      fig.width = 9.5)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(patchwork)
+library(scales)
+library(sf)
+library(broom)
+library(treemapify)
+library(kableExtra)
+
+`%out%` <- Negate(`%in%`)
+options(scipen = 100)
+theme_set(theme_light())
+
+show_col(viridis_pal(option = "cividis")(8))
+
+```
+
+
+```{r compressed data, message=FALSE}
+
+country_list <- c("Afghanistan", "Bangladesh", "Bhutan", "Cambodia", 
+                  "China", "Fiji", "Hong Kong", "India", "Indonesia", 
+                  "Iran", "North Korea", "South Korea", "Laos", 
+                  "Malaysia", "Maldives", "Mongolia", "Myanmar", 
+                  "Nepal", "Pakistan", "Papua New Guinea", "Philippines", 
+                  "Solomon Islands", "Sri Lanka", "Thailand", "Timor-Leste", 
+                  "Vanuatu", "Vietnam")
+
+actor_codes_acled <- tribble(
+  ~actor_code, ~description, 
+  1, "State Forces", 
+  2, "Rebel Groups", 
+  3, "Political Militias", 
+  4, "Identity Militias", 
+  5, "Rioters",
+  6, "Protesters", 
+  7, "Civilians", 
+  8, "Other Forces"
+)
+
+interaction_codes_acled <- read_csv(here("data", "interaction_codes_acled.csv"))
+
+ged241 <- readRDS(here("data", "ged241.rds"))
+
+acled_filtered <- readRDS(here("data", "acled_filtered.rds"))
+
+
+ged <- ged241 |> 
+  filter(date_start < "2024-01-01" & date_start >= "2014-01-01") |> 
+  mutate(country = case_when(country == "Cambodia (Kampuchea)" ~ "Cambodia", 
+                             country == "Myanmar (Burma)" ~ "Myanmar", 
+                             TRUE ~ country)) |>
+  filter(country %in% country_list)
+
+
+population <- read_csv(here("data", "wdi_population_data.csv")) |> 
+  slice(1:27) |> 
+  janitor::clean_names() %>%
+  mutate(across(matches("_yr"), ~ as.numeric(.))) %>%
+  pivot_longer(cols = x2015_yr2015:x2023_yr2023, 
+               names_to = "year", 
+               values_to = "population") |> 
+  mutate(year = str_sub(year, start = -4, end = -1), 
+         year = as.integer(year)) |> 
+  rename(country = country_name) |> 
+  mutate(country = case_when(str_detect(country, "Korea, Rep.") ~ "South Korea",
+                             str_detect(country, "Korea, Dem. People's Rep.") ~ "North Korea", 
+                             str_detect(country, "Hong Kong SAR, China") ~ "Hong Kong", 
+                             str_detect(country, "Iran, Islamic Rep.") ~ "Iran", 
+                             str_detect(country, "Lao PDR") ~ "Laos", 
+                             country == "Viet Nam" ~ "Vietnam", 
+                             TRUE ~ country))
+
+population_estimates <- crossing(country = population$country, year = 2014:2023) |> 
+  left_join(population |> 
+              select(year, country, population), 
+            by = c("year", "country")) |> 
+  group_by(country) %>% 
+  fill(population, .direction = "updown") 
+
+world_shape <- st_read(here("data", 
+                            "world-administrative-boundaries", 
+                            "world-administrative-boundaries.shp"), 
+                       quiet = TRUE)
+
+myanmar_adm1 <- st_read(here("data", 
+                             "mmr_polbnda2_adm1_mimu_250k", 
+                             "mmr_polbnda2_adm1_mimu_250k.shp"), 
+                        quiet = TRUE) |> 
+  rename(state = ST, 
+        admin1_pcode = ST_PCODE) |> st_as_sf()
+
+
+# country_iso3 <- world_shape |> distinct(name, iso3)
+
+```
+
+
+
+```{r}
+most_events_list <- acled_filtered |> 
+  filter(event_type != "Protest") |> 
+  group_by(country) |> 
+  summarise(events = n()) |> 
+  arrange(desc(events)) |> 
+  pull(country)
+
+most_fatalities_list <- acled_filtered |> 
+  group_by(country) |> 
+  mutate(fatalities = as.numeric(fatalities)) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE)) |> 
+  arrange(desc(fatalities)) |> 
+  filter(fatalities > 10) |> 
+  pull(country)
+
+```
+
+
+# Comparison
+
+### Fatalities
+
+Both ACLED and UCDP data on fatalities are quite highly correlated -- in the cases in which there is overlap in reporting. 
+
+
+
+
+
+```{r}
+fatalities_lm_summary <- acled_filtered |> 
+  filter(event_type != "Protests" & 
+           country %in% ged$country) |> 
+  select(id = event_id_cnty, 
+         fatalities, 
+         country, 
+         event_date, 
+         year) |>
+  mutate(source = "ACLED") |> 
+  rbind(
+    ged |>
+      select(id = relid, country, event_date = date_start, year, fatalities = best) |>
+      mutate(source = "UCDP") 
+  ) |> 
+  group_by(country, source, year) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE), .groups = "drop") |> 
+  pivot_wider(names_from = source, 
+              values_from = fatalities) |> 
+  filter(!is.na(ACLED) & !is.na(UCDP)) |> 
+  nest(data = -country) %>%
+  mutate(model = map(data, ~ lm(ACLED ~ UCDP, data = .))) %>%
+  mutate(tidy_summary = map(model, tidy)) %>%
+  unnest(tidy_summary) |> 
+  filter(term != "(Intercept)") |> 
+  filter(!is.nan(p.value) & !is.na(p.value)) |> 
+  mutate(significant = ifelse(p.value < .5, 1, 0))
+
+
+```
+
+
+Of the `r fatalities_lm_summary |> nrow()` countries in the Asia-Pacific between 2014 and 2023 for which the data was comparable, `r sum(fatalities_lm_summary$significant)` had a statistically significant relationship between the number of fatalities reported in the ACLED and UCDP datasets: 
+
+<br> 
+
+```{r fig.height=7}
+ged_country_list <- ged |> 
+  group_by(country) |> 
+  summarise(fatalities = sum(best, na.rm = TRUE)) |> 
+  arrange(desc(fatalities)) |> 
+  distinct(country) |> pull()
+
+acled_filtered |> 
+  filter(event_type != "Protests" & 
+           country %in% ged_country_list) |> 
+  select(id = event_id_cnty, 
+         fatalities, 
+         country, 
+         event_date, 
+         year) |>
+  mutate(source = "ACLED") |> 
+  rbind(
+    ged |>
+      filter(country != "Australia") |> 
+      select(id = relid, country, event_date = date_start, year, fatalities = best) |>
+      mutate(source = "UCDP") 
+  ) |> 
+  group_by(country, source, year) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE), .groups = "drop") |> 
+  mutate(country = fct_relevel(country, ged_country_list)) |>
+  ggplot(aes(x = year, y = fatalities)) + 
+  geom_line(aes(colour = source), 
+            size = .7, 
+            alpha = .9) + 
+  facet_wrap(~country, scales = "free_y") +
+  scale_colour_viridis_d(option = "magma", 
+                       begin = .2, end = .7, 
+                       direction = -1) + 
+  theme(axis.text.x = element_text(angle = 45, 
+                                   hjust = 1), 
+        axis.text.y = element_text(size = 4)) + 
+  labs(title = "Fatalities in the ACLED and UCDP datasets, 2014-2023", 
+       subtitle = "Excludes protests", 
+       x = "", y = "Annual fatalities", 
+       colour = "Dataset") + 
+  scale_x_continuous(breaks = c(2014, 2016, 2018, 2020, 2022)) + 
+  scale_y_continuous(labels = comma)
+
+
+  
+
+```
+
+<br>
+
+However, we note that the number of conflict fatalities reported by UCDP are consistently lower, due to a number of factors, which we will discuss later. 
+
+However, this finding illustrates our hypothesis that even when accounting for ACLED's broader coverage of event types (protests), UCDP's coverage of conflicts in the Asia-Pacific is not as comprehensive as that of ACLED. 
+
+We don't really have enough for trends yet, but we can note prominent spikes in fatalities. For instance, Afghanistan had a fairly long lead up to violence peaking in 2021, the subsequent US withdrawal followed by the lessening of tensions. Iran saw a spike of violence coinciding with the 2021-2022 Iranian protests. In Thailand, we see a lessening of tensions from the 2014 coup and its fallout, and the state reasserting itself. And the spike in Sri Lanka in 2019 was related to the 2019 Easter Sunday bombings. 
+
+
+
+<br><br><br>
+
+### Sources
+
+```{r}
+acled_sources <- acled_filtered |>
+  select(event_id_cnty, country, event_date, source, notes) |>
+  # This is crazy, this is too many sources
+  # However the curation of their sources has tremendously improved
+  separate(source, sep = "; ", into = paste("source", 1:31, sep = "_")) |> 
+  pivot_longer(cols = c(source_1:source_31), names_to = "ignore", values_to = "source") %>% 
+  filter(!is.na(source)) |> 
+  select(-ignore) |> 
+  group_by(event_id_cnty) |> 
+  mutate(source_count = n()) |> 
+  ungroup() 
+
+ged_sources <- read_csv(here("data", "ged_sources.csv"))
+
+```
+
+```{r ged-sources-original, eval=FALSE}
+ged_sources <-  ged |> 
+  select(id, source_office) |> 
+  # A lot of strange repeats
+  separate(source_office, sep = ";", into = paste0("source_", 1:6), remove = FALSE) |> 
+  pivot_longer(cols = c(source_1:source_6), 
+               names_to = "remove", 
+               values_to = "source") |> 
+  select(-remove) |> 
+  filter(!is.na(source)) |> 
+  mutate(count = 1) |> 
+  group_by(source, id) |> 
+  summarise(count = sum(count), .groups = "drop") |> 
+  select(-count) 
+
+# Separating into two parts because the part above throws an error
+# See, GED doesn't clean their sources as well as ACLED
+ged_sources <- ged_sources |> 
+  count(id, source) |> 
+  mutate(source = case_when(source %in% c("AFP", "Agence Frace Presse") ~ "Agence France Presse",
+                            source == "Aljazeera" ~ "Al Jazeera", 
+                            source == "Al Jazeera English" ~ "Al Jazeera", 
+                            source == "Amnesty" ~ "Amnesty International", 
+                            source == "Antara" ~ "Antara News", 
+                            source %in% c("Associated Press Newswires", 
+                                          "AP", "AP News", "The Associated Press") ~ 
+                              "Associated Press",
+                            str_detect(source, "BBC Monitoring") ~ "BBC Monitoring", 
+                            source %in% c("BBC News", "BBC News Asia", "BBC News World") ~ "BBC", 
+                            source %in% c("BNI", "BNI online", "Burma News International") ~ 
+                              "BNI Multimedia Group", 
+                            source == "BenarNews" ~ "Benar News", 
+                            source == "Burmalink" ~ "Burma Link", 
+                            source == "CNN Indonesia" ~ "CNN", 
+                            str_detect(source, "Crisis Watch|Crsis Watch|Crisiswatch") ~ 
+                              "CrisisWatch", 
+                            source == "Daily Exelsior" ~ "Daily Excelsior", 
+                            source == "DhakaTribune" ~ "Dhaka Tribune", 
+                            source == "Dwan" ~ "Dawn", 
+                            str_detect(source, "Eleven") ~ "Eleven Media Group", 
+                            source == "Forify Rights" ~ "Fortify Rights", 
+                            str_detect(source, "Free Burma Ran") ~ "Free Burma Rangers", 
+                            source == "HRW" ~ "Human Rights Watch", 
+                            source %in% c("Global New Lights of Myanmar", 
+                                          "Global light of Myanmar", 
+                                          "Global New Light Of Myanmar") ~ 
+                              "Global New Light of Myanmar", 
+                            str_detect(source, "ICG|International Crisis Group") ~ 
+                              "International Crisis Group", 
+                            source %in% c("India Express", "The Indian Epxress") ~ 
+                              "Indian Express", 
+                            str_detect(source, "International Security") ~ 
+                              "International Security",
+                            str_detect(source, "Kachin News") ~ 
+                              "Kachin News Group",
+                            str_detect(source, "Kachin Women's Association") ~ 
+                              "Kachin Women's Association Thailand",
+                            str_detect(source, "Kantarawaddy") ~ 
+                              "Kantarawaddy Times",
+                            str_detect(source, "Kachin News") ~ 
+                              "Kachin News Group",
+                            str_detect(source, "Mizzima") ~ 
+                              "Mizzima",
+                            source == "Mon News" ~ "Mon News Agency", 
+                            source == "Myanmar NowShan Human Rights Foundation" ~ 
+                              "Shan Human Rights Foundation", 
+                            str_detect(source, "Myanmar Peace Monitor|mmpeacemonitor|Mmpeacemonitor") ~ 
+                              "Myanmar Peace Monitor", 
+                            source == "Narinjara via BNI Multimedia Group" ~ "Narinjara News", 
+                            str_detect(source, "SATP|SATp|STP|satp|sato|STp") ~ 
+                              "South Asia Terrorism Portal", 
+                            str_detect(source, "PIPS Pakistan Security Report") ~ 
+                              "PIPS Pakistan Security Report", 
+                            source == "PNA" ~ "PNA (Philippines News Agency)", 
+                            str_detect(source, "PSLF|TNLA|pslf") ~ "PSLF/TNLA", 
+                            source == "Pajhwok News" ~ "Pajhwok Afghan News", 
+                            str_detect(source, "Radio New Zealand") ~ "Radio New Zealand", 
+                            str_detect(source, "Samaa") ~ "Samaa TV", 
+                            source %in% c("Scroll India", "Scroll (India)") ~ "Scroll.in", 
+                            source %in% c("Tempo", "Tempo Indonesia", 
+                                          "Tempco News", "Tempo News") ~ "Tempo.co", 
+                            str_detect(source, "Than Lwin Times") ~ "Than Lwin Times", 
+                            source == "The Bureau of Investigate Journalism" ~ 
+                              "The Bureau of Investigative Journalism",
+                            source == "The Canadian Press - Broadcast wire" ~ 
+                              "The Canadian Press", 
+                            source %in% c("The Irradwaddy", "The Irrawaddi", "The Irrawaddy", 
+                                          "The Irrawaddy Online", "The Irrawady", "The Irrawassy", 
+                                          "The rrawaddy", "he Irrawaddy Online", "Irrawaddy", 
+                                          "The Irrawaday") ~ 
+                              "The Irrawaddy", 
+                            source == "The Nation Thailand" ~ 
+                              "The Nation",
+                            source == "The New Yprk Times" ~ "The New York Times", 
+                            source %in% c("The News (Pakistan)") ~ "The News International",
+                            source == "The Patriot ndia" ~ "The Patriot India",
+                            source == "The Print (India)" ~ "The Print", 
+                            source == "The Shan Herald Agency for News" ~ 
+                              "Shan Herald Agency for News", 
+                            source == "The Stateless Rohinghya" ~ "The Stateless Rohingya", 
+                            str_detect(source, "Times of India") ~ "The Times of India", 
+                            source == "The Wall Street Journal Online" ~ "The Wall Street Journal", 
+                            source %in% c("The Wire", "thewire.in", "Wire") ~ "Wire (India)", 
+                            source %in% c("United Nations Human Rights Council",
+                                          "Human Rights Council") ~ 
+                              "UN Human Rights Council", 
+                            str_detect(source, "HIGH COMMISSIONER FOR HUMAN RIGHTS") ~ "UN OHCHR", 
+                            source == "Voi" ~ "VOI.id", 
+                            str_detect(source, "Xinhua") ~ "Xinhua",
+                            source == "Zee News India" ~ "Zee News (India)", 
+                            source %in% c("bdnews´24.com", "bdnews24.com") ~ "BD News24",
+                            source == "indiatoday.in" ~ "India Today", 
+                            source == "www.thehindu.com" ~ "The Hindu", 
+                            source == "www,thequint.com" ~ "The Quint",
+                            source == "the Balochistan Post" ~ "The Balochistan Post",
+                            source == "www.newindianexpress.com"  ~ "New Indian Express",
+                            str_detect(source, "ABS-CBN") ~ "ABS-CBN",
+                            str_detect(source, "Antara News En") ~ "Antara News", 
+                            str_detect(source, "ATP Maharasthtra|Chhattisgarh|Jharkhand") ~ 
+                              "South Asia Terrorism Portal",
+                            source == "Burma Free Rangers" ~ "Free Burma Rangers", 
+                            source == "India TodayNE" ~ "India Today", 
+                            source == "Philippine Daily Inquirer" ~ "Inquirer.net", 
+                            source == "RFA" ~ "Radio Free Asia", 
+                            source %in% c("SAP", "ATP", "SAT") ~ "South Asia Terrorism Portal",
+                            str_detect(source, "Thaiger") ~ "The Thaiger", 
+                            source == "The New Indian Express" ~ "New Indian Express", 
+                            source == "business-standard.com" ~ "Business Standard", 
+                            source == "Dawn News" ~ "Dawn (Pakistan)", 
+                            str_detect(source, "Kachin Women") ~ 
+                              "Kachin Women's Association Thailand",
+                            source == "hindustantimes" ~ "Hindustan Times", 
+                            str_detect(source, "Voice of America") ~ "VOA", 
+                            TRUE ~ source)) |> 
+  mutate(source = str_trim(source)) |> 
+  group_by(source, id) |> 
+  summarise(num_sources = sum(n), .groups = "drop") |> 
+  left_join(ged |> 
+              select(id, year, country, source_headline), 
+            by = c("id"))
+
+
+ged_sources |> write_csv(here("data", "ged_sources.csv"))
+  
+```
+
+
+
+```{r fig.height=7}
+
+ged_source_order <- ged_sources |> 
+  group_by(country) |> 
+  summarise(num_sources = n_distinct(source)) |> 
+  arrange(desc(num_sources)) |> 
+  pull(country)
+
+acled_sources |> 
+  filter(country %in% ged_source_order) |> 
+  mutate(event_date = as.Date(event_date, "%d %B %Y"), 
+         year = year(event_date)) |> 
+  group_by(country, year) |> 
+  summarise(num_sources = n_distinct(source), .groups = "drop") |> 
+  mutate(dataset = "ACLED") |>
+  rbind(
+    ged_sources |>
+      group_by(country, year) |>
+      summarise(num_sources = n_distinct(source), .groups = "drop") |> 
+      mutate(dataset = "UCDP")
+  ) |> 
+  mutate(country = fct_relevel(country, ged_source_order)) |> 
+  ggplot(aes(x = year, y = num_sources, fill = dataset)) + 
+  geom_col() +
+  facet_wrap(~ country) + 
+  scale_fill_viridis_d(option = "cividis", 
+                       begin = .2, end = .7,
+                       direction = -1) +
+  theme(axis.text.x = element_text(angle = 45, 
+                                   hjust = 1)) + 
+  labs(title = "Sources used in the ACLED and UCDP datasets (2014-2023)", 
+       x = "", y = "Number of distinct sources",
+       fill = "Dataset") + 
+  scale_x_continuous(breaks = c(2014, 2016, 2018, 2020, 2022))
+  
+```
+<br>
+
+```{r}
+ged_sources_top10 <- ged_sources |> 
+  count(source, sort = TRUE) |> 
+  mutate(pc = round(n / sum(n) * 100, digits = 2)) |> 
+  arrange(desc(pc)) |> 
+  slice(1:10) %>%
+  {sum(.$pc)}
+```
+
+
+We note that ACLED, in general, draws from a much wider range of sources than UCDP. Additionally, from the treemaps below, we see that not only does ACLED use more sources than UCDP, UCDP is also highly reliant on a relatively small number of sources: the top 10 sources in the UCDP dataset are responsible for `r paste0(ged_sources_top10, "%")` of all source articles. 
+
+
+
+
+```{r}
+ged_sources |> 
+  count(source, sort = TRUE) |> 
+  mutate(pc = paste0(round(n / sum(n) * 100, digits = 2), "%")) |> 
+  ggplot(aes(area = n)) + 
+  geom_treemap(fill = "#16396dff") + 
+  geom_treemap_text(aes(label = pc), 
+                    colour = "white") +
+  labs(title = "Treemap of GED articles by source", 
+       subtitle = "% of source articles attributed to source") 
+```
+<br>
+
+
+```{r}
+acled_sources_top10 <- acled_sources |> 
+  count(source, sort = TRUE) |> 
+  mutate(pc = round(n / sum(n) * 100, digits = 2)) |> 
+  arrange(desc(pc)) |> 
+  slice(1:10) %>%
+  {sum(.$pc)}
+
+
+```
+
+
+Comparatively, the ACLED dataset is much more diverse. The top 10 sources in ACLED issued `r paste0(acled_sources_top10, "%")` of all source articles. 
+
+<br>
+
+```{r}
+acled_sources |> 
+  count(source, sort = TRUE) |> 
+  mutate(pc = paste0(round(n / sum(n) * 100, digits = 2), "%")) |> 
+  ggplot(aes(area = n)) + 
+  geom_treemap(fill = "#a69d75ff") + 
+  geom_treemap_text(aes(label = pc), 
+                    colour = "white") +
+  labs(title = "Treemap of ACLED articles by source", 
+       subtitle = "% of source articles attributed to source") 
+```
+
+
+<br><br><br>
+
+### Types of violence
+
+ACLED is an event-based dataset, as such, comparing event types does not really work out. Instead, we will undertake the comparison using `interaction type`, which are analogous to UCDP's `type of violence`.  variable. 
+
+
+<br>
+
+
+
+```{r}
+acled_filtered |> 
+  mutate(interaction = parse_number(interaction)) |> 
+  left_join(interaction_codes_acled, 
+            by = c("interaction" = "interaction_code")) |> 
+  mutate(ged_violence_type = 
+           case_when(
+             str_detect(interaction_simple, 
+                        "Sole|Civilians|State Forces Versus Protesters") ~ "one-sided", 
+             str_detect(interaction_simple, "State Forces|Police") ~ "state-based",
+             TRUE ~ "non-state")) |> 
+  # filter(year == 2022 & country == "Myanmar") |> 
+  mutate(acled_interaction_type = 
+           fct_lump(interaction_simple, 11)) |>
+  mutate(ged_violence_type = fct_rev(str_to_title(ged_violence_type))) |>
+  count(ged_violence_type, acled_interaction_type, wt = fatalities, name = "acled_fatalities") |>
+  group_by(ged_violence_type) |> 
+  arrange(desc(acled_fatalities), .by_group = TRUE) |>
+  filter(acled_fatalities > 10) |> 
+  select(GED_type = ged_violence_type, 
+         ACLED_type = acled_interaction_type, 
+         ACLED_fatalities = acled_fatalities) |> 
+  mutate(ACLED_fatalities = format(ACLED_fatalities, big.mark = ",")) |> 
+  pander::pander()
+
+```
+
+
+<br>
+
+Overall, there is just much less detail in the UCDP dataset. The map below mirrors another done by [Raleigh, Kishi and Linke](https://www.nature.com/articles/s41599-023-01559-4/figures/1) where they noted that UCDP did not collect data on incidents related to the Philippine drug war. 
+
+The ACLED map below already excludes protest events. With the ACLED data, the linear patterns of violence become very clear, as various armed groups fought for the control of major roads and highways. ACLED also picked up on the violence around the borders with India and China, something which UCDP did not. 
+
+<br>
+
+
+![](./plots/myanmar_combined_2022.png)
+
+<br><br><br>
+
+### Actors 
+
+```{r acled-and-ged-actors}
+
+acled_actors <- rbind(
+  acled_filtered |>
+    select(actor = actor1, actor_code = inter1, id = event_id_cnty),
+  
+  acled_filtered |> 
+    select(actor = actor2, actor_code = inter2, id = event_id_cnty)
+  
+  ) |> 
+  left_join(acled_filtered |> 
+              select(id = event_id_cnty, interaction, event_date, country, fatalities), 
+            by = c("id"),
+            relationship = "many-to-many") |> 
+  mutate(event_date = as.Date(event_date, "%d %B %Y"), 
+         year = year(event_date), 
+         actor_code = as.double(actor_code)) |> 
+  left_join(actor_codes_acled |>
+              rename(actor_description = description), 
+            by = "actor_code", 
+            relationship = "many-to-many") |> 
+  mutate(source = "ACLED")
+
+ged_actors <- rbind(
+  ged |> 
+    select(actor = side_a, actor_code = side_a_new_id, id = relid), 
+  
+  ged |> 
+    select(actor = side_b, actor_code = side_b_new_id, id = relid)
+) |> 
+  
+  left_join(
+    ged |> 
+      select(id = relid, year, event_date = date_start), 
+    by = c("id"),
+    relationship = "many-to-many"
+  ) |> 
+  mutate(actor_description = "", 
+         source = "UCDP")
+  
+```
+
+
+Perhaps one of the most easily identifiable differences is that conflict actors within the ACLED dataset are classified into broader groups, whereas UCDP data is not, preventing plots like these: 
+
+<br>
+
+
+
+```{r fig.height = 7}
+
+acled_actors_order <- acled_actors |> 
+  group_by(country) |> 
+  summarise(num_actors = n_distinct(actor)) |> 
+  arrange(desc(num_actors)) |> 
+  slice(1:20) |> 
+  pull(country)
+
+acled_actors |> 
+  group_by(country, year, actor_description) |> 
+  summarise(num_actors = n_distinct(actor), .groups = "drop") |> 
+  filter(!is.na(actor_description) & 
+           country %in% acled_actors_order) |> 
+  mutate(country = fct_relevel(country, acled_actors_order)) |> 
+  ggplot(aes(x = year, y = num_actors, group = actor_description)) + 
+  geom_line(aes(colour = actor_description), 
+            size = .7, alpha = .7) + 
+  facet_wrap(~country, scales = "free_y") + 
+  scale_colour_viridis_d(option = "turbo") + 
+  scale_x_continuous(breaks = c(2014, 2016, 2018, 2020, 2022)) + 
+  scale_y_continuous(labels = number_format(scale = 1)) + 
+  theme(axis.text.x = element_text(hjust = 1, angle = 45), 
+        legend.position = "top", 
+        legend.text = element_text(size = 5), 
+        legend.key.width = unit(.3, "cm"), 
+        legend.key.height = unit(.3, "cm"), 
+        legend.margin=margin(t = 0, unit='cm')) + 
+  labs(title = "ACLED: Breakdown of conflict actor types in the Asia-Pacific, 2014-2023", 
+       subtitle = "Only includes the top 20 countries in terms of conflict actors", 
+       x = "", y = "Number of actors", 
+       colour = "") + 
+  guides(colour = guide_legend(nrow = 1), 
+         colour = guide_legend(override.aes = list(size = 2))) + 
+  theme(
+    axis.text.y = element_text(size = 5)
+  )
+
+# Keep countries with low actor counts? 
+```
+
+<br>
+
+From the plot above, we observe that India, Pakistan, Indonesia, Bangladesh and Papua New Guinea all experience spikes in the activity of identity militias -- this group includes a large number of tribal and communal militias. 
+
+In Thailand, China, Cambodia and the Philippines, the predominance of state actors indicate higher levels of state violence. In comparison, South Korea's uptick in protest activity was not accompanied by an increase in state violence.
+
+Myanmar is in open civil war and has seen a massive proliferation of political militias, who, in many cases have broader aims compared to identity militias. Let's take a closer look and put the y-axis on a log scale so it's easier to interpret: 
+
+<br>
+
+
+```{r}
+acled_actors |> 
+  filter(country == "Myanmar") |> 
+  group_by(year, actor_description) |> 
+  summarise(num_actors = n_distinct(actor), .groups = "drop") |> 
+  filter(!is.na(actor_description)) |> 
+  ggplot(aes(x = year, y = num_actors, groups = actor_description)) + 
+  geom_line(aes(colour = actor_description), 
+            size = .7, alpha = .7) +
+  scale_colour_viridis_d(option = "turbo") + 
+  scale_x_date(breaks = "1 year") + 
+  scale_x_continuous(breaks = seq(2014, 2023, 1)) + 
+  scale_y_log10(labels = comma, 
+                breaks = c(0, 1, 3, 10, 30, 100, 300, 1000)) + 
+  theme(axis.text.x = element_text(hjust = 1, angle = 45), 
+        legend.position = "top", 
+        legend.text = element_text(size = 5), 
+        legend.key.width = unit(.3, "cm"), 
+        legend.key.height = unit(.3, "cm"), 
+        legend.margin=margin(t = 0, unit='cm')) + 
+  labs(title = "ACLED: Breakdown of conflict actor types in the Asia-Pacific, 2014-2023", 
+       x = "", y = "Number of actors", 
+       colour = "") + 
+  guides(colour = guide_legend(nrow = 1), 
+         colour = guide_legend(override.aes = list(size = 2))) + 
+  theme(
+    axis.text.y = element_text(size = 5)
+    
+  )
+ 
+```
+
+
+
+
+
+
+
+

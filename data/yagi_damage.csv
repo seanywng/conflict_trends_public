@@ -1,0 +1,1030 @@
+damage_indicators,sector,unit,adm1_vi,value,adm1_en,adm1_pcode
+Number of deaths,Human lives,people,Hà Giang,2,Ha Giang,VN201
+Number of deaths,Human lives,people,Cao Bằng,55,Cao Bang,VN203
+Number of deaths,Human lives,people,Lào Cai,135,Lao Cai,VN205
+Number of deaths,Human lives,people,Bắc Kạn,NA,Bac Kan,VN207
+Number of deaths,Human lives,people,Lạng Sơn,3,Lang Son,VN209
+Number of deaths,Human lives,people,Điện Biên,NA,Dien Bien,VN302
+Number of deaths,Human lives,people,Tuyên Quang,5,Tuyen Quang,VN211
+Number of deaths,Human lives,people,Yên Bái,54,Yen Bai,VN213
+Number of deaths,Human lives,people,Thái Nguyên,8,Thai Nguyen,VN215
+Number of deaths,Human lives,people,Phú Thọ,6,Phu Tho,VN217
+Number of deaths,Human lives,people,Bắc Giang,2,Bac Giang,VN221
+Number of deaths,Human lives,people,Lai Châu,1,Lai Chau,VN301
+Number of deaths,Human lives,people,Sơn La,NA,Son La,VN303
+Number of deaths,Human lives,people,Hòa Bình,7,Hoa Binh,VN305
+Number of deaths,Human lives,people,Hà Nội,1,Ha Noi,VN101
+Number of deaths,Human lives,people,Hải Phòng,2,Hai Phong city,VN103
+Number of deaths,Human lives,people,Quảng Ninh,29,Quang Ninh,VN225
+Number of deaths,Human lives,people,Hải Dương,8,Hai Duong,VN107
+Number of deaths,Human lives,people,Hưng Yên,NA,Hung Yen,VN109
+Number of deaths,Human lives,people,Vĩnh Phúc,2,Vinh Phuc,VN104
+Number of deaths,Human lives,people,Bắc Ninh,NA,Bac Ninh,VN106
+Number of deaths,Human lives,people,Hà Nam,NA,Ha Nam,VN111
+Number of deaths,Human lives,people,Ninh Bình,NA,Ninh Binh,VN117
+Number of deaths,Human lives,people,Thái Bình,NA,Thai Binh,VN115
+Number of deaths,Human lives,people,Nam Định,NA,Nam Dinh,VN113
+Number of deaths,Human lives,people,Thanh Hóa,1,Thanh Hoa,VN401
+Number of missing people,Human lives,people,Hà Giang,NA,Ha Giang,VN201
+Number of missing people,Human lives,people,Cao Bằng,3,Cao Bang,VN203
+Number of missing people,Human lives,people,Lào Cai,16,Lao Cai,VN205
+Number of missing people,Human lives,people,Bắc Kạn,NA,Bac Kan,VN207
+Number of missing people,Human lives,people,Lạng Sơn,NA,Lang Son,VN209
+Number of missing people,Human lives,people,Điện Biên,NA,Dien Bien,VN302
+Number of missing people,Human lives,people,Tuyên Quang,NA,Tuyen Quang,VN211
+Number of missing people,Human lives,people,Yên Bái,0,Yen Bai,VN213
+Number of missing people,Human lives,people,Thái Nguyên,NA,Thai Nguyen,VN215
+Number of missing people,Human lives,people,Phú Thọ,4,Phu Tho,VN217
+Number of missing people,Human lives,people,Bắc Giang,NA,Bac Giang,VN221
+Number of missing people,Human lives,people,Lai Châu,NA,Lai Chau,VN301
+Number of missing people,Human lives,people,Sơn La,1,Son La,VN303
+Number of missing people,Human lives,people,Hòa Bình,NA,Hoa Binh,VN305
+Number of missing people,Human lives,people,Hà Nội,NA,Ha Noi,VN101
+Number of missing people,Human lives,people,Hải Phòng,NA,Hai Phong city,VN103
+Number of missing people,Human lives,people,Quảng Ninh,NA,Quang Ninh,VN225
+Number of missing people,Human lives,people,Hải Dương,NA,Hai Duong,VN107
+Number of missing people,Human lives,people,Hưng Yên,NA,Hung Yen,VN109
+Number of missing people,Human lives,people,Vĩnh Phúc,NA,Vinh Phuc,VN104
+Number of missing people,Human lives,people,Bắc Ninh,NA,Bac Ninh,VN106
+Number of missing people,Human lives,people,Hà Nam,NA,Ha Nam,VN111
+Number of missing people,Human lives,people,Ninh Bình,NA,Ninh Binh,VN117
+Number of missing people,Human lives,people,Thái Bình,NA,Thai Binh,VN115
+Number of missing people,Human lives,people,Nam Định,NA,Nam Dinh,VN113
+Number of missing people,Human lives,people,Thanh Hóa,NA,Thanh Hoa,VN401
+Number of injured people,Human lives,people,Hà Giang,1,Ha Giang,VN201
+Number of injured people,Human lives,people,Cao Bằng,19,Cao Bang,VN203
+Number of injured people,Human lives,people,Lào Cai,88,Lao Cai,VN205
+Number of injured people,Human lives,people,Bắc Kạn,4,Bac Kan,VN207
+Number of injured people,Human lives,people,Lạng Sơn,10,Lang Son,VN209
+Number of injured people,Human lives,people,Điện Biên,NA,Dien Bien,VN302
+Number of injured people,Human lives,people,Tuyên Quang,NA,Tuyen Quang,VN211
+Number of injured people,Human lives,people,Yên Bái,42,Yen Bai,VN213
+Number of injured people,Human lives,people,Thái Nguyên,NA,Thai Nguyen,VN215
+Number of injured people,Human lives,people,Phú Thọ,8,Phu Tho,VN217
+Number of injured people,Human lives,people,Bắc Giang,15,Bac Giang,VN221
+Number of injured people,Human lives,people,Lai Châu,NA,Lai Chau,VN301
+Number of injured people,Human lives,people,Sơn La,NA,Son La,VN303
+Number of injured people,Human lives,people,Hòa Bình,2,Hoa Binh,VN305
+Number of injured people,Human lives,people,Hà Nội,10,Ha Noi,VN101
+Number of injured people,Human lives,people,Hải Phòng,67,Hai Phong city,VN103
+Number of injured people,Human lives,people,Quảng Ninh,1609,Quang Ninh,VN225
+Number of injured people,Human lives,people,Hải Dương,41,Hai Duong,VN107
+Number of injured people,Human lives,people,Hưng Yên,6,Hung Yen,VN109
+Number of injured people,Human lives,people,Vĩnh Phúc,2,Vinh Phuc,VN104
+Number of injured people,Human lives,people,Bắc Ninh,52,Bac Ninh,VN106
+Number of injured people,Human lives,people,Hà Nam,NA,Ha Nam,VN111
+Number of injured people,Human lives,people,Ninh Bình,NA,Ninh Binh,VN117
+Number of injured people,Human lives,people,Thái Bình,NA,Thai Binh,VN115
+Number of injured people,Human lives,people,Nam Định,NA,Nam Dinh,VN113
+Number of injured people,Human lives,people,Thanh Hóa,2,Thanh Hoa,VN401
+Number of affected households,Human lives,households,Hà Giang,NA,Ha Giang,VN201
+Number of affected households,Human lives,households,Cao Bằng,NA,Cao Bang,VN203
+Number of affected households,Human lives,households,Lào Cai,6262,Lao Cai,VN205
+Number of affected households,Human lives,households,Bắc Kạn,NA,Bac Kan,VN207
+Number of affected households,Human lives,households,Lạng Sơn,4473,Lang Son,VN209
+Number of affected households,Human lives,households,Điện Biên,NA,Dien Bien,VN302
+Number of affected households,Human lives,households,Tuyên Quang,NA,Tuyen Quang,VN211
+Number of affected households,Human lives,households,Yên Bái,30000,Yen Bai,VN213
+Number of affected households,Human lives,households,Thái Nguyên,NA,Thai Nguyen,VN215
+Number of affected households,Human lives,households,Phú Thọ,NA,Phu Tho,VN217
+Number of affected households,Human lives,households,Bắc Giang,NA,Bac Giang,VN221
+Number of affected households,Human lives,households,Lai Châu,NA,Lai Chau,VN301
+Number of affected households,Human lives,households,Sơn La,NA,Son La,VN303
+Number of affected households,Human lives,households,Hòa Bình,2300,Hoa Binh,VN305
+Number of affected households,Human lives,households,Hà Nội,NA,Ha Noi,VN101
+Number of affected households,Human lives,households,Hải Phòng,NA,Hai Phong city,VN103
+Number of affected households,Human lives,households,Quảng Ninh,NA,Quang Ninh,VN225
+Number of affected households,Human lives,households,Hải Dương,4138,Hai Duong,VN107
+Number of affected households,Human lives,households,Hưng Yên,NA,Hung Yen,VN109
+Number of affected households,Human lives,households,Vĩnh Phúc,NA,Vinh Phuc,VN104
+Number of affected households,Human lives,households,Bắc Ninh,NA,Bac Ninh,VN106
+Number of affected households,Human lives,households,Hà Nam,13396,Ha Nam,VN111
+Number of affected households,Human lives,households,Ninh Bình,NA,Ninh Binh,VN117
+Number of affected households,Human lives,households,Thái Bình,3870,Thai Binh,VN115
+Number of affected households,Human lives,households,Nam Định,NA,Nam Dinh,VN113
+Number of affected households,Human lives,households,Thanh Hóa,1040,Thanh Hoa,VN401
+Number of people affected,Human lives,people,Hà Giang,NA,Ha Giang,VN201
+Number of people affected,Human lives,people,Cao Bằng,NA,Cao Bang,VN203
+Number of people affected,Human lives,people,Lào Cai,27315,Lao Cai,VN205
+Number of people affected,Human lives,people,Bắc Kạn,8000,Bac Kan,VN207
+Number of people affected,Human lives,people,Lạng Sơn,NA,Lang Son,VN209
+Number of people affected,Human lives,people,Điện Biên,NA,Dien Bien,VN302
+Number of people affected,Human lives,people,Tuyên Quang,NA,Tuyen Quang,VN211
+Number of people affected,Human lives,people,Yên Bái,123000,Yen Bai,VN213
+Number of people affected,Human lives,people,Thái Nguyên,NA,Thai Nguyen,VN215
+Number of people affected,Human lives,people,Phú Thọ,NA,Phu Tho,VN217
+Number of people affected,Human lives,people,Bắc Giang,NA,Bac Giang,VN221
+Number of people affected,Human lives,people,Lai Châu,NA,Lai Chau,VN301
+Number of people affected,Human lives,people,Sơn La,NA,Son La,VN303
+Number of people affected,Human lives,people,Hòa Bình,NA,Hoa Binh,VN305
+Number of people affected,Human lives,people,Hà Nội,78455,Ha Noi,VN101
+Number of people affected,Human lives,people,Hải Phòng,NA,Hai Phong city,VN103
+Number of people affected,Human lives,people,Quảng Ninh,NA,Quang Ninh,VN225
+Number of people affected,Human lives,people,Hải Dương,12293,Hai Duong,VN107
+Number of people affected,Human lives,people,Hưng Yên,NA,Hung Yen,VN109
+Number of people affected,Human lives,people,Vĩnh Phúc,NA,Vinh Phuc,VN104
+Number of people affected,Human lives,people,Bắc Ninh,NA,Bac Ninh,VN106
+Number of people affected,Human lives,people,Hà Nam,46090,Ha Nam,VN111
+Number of people affected,Human lives,people,Ninh Bình,NA,Ninh Binh,VN117
+Number of people affected,Human lives,people,Thái Bình,9907,Thai Binh,VN115
+Number of people affected,Human lives,people,Nam Định,NA,Nam Dinh,VN113
+Number of people affected,Human lives,people,Thanh Hóa,4339,Thanh Hoa,VN401
+Complete damage (over 70%),Housing,unit,Hà Giang,28,Ha Giang,VN201
+Complete damage (over 70%),Housing,unit,Cao Bằng,68,Cao Bang,VN203
+Complete damage (over 70%),Housing,unit,Lào Cai,849,Lao Cai,VN205
+Complete damage (over 70%),Housing,unit,Bắc Kạn,20,Bac Kan,VN207
+Complete damage (over 70%),Housing,unit,Lạng Sơn,20,Lang Son,VN209
+Complete damage (over 70%),Housing,unit,Điện Biên,NA,Dien Bien,VN302
+Complete damage (over 70%),Housing,unit,Tuyên Quang,72,Tuyen Quang,VN211
+Complete damage (over 70%),Housing,unit,Yên Bái,326,Yen Bai,VN213
+Complete damage (over 70%),Housing,unit,Thái Nguyên,50,Thai Nguyen,VN215
+Complete damage (over 70%),Housing,unit,Phú Thọ,19,Phu Tho,VN217
+Complete damage (over 70%),Housing,unit,Bắc Giang,NA,Bac Giang,VN221
+Complete damage (over 70%),Housing,unit,Lai Châu,NA,Lai Chau,VN301
+Complete damage (over 70%),Housing,unit,Sơn La,23,Son La,VN303
+Complete damage (over 70%),Housing,unit,Hòa Bình,6,Hoa Binh,VN305
+Complete damage (over 70%),Housing,unit,Hà Nội,NA,Ha Noi,VN101
+Complete damage (over 70%),Housing,unit,Hải Phòng,NA,Hai Phong city,VN103
+Complete damage (over 70%),Housing,unit,Quảng Ninh,254,Quang Ninh,VN225
+Complete damage (over 70%),Housing,unit,Hải Dương,2563,Hai Duong,VN107
+Complete damage (over 70%),Housing,unit,Hưng Yên,NA,Hung Yen,VN109
+Complete damage (over 70%),Housing,unit,Vĩnh Phúc,6,Vinh Phuc,VN104
+Complete damage (over 70%),Housing,unit,Bắc Ninh,NA,Bac Ninh,VN106
+Complete damage (over 70%),Housing,unit,Hà Nam,21,Ha Nam,VN111
+Complete damage (over 70%),Housing,unit,Ninh Bình,NA,Ninh Binh,VN117
+Complete damage (over 70%),Housing,unit,Thái Bình,252,Thai Binh,VN115
+Complete damage (over 70%),Housing,unit,Nam Định,NA,Nam Dinh,VN113
+Complete damage (over 70%),Housing,unit,Thanh Hóa,22,Thanh Hoa,VN401
+Very heavy damage (from 50% -70%),Housing,unit,Hà Giang,NA,Ha Giang,VN201
+Very heavy damage (from 50% -70%),Housing,unit,Cao Bằng,265,Cao Bang,VN203
+Very heavy damage (from 50% -70%),Housing,unit,Lào Cai,469,Lao Cai,VN205
+Very heavy damage (from 50% -70%),Housing,unit,Bắc Kạn,NA,Bac Kan,VN207
+Very heavy damage (from 50% -70%),Housing,unit,Lạng Sơn,NA,Lang Son,VN209
+Very heavy damage (from 50% -70%),Housing,unit,Điện Biên,NA,Dien Bien,VN302
+Very heavy damage (from 50% -70%),Housing,unit,Tuyên Quang,64,Tuyen Quang,VN211
+Very heavy damage (from 50% -70%),Housing,unit,Yên Bái,593,Yen Bai,VN213
+Very heavy damage (from 50% -70%),Housing,unit,Thái Nguyên,NA,Thai Nguyen,VN215
+Very heavy damage (from 50% -70%),Housing,unit,Phú Thọ,15,Phu Tho,VN217
+Very heavy damage (from 50% -70%),Housing,unit,Bắc Giang,NA,Bac Giang,VN221
+Very heavy damage (from 50% -70%),Housing,unit,Lai Châu,NA,Lai Chau,VN301
+Very heavy damage (from 50% -70%),Housing,unit,Sơn La,4,Son La,VN303
+Very heavy damage (from 50% -70%),Housing,unit,Hòa Bình,NA,Hoa Binh,VN305
+Very heavy damage (from 50% -70%),Housing,unit,Hà Nội,NA,Ha Noi,VN101
+Very heavy damage (from 50% -70%),Housing,unit,Hải Phòng,NA,Hai Phong city,VN103
+Very heavy damage (from 50% -70%),Housing,unit,Quảng Ninh,NA,Quang Ninh,VN225
+Very heavy damage (from 50% -70%),Housing,unit,Hải Dương,115,Hai Duong,VN107
+Very heavy damage (from 50% -70%),Housing,unit,Hưng Yên,NA,Hung Yen,VN109
+Very heavy damage (from 50% -70%),Housing,unit,Vĩnh Phúc,31,Vinh Phuc,VN104
+Very heavy damage (from 50% -70%),Housing,unit,Bắc Ninh,NA,Bac Ninh,VN106
+Very heavy damage (from 50% -70%),Housing,unit,Hà Nam,1,Ha Nam,VN111
+Very heavy damage (from 50% -70%),Housing,unit,Ninh Bình,NA,Ninh Binh,VN117
+Very heavy damage (from 50% -70%),Housing,unit,Thái Bình,340,Thai Binh,VN115
+Very heavy damage (from 50% -70%),Housing,unit,Nam Định,NA,Nam Dinh,VN113
+Very heavy damage (from 50% -70%),Housing,unit,Thanh Hóa,1,Thanh Hoa,VN401
+Heavy damage (from 30% -50%),Housing,unit,Hà Giang,138,Ha Giang,VN201
+Heavy damage (from 30% -50%),Housing,unit,Cao Bằng,89,Cao Bang,VN203
+Heavy damage (from 30% -50%),Housing,unit,Lào Cai,1116,Lao Cai,VN205
+Heavy damage (from 30% -50%),Housing,unit,Bắc Kạn,NA,Bac Kan,VN207
+Heavy damage (from 30% -50%),Housing,unit,Lạng Sơn,NA,Lang Son,VN209
+Heavy damage (from 30% -50%),Housing,unit,Điện Biên,1,Dien Bien,VN302
+Heavy damage (from 30% -50%),Housing,unit,Tuyên Quang,47,Tuyen Quang,VN211
+Heavy damage (from 30% -50%),Housing,unit,Yên Bái,380,Yen Bai,VN213
+Heavy damage (from 30% -50%),Housing,unit,Thái Nguyên,121,Thai Nguyen,VN215
+Heavy damage (from 30% -50%),Housing,unit,Phú Thọ,14,Phu Tho,VN217
+Heavy damage (from 30% -50%),Housing,unit,Bắc Giang,NA,Bac Giang,VN221
+Heavy damage (from 30% -50%),Housing,unit,Lai Châu,NA,Lai Chau,VN301
+Heavy damage (from 30% -50%),Housing,unit,Sơn La,4,Son La,VN303
+Heavy damage (from 30% -50%),Housing,unit,Hòa Bình,151,Hoa Binh,VN305
+Heavy damage (from 30% -50%),Housing,unit,Hà Nội,NA,Ha Noi,VN101
+Heavy damage (from 30% -50%),Housing,unit,Hải Phòng,NA,Hai Phong city,VN103
+Heavy damage (from 30% -50%),Housing,unit,Quảng Ninh,NA,Quang Ninh,VN225
+Heavy damage (from 30% -50%),Housing,unit,Hải Dương,983,Hai Duong,VN107
+Heavy damage (from 30% -50%),Housing,unit,Hưng Yên,NA,Hung Yen,VN109
+Heavy damage (from 30% -50%),Housing,unit,Vĩnh Phúc,52,Vinh Phuc,VN104
+Heavy damage (from 30% -50%),Housing,unit,Bắc Ninh,NA,Bac Ninh,VN106
+Heavy damage (from 30% -50%),Housing,unit,Hà Nam,22,Ha Nam,VN111
+Heavy damage (from 30% -50%),Housing,unit,Ninh Bình,1,Ninh Binh,VN117
+Heavy damage (from 30% -50%),Housing,unit,Thái Bình,791,Thai Binh,VN115
+Heavy damage (from 30% -50%),Housing,unit,Nam Định,NA,Nam Dinh,VN113
+Heavy damage (from 30% -50%),Housing,unit,Thanh Hóa,3,Thanh Hoa,VN401
+Partial damage (less than 30%),Housing,unit,Hà Giang,379,Ha Giang,VN201
+Partial damage (less than 30%),Housing,unit,Cao Bằng,715,Cao Bang,VN203
+Partial damage (less than 30%),Housing,unit,Lào Cai,6044,Lao Cai,VN205
+Partial damage (less than 30%),Housing,unit,Bắc Kạn,1588,Bac Kan,VN207
+Partial damage (less than 30%),Housing,unit,Lạng Sơn,3548,Lang Son,VN209
+Partial damage (less than 30%),Housing,unit,Điện Biên,15,Dien Bien,VN302
+Partial damage (less than 30%),Housing,unit,Tuyên Quang,1268,Tuyen Quang,VN211
+Partial damage (less than 30%),Housing,unit,Yên Bái,2895,Yen Bai,VN213
+Partial damage (less than 30%),Housing,unit,Thái Nguyên,367,Thai Nguyen,VN215
+Partial damage (less than 30%),Housing,unit,Phú Thọ,412,Phu Tho,VN217
+Partial damage (less than 30%),Housing,unit,Bắc Giang,8634,Bac Giang,VN221
+Partial damage (less than 30%),Housing,unit,Lai Châu,22,Lai Chau,VN301
+Partial damage (less than 30%),Housing,unit,Sơn La,515,Son La,VN303
+Partial damage (less than 30%),Housing,unit,Hòa Bình,590,Hoa Binh,VN305
+Partial damage (less than 30%),Housing,unit,Hà Nội,NA,Ha Noi,VN101
+Partial damage (less than 30%),Housing,unit,Hải Phòng,111870,Hai Phong city,VN103
+Partial damage (less than 30%),Housing,unit,Quảng Ninh,102859,Quang Ninh,VN225
+Partial damage (less than 30%),Housing,unit,Hải Dương,17763,Hai Duong,VN107
+Partial damage (less than 30%),Housing,unit,Hưng Yên,3678,Hung Yen,VN109
+Partial damage (less than 30%),Housing,unit,Vĩnh Phúc,249,Vinh Phuc,VN104
+Partial damage (less than 30%),Housing,unit,Bắc Ninh,3772,Bac Ninh,VN106
+Partial damage (less than 30%),Housing,unit,Hà Nam,92,Ha Nam,VN111
+Partial damage (less than 30%),Housing,unit,Ninh Bình,NA,Ninh Binh,VN117
+Partial damage (less than 30%),Housing,unit,Thái Bình,5193,Thai Binh,VN115
+Partial damage (less than 30%),Housing,unit,Nam Định,160,Nam Dinh,VN113
+Partial damage (less than 30%),Housing,unit,Thanh Hóa,256,Thanh Hoa,VN401
+The house was flooded,Housing,unit,Hà Giang,664,Ha Giang,VN201
+The house was flooded,Housing,unit,Cao Bằng,1064,Cao Bang,VN203
+The house was flooded,Housing,unit,Lào Cai,NA,Lao Cai,VN205
+The house was flooded,Housing,unit,Bắc Kạn,591,Bac Kan,VN207
+The house was flooded,Housing,unit,Lạng Sơn,6945,Lang Son,VN209
+The house was flooded,Housing,unit,Điện Biên,NA,Dien Bien,VN302
+The house was flooded,Housing,unit,Tuyên Quang,19206,Tuyen Quang,VN211
+The house was flooded,Housing,unit,Yên Bái,21749,Yen Bai,VN213
+The house was flooded,Housing,unit,Thái Nguyên,NA,Thai Nguyen,VN215
+The house was flooded,Housing,unit,Phú Thọ,6867,Phu Tho,VN217
+The house was flooded,Housing,unit,Bắc Giang,NA,Bac Giang,VN221
+The house was flooded,Housing,unit,Lai Châu,NA,Lai Chau,VN301
+The house was flooded,Housing,unit,Sơn La,300,Son La,VN303
+The house was flooded,Housing,unit,Hòa Bình,1024,Hoa Binh,VN305
+The house was flooded,Housing,unit,Hà Nội,29468,Ha Noi,VN101
+The house was flooded,Housing,unit,Hải Phòng,NA,Hai Phong city,VN103
+The house was flooded,Housing,unit,Quảng Ninh,5008,Quang Ninh,VN225
+The house was flooded,Housing,unit,Hải Dương,2136,Hai Duong,VN107
+The house was flooded,Housing,unit,Hưng Yên,NA,Hung Yen,VN109
+The house was flooded,Housing,unit,Vĩnh Phúc,NA,Vinh Phuc,VN104
+The house was flooded,Housing,unit,Bắc Ninh,NA,Bac Ninh,VN106
+The house was flooded,Housing,unit,Hà Nam,14849,Ha Nam,VN111
+The house was flooded,Housing,unit,Ninh Bình,4923,Ninh Binh,VN117
+The house was flooded,Housing,unit,Thái Bình,490,Thai Binh,VN115
+The house was flooded,Housing,unit,Nam Định,6705,Nam Dinh,VN113
+The house was flooded,Housing,unit,Thanh Hóa,426,Thanh Hoa,VN401
+The house must be relocated urgently,Housing,unit,Hà Giang,184,Ha Giang,VN201
+The house must be relocated urgently,Housing,unit,Cao Bằng,796,Cao Bang,VN203
+The house must be relocated urgently,Housing,unit,Lào Cai,NA,Lao Cai,VN205
+The house must be relocated urgently,Housing,unit,Bắc Kạn,NA,Bac Kan,VN207
+The house must be relocated urgently,Housing,unit,Lạng Sơn,NA,Lang Son,VN209
+The house must be relocated urgently,Housing,unit,Điện Biên,250,Dien Bien,VN302
+The house must be relocated urgently,Housing,unit,Tuyên Quang,4603,Tuyen Quang,VN211
+The house must be relocated urgently,Housing,unit,Yên Bái,1082,Yen Bai,VN213
+The house must be relocated urgently,Housing,unit,Thái Nguyên,NA,Thai Nguyen,VN215
+The house must be relocated urgently,Housing,unit,Phú Thọ,7303,Phu Tho,VN217
+The house must be relocated urgently,Housing,unit,Bắc Giang,NA,Bac Giang,VN221
+The house must be relocated urgently,Housing,unit,Lai Châu,NA,Lai Chau,VN301
+The house must be relocated urgently,Housing,unit,Sơn La,152,Son La,VN303
+The house must be relocated urgently,Housing,unit,Hòa Bình,596,Hoa Binh,VN305
+The house must be relocated urgently,Housing,unit,Hà Nội,NA,Ha Noi,VN101
+The house must be relocated urgently,Housing,unit,Hải Phòng,NA,Hai Phong city,VN103
+The house must be relocated urgently,Housing,unit,Quảng Ninh,NA,Quang Ninh,VN225
+The house must be relocated urgently,Housing,unit,Hải Dương,359,Hai Duong,VN107
+The house must be relocated urgently,Housing,unit,Hưng Yên,NA,Hung Yen,VN109
+The house must be relocated urgently,Housing,unit,Vĩnh Phúc,NA,Vinh Phuc,VN104
+The house must be relocated urgently,Housing,unit,Bắc Ninh,NA,Bac Ninh,VN106
+The house must be relocated urgently,Housing,unit,Hà Nam,876,Ha Nam,VN111
+The house must be relocated urgently,Housing,unit,Ninh Bình,319,Ninh Binh,VN117
+The house must be relocated urgently,Housing,unit,Thái Bình,19,Thai Binh,VN115
+The house must be relocated urgently,Housing,unit,Nam Định,2148,Nam Dinh,VN113
+The house must be relocated urgently,Housing,unit,Thanh Hóa,19,Thanh Hoa,VN401
+Other housing damages (*),Housing,NA,Lào Cai,NA,Lao Cai,VN205
+Other housing damages (*),Housing,NA,Lạng Sơn,NA,Lang Son,VN209
+Number of affected points/schools,Education,unit,Hà Giang,20,Ha Giang,VN201
+Number of affected points/schools,Education,unit,Cao Bằng,49,Cao Bang,VN203
+Number of affected points/schools,Education,unit,Lào Cai,149,Lao Cai,VN205
+Number of affected points/schools,Education,unit,Bắc Kạn,39,Bac Kan,VN207
+Number of affected points/schools,Education,unit,Lạng Sơn,NA,Lang Son,VN209
+Number of affected points/schools,Education,unit,Điện Biên,8,Dien Bien,VN302
+Number of affected points/schools,Education,unit,Tuyên Quang,NA,Tuyen Quang,VN211
+Number of affected points/schools,Education,unit,Yên Bái,65,Yen Bai,VN213
+Number of affected points/schools,Education,unit,Thái Nguyên,93,Thai Nguyen,VN215
+Number of affected points/schools,Education,unit,Phú Thọ,42,Phu Tho,VN217
+Number of affected points/schools,Education,unit,Bắc Giang,214,Bac Giang,VN221
+Number of affected points/schools,Education,unit,Lai Châu,NA,Lai Chau,VN301
+Number of affected points/schools,Education,unit,Sơn La,14,Son La,VN303
+Number of affected points/schools,Education,unit,Hòa Bình,33,Hoa Binh,VN305
+Number of affected points/schools,Education,unit,Hà Nội,93,Ha Noi,VN101
+Number of affected points/schools,Education,unit,Hải Phòng,603,Hai Phong city,VN103
+Number of affected points/schools,Education,unit,Quảng Ninh,NA,Quang Ninh,VN225
+Number of affected points/schools,Education,unit,Hải Dương,575,Hai Duong,VN107
+Number of affected points/schools,Education,unit,Hưng Yên,NA,Hung Yen,VN109
+Number of affected points/schools,Education,unit,Vĩnh Phúc,32,Vinh Phuc,VN104
+Number of affected points/schools,Education,unit,Bắc Ninh,NA,Bac Ninh,VN106
+Number of affected points/schools,Education,unit,Hà Nam,17,Ha Nam,VN111
+Number of affected points/schools,Education,unit,Ninh Bình,6,Ninh Binh,VN117
+Number of affected points/schools,Education,unit,Thái Bình,266,Thai Binh,VN115
+Number of affected points/schools,Education,unit,Nam Định,15,Nam Dinh,VN113
+Number of affected points/schools,Education,unit,Thanh Hóa,17,Thanh Hoa,VN401
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Hà Giang,17,Ha Giang,VN201
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Cao Bằng,5,Cao Bang,VN203
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Lào Cai,34,Lao Cai,VN205
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Bắc Kạn,2,Bac Kan,VN207
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Lạng Sơn,NA,Lang Son,VN209
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Điện Biên,NA,Dien Bien,VN302
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Tuyên Quang,NA,Tuyen Quang,VN211
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Yên Bái,28,Yen Bai,VN213
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Thái Nguyên,NA,Thai Nguyen,VN215
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Phú Thọ,7,Phu Tho,VN217
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Bắc Giang,74,Bac Giang,VN221
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Lai Châu,NA,Lai Chau,VN301
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Sơn La,NA,Son La,VN303
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Hòa Bình,2,Hoa Binh,VN305
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Hà Nội,41,Ha Noi,VN101
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Hải Phòng,237,Hai Phong city,VN103
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Quảng Ninh,NA,Quang Ninh,VN225
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Hải Dương,118,Hai Duong,VN107
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Hưng Yên,NA,Hung Yen,VN109
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Vĩnh Phúc,9,Vinh Phuc,VN104
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Bắc Ninh,NA,Bac Ninh,VN106
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Hà Nam,20,Ha Nam,VN111
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Ninh Bình,5,Ninh Binh,VN117
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Thái Bình,143,Thai Binh,VN115
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Nam Định,3,Nam Dinh,VN113
+"Number of medical facilities (hospitals, medical centers, medical stations)",Health,unit,Thanh Hóa,NA,Thanh Hoa,VN401
+Cultural works,Culture,NA,Cao Bằng,6,Cao Bang,VN203
+Cultural works,Culture,NA,Lào Cai,47,Lao Cai,VN205
+Cultural works,Culture,NA,Bắc Kạn,10,Bac Kan,VN207
+Cultural works,Culture,NA,Yên Bái,2,Yen Bai,VN213
+Cultural works,Culture,NA,Phú Thọ,29,Phu Tho,VN217
+Cultural works,Culture,NA,Bắc Giang,245,Bac Giang,VN221
+Cultural works,Culture,NA,Sơn La,1,Son La,VN303
+Cultural works,Culture,NA,Hòa Bình,11,Hoa Binh,VN305
+Cultural works,Culture,NA,Hà Nội,109,Ha Noi,VN101
+Cultural works,Culture,NA,Hải Phòng,1046,Hai Phong city,VN103
+Cultural works,Culture,NA,Hải Dương,260,Hai Duong,VN107
+Cultural works,Culture,NA,Vĩnh Phúc,11,Vinh Phuc,VN104
+Cultural works,Culture,NA,Hà Nam,8,Ha Nam,VN111
+Cultural works,Culture,NA,Ninh Bình,1,Ninh Binh,VN117
+Cultural works,Culture,NA,Thái Bình,326,Thai Binh,VN115
+Cultural works,Culture,NA,Nam Định,28,Nam Dinh,VN113
+Cultural works,Culture,NA,Thanh Hóa,3,Thanh Hoa,VN401
+"Cultural and historical relics, scenic spots",Culture,NA,Yên Bái,12,Yen Bai,VN213
+"Cultural and historical relics, scenic spots",Culture,NA,Phú Thọ,1,Phu Tho,VN217
+"Cultural and historical relics, scenic spots",Culture,NA,Bắc Giang,81,Bac Giang,VN221
+"Cultural and historical relics, scenic spots",Culture,NA,Hà Nội,176,Ha Noi,VN101
+"Cultural and historical relics, scenic spots",Culture,NA,Hải Dương,93,Hai Duong,VN107
+"Cultural and historical relics, scenic spots",Culture,NA,Vĩnh Phúc,4,Vinh Phuc,VN104
+"Cultural and historical relics, scenic spots",Culture,NA,Hà Nam,1,Ha Nam,VN111
+"Cultural and historical relics, scenic spots",Culture,NA,Thanh Hóa,1,Thanh Hoa,VN401
+Rice area,"Agriculture, forestry and salt",ha,Hà Giang,1189.2,Ha Giang,VN201
+Rice area,"Agriculture, forestry and salt",ha,Cao Bằng,1168.8,Cao Bang,VN203
+Rice area,"Agriculture, forestry and salt",ha,Lào Cai,2475.56,Lao Cai,VN205
+Rice area,"Agriculture, forestry and salt",ha,Bắc Kạn,1025.4,Bac Kan,VN207
+Rice area,"Agriculture, forestry and salt",ha,Lạng Sơn,5108,Lang Son,VN209
+Rice area,"Agriculture, forestry and salt",ha,Điện Biên,397.33000000000004,Dien Bien,VN302
+Rice area,"Agriculture, forestry and salt",ha,Tuyên Quang,5182.6,Tuyen Quang,VN211
+Rice area,"Agriculture, forestry and salt",ha,Yên Bái,3096,Yen Bai,VN213
+Rice area,"Agriculture, forestry and salt",ha,Thái Nguyên,8915.7,Thai Nguyen,VN215
+Rice area,"Agriculture, forestry and salt",ha,Phú Thọ,5635.0599999999995,Phu Tho,VN217
+Rice area,"Agriculture, forestry and salt",ha,Bắc Giang,18857,Bac Giang,VN221
+Rice area,"Agriculture, forestry and salt",ha,Lai Châu,37.32000000000001,Lai Chau,VN301
+Rice area,"Agriculture, forestry and salt",ha,Sơn La,733.9,Son La,VN303
+Rice area,"Agriculture, forestry and salt",ha,Hòa Bình,3433.1000000000004,Hoa Binh,VN305
+Rice area,"Agriculture, forestry and salt",ha,Hà Nội,38737,Ha Noi,VN101
+Rice area,"Agriculture, forestry and salt",ha,Hải Phòng,23342,Hai Phong city,VN103
+Rice area,"Agriculture, forestry and salt",ha,Quảng Ninh,5891,Quang Ninh,VN225
+Rice area,"Agriculture, forestry and salt",ha,Hải Dương,34168,Hai Duong,VN107
+Rice area,"Agriculture, forestry and salt",ha,Hưng Yên,10539,Hung Yen,VN109
+Rice area,"Agriculture, forestry and salt",ha,Vĩnh Phúc,9830,Vinh Phuc,VN104
+Rice area,"Agriculture, forestry and salt",ha,Bắc Ninh,7930.6,Bac Ninh,VN106
+Rice area,"Agriculture, forestry and salt",ha,Hà Nam,7129,Ha Nam,VN111
+Rice area,"Agriculture, forestry and salt",ha,Ninh Bình,2115.8,Ninh Binh,VN117
+Rice area,"Agriculture, forestry and salt",ha,Thái Bình,60191,Thai Binh,VN115
+Rice area,"Agriculture, forestry and salt",ha,Nam Định,27085.26,Nam Dinh,VN113
+Rice area,"Agriculture, forestry and salt",ha,Thanh Hóa,2445.88,Thanh Hoa,VN401
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Hà Giang,617.9,Ha Giang,VN201
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Cao Bằng,746.43,Cao Bang,VN203
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Lào Cai,1448.14,Lao Cai,VN205
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Bắc Kạn,820.6,Bac Kan,VN207
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Lạng Sơn,2669,Lang Son,VN209
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Điện Biên,3.05,Dien Bien,VN302
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Tuyên Quang,12890.8,Tuyen Quang,VN211
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Yên Bái,1611,Yen Bai,VN213
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Thái Nguyên,812.84,Thai Nguyen,VN215
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Phú Thọ,2191.4399999999996,Phu Tho,VN217
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Bắc Giang,2846.9,Bac Giang,VN221
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Lai Châu,5.74,Lai Chau,VN301
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Sơn La,57.3,Son La,VN303
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Hòa Bình,1467.31,Hoa Binh,VN305
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Hà Nội,13182,Ha Noi,VN101
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Hải Phòng,2978,Hai Phong city,VN103
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Quảng Ninh,1643,Quang Ninh,VN225
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Hải Dương,4904,Hai Duong,VN107
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Hưng Yên,2536,Hung Yen,VN109
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Vĩnh Phúc,2296,Vinh Phuc,VN104
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Bắc Ninh,1250.14,Bac Ninh,VN106
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Hà Nam,557,Ha Nam,VN111
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Ninh Bình,304.8,Ninh Binh,VN117
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Thái Bình,3200,Thai Binh,VN115
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Nam Định,1671.22,Nam Dinh,VN113
+Area of ​​crops and vegetables,"Agriculture, forestry and salt",ha,Thanh Hóa,639.15,Thanh Hoa,VN401
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Lào Cai,162585,Lao Cai,VN205
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Yên Bái,3712,Yen Bai,VN213
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Thái Nguyên,172665,Thai Nguyen,VN215
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Hải Phòng,695230,Hai Phong city,VN103
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Hải Dương,240351,Hai Duong,VN107
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Hưng Yên,820,Hung Yen,VN109
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Hà Nam,20539,Ha Nam,VN111
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Thái Bình,566834,Thai Binh,VN115
+Number of flowers and ornamental plants of all kinds,"Agriculture, forestry and salt",NA,Nam Định,424793,Nam Dinh,VN113
+Area of perennial crops,"Agriculture, forestry and salt",NA,Cao Bằng,40.14,Cao Bang,VN203
+Area of perennial crops,"Agriculture, forestry and salt",NA,Lào Cai,817.38,Lao Cai,VN205
+Area of perennial crops,"Agriculture, forestry and salt",NA,Lạng Sơn,394,Lang Son,VN209
+Area of perennial crops,"Agriculture, forestry and salt",NA,Yên Bái,695,Yen Bai,VN213
+Area of perennial crops,"Agriculture, forestry and salt",NA,Thái Nguyên,860.29,Thai Nguyen,VN215
+Area of perennial crops,"Agriculture, forestry and salt",NA,Phú Thọ,395.84999999999997,Phu Tho,VN217
+Area of perennial crops,"Agriculture, forestry and salt",NA,Sơn La,75.1,Son La,VN303
+Area of perennial crops,"Agriculture, forestry and salt",NA,Hòa Bình,72.58,Hoa Binh,VN305
+Area of perennial crops,"Agriculture, forestry and salt",NA,Hải Dương,11124,Hai Duong,VN107
+Area of perennial crops,"Agriculture, forestry and salt",NA,Hà Nam,557,Ha Nam,VN111
+Area of perennial crops,"Agriculture, forestry and salt",NA,Thái Bình,2383,Thai Binh,VN115
+Area of perennial crops,"Agriculture, forestry and salt",NA,Nam Định,452.92,Nam Dinh,VN113
+Area of perennial crops,"Agriculture, forestry and salt",NA,Thanh Hóa,97.58,Thanh Hoa,VN401
+Annual crop area,"Agriculture, forestry and salt",NA,Cao Bằng,293.92,Cao Bang,VN203
+Annual crop area,"Agriculture, forestry and salt",NA,Lào Cai,681.13,Lao Cai,VN205
+Annual crop area,"Agriculture, forestry and salt",NA,Tuyên Quang,539.2,Tuyen Quang,VN211
+Annual crop area,"Agriculture, forestry and salt",NA,Thái Nguyên,343.82,Thai Nguyen,VN215
+Annual crop area,"Agriculture, forestry and salt",NA,Phú Thọ,635.4,Phu Tho,VN217
+Annual crop area,"Agriculture, forestry and salt",NA,Sơn La,751.4,Son La,VN303
+Annual crop area,"Agriculture, forestry and salt",NA,Hòa Bình,831.94,Hoa Binh,VN305
+Annual crop area,"Agriculture, forestry and salt",NA,Hải Dương,1014,Hai Duong,VN107
+Annual crop area,"Agriculture, forestry and salt",NA,Hưng Yên,1922,Hung Yen,VN109
+Annual crop area,"Agriculture, forestry and salt",NA,Hà Nam,656,Ha Nam,VN111
+Annual crop area,"Agriculture, forestry and salt",NA,Ninh Bình,107,Ninh Binh,VN117
+Annual crop area,"Agriculture, forestry and salt",NA,Thái Bình,678,Thai Binh,VN115
+Annual crop area,"Agriculture, forestry and salt",NA,Nam Định,417.108,Nam Dinh,VN113
+Annual crop area,"Agriculture, forestry and salt",NA,Thanh Hóa,1190.82,Thanh Hoa,VN401
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Hà Giang,185.2,Ha Giang,VN201
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Cao Bằng,3.11,Cao Bang,VN203
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Lào Cai,261.83,Lao Cai,VN205
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Bắc Kạn,12.9,Bac Kan,VN207
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Tuyên Quang,802.7,Tuyen Quang,VN211
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Yên Bái,101,Yen Bai,VN213
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Phú Thọ,609.58,Phu Tho,VN217
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Bắc Giang,7482.2,Bac Giang,VN221
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Hòa Bình,193.14,Hoa Binh,VN305
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Hà Nội,9069,Ha Noi,VN101
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Hải Dương,8411,Hai Duong,VN107
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Hưng Yên,8606,Hung Yen,VN109
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Bắc Ninh,1356.75,Bac Ninh,VN106
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Hà Nam,696,Ha Nam,VN111
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Thái Bình,1421,Thai Binh,VN115
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Nam Định,15.73,Nam Dinh,VN113
+Concentrated fruit tree area,"Agriculture, forestry and salt",NA,Thanh Hóa,14.5,Thanh Hoa,VN401
+Existing forest area,"Agriculture, forestry and salt",NA,Hà Giang,139.3,Ha Giang,VN201
+Existing forest area,"Agriculture, forestry and salt",NA,Lào Cai,1022.64,Lao Cai,VN205
+Existing forest area,"Agriculture, forestry and salt",NA,Bắc Kạn,260.7,Bac Kan,VN207
+Existing forest area,"Agriculture, forestry and salt",NA,Lạng Sơn,18445,Lang Son,VN209
+Existing forest area,"Agriculture, forestry and salt",NA,Tuyên Quang,908.6,Tuyen Quang,VN211
+Existing forest area,"Agriculture, forestry and salt",NA,Yên Bái,1445,Yen Bai,VN213
+Existing forest area,"Agriculture, forestry and salt",NA,Thái Nguyên,651.64,Thai Nguyen,VN215
+Existing forest area,"Agriculture, forestry and salt",NA,Phú Thọ,655.24,Phu Tho,VN217
+Existing forest area,"Agriculture, forestry and salt",NA,Bắc Giang,37635.6,Bac Giang,VN221
+Existing forest area,"Agriculture, forestry and salt",NA,Lai Châu,0.36,Lai Chau,VN301
+Existing forest area,"Agriculture, forestry and salt",NA,Hòa Bình,1227.63,Hoa Binh,VN305
+Existing forest area,"Agriculture, forestry and salt",NA,Hải Phòng,7192,Hai Phong city,VN103
+Existing forest area,"Agriculture, forestry and salt",NA,Quảng Ninh,117800,Quang Ninh,VN225
+Existing forest area,"Agriculture, forestry and salt",NA,Hải Dương,2250,Hai Duong,VN107
+Existing forest area,"Agriculture, forestry and salt",NA,Bắc Ninh,163.31,Bac Ninh,VN106
+Existing forest area,"Agriculture, forestry and salt",NA,Ninh Bình,41,Ninh Binh,VN117
+Existing forest area,"Agriculture, forestry and salt",NA,Thái Bình,375,Thai Binh,VN115
+Existing forest area,"Agriculture, forestry and salt",NA,Nam Định,3.5,Nam Dinh,VN113
+Existing forest area,"Agriculture, forestry and salt",NA,Thanh Hóa,13,Thanh Hoa,VN401
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Yên Bái,2745,Yen Bai,VN213
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Hòa Bình,831,Hoa Binh,VN305
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Hà Nội,106364,Ha Noi,VN101
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Hải Phòng,124724,Hai Phong city,VN103
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Hải Dương,347,Hai Duong,VN107
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Hưng Yên,12317,Hung Yen,VN109
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Vĩnh Phúc,27210,Vinh Phuc,VN104
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Bắc Ninh,46644,Bac Ninh,VN106
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Hà Nam,6034,Ha Nam,VN111
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Thái Bình,74751,Thai Binh,VN115
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Nam Định,3819,Nam Dinh,VN113
+"Shade trees, urban green trees fell and broke","Agriculture, forestry and salt",NA,Thanh Hóa,85,Thanh Hoa,VN401
+Damaged seedlings,"Agriculture, forestry and salt",NA,Lào Cai,NA,Lao Cai,VN205
+Damaged seedlings,"Agriculture, forestry and salt",NA,Hà Nam,6,Ha Nam,VN111
+Damaged seedlings,"Agriculture, forestry and salt",NA,Thái Bình,1950,Thai Binh,VN115
+Damaged seedlings,"Agriculture, forestry and salt",NA,Nam Định,470,Nam Dinh,VN113
+Damaged seeds,"Agriculture, forestry and salt",NA,Thái Bình,2,Thai Binh,VN115
+"Food is drifting, damp, wet, and spoiled","Agriculture, forestry and salt",NA,Thái Bình,15,Thai Binh,VN115
+"Food is drifting, damp, wet, and spoiled","Agriculture, forestry and salt",NA,Nam Định,2.8,Nam Dinh,VN113
+Cattle died and were swept away,Livestock,heads,Hà Giang,112,Ha Giang,VN201
+Cattle died and were swept away,Livestock,heads,Cao Bằng,235,Cao Bang,VN203
+Cattle died and were swept away,Livestock,heads,Lào Cai,1692,Lao Cai,VN205
+Cattle died and were swept away,Livestock,heads,Bắc Kạn,46,Bac Kan,VN207
+Cattle died and were swept away,Livestock,heads,Lạng Sơn,NA,Lang Son,VN209
+Cattle died and were swept away,Livestock,heads,Điện Biên,NA,Dien Bien,VN302
+Cattle died and were swept away,Livestock,heads,Tuyên Quang,1665,Tuyen Quang,VN211
+Cattle died and were swept away,Livestock,heads,Yên Bái,8769,Yen Bai,VN213
+Cattle died and were swept away,Livestock,heads,Thái Nguyên,NA,Thai Nguyen,VN215
+Cattle died and were swept away,Livestock,heads,Phú Thọ,221,Phu Tho,VN217
+Cattle died and were swept away,Livestock,heads,Bắc Giang,1871,Bac Giang,VN221
+Cattle died and were swept away,Livestock,heads,Lai Châu,NA,Lai Chau,VN301
+Cattle died and were swept away,Livestock,heads,Sơn La,56,Son La,VN303
+Cattle died and were swept away,Livestock,heads,Hòa Bình,366,Hoa Binh,VN305
+Cattle died and were swept away,Livestock,heads,Hà Nội,3014,Ha Noi,VN101
+Cattle died and were swept away,Livestock,heads,Hải Phòng,6978,Hai Phong city,VN103
+Cattle died and were swept away,Livestock,heads,Quảng Ninh,NA,Quang Ninh,VN225
+Cattle died and were swept away,Livestock,heads,Hải Dương,5120,Hai Duong,VN107
+Cattle died and were swept away,Livestock,heads,Hưng Yên,2486,Hung Yen,VN109
+Cattle died and were swept away,Livestock,heads,Vĩnh Phúc,600,Vinh Phuc,VN104
+Cattle died and were swept away,Livestock,heads,Bắc Ninh,348,Bac Ninh,VN106
+Cattle died and were swept away,Livestock,heads,Hà Nam,3209,Ha Nam,VN111
+Cattle died and were swept away,Livestock,heads,Ninh Bình,NA,Ninh Binh,VN117
+Cattle died and were swept away,Livestock,heads,Thái Bình,6917,Thai Binh,VN115
+Cattle died and were swept away,Livestock,heads,Nam Định,840,Nam Dinh,VN113
+Cattle died and were swept away,Livestock,heads,Thanh Hóa,11,Thanh Hoa,VN401
+Poultry died and was swept away,Livestock,heads,Hà Giang,6415,Ha Giang,VN201
+Poultry died and was swept away,Livestock,heads,Cao Bằng,3055,Cao Bang,VN203
+Poultry died and was swept away,Livestock,heads,Lào Cai,58684,Lao Cai,VN205
+Poultry died and was swept away,Livestock,heads,Bắc Kạn,8320,Bac Kan,VN207
+Poultry died and was swept away,Livestock,heads,Lạng Sơn,NA,Lang Son,VN209
+Poultry died and was swept away,Livestock,heads,Điện Biên,3,Dien Bien,VN302
+Poultry died and was swept away,Livestock,heads,Tuyên Quang,20072,Tuyen Quang,VN211
+Poultry died and was swept away,Livestock,heads,Yên Bái,327450,Yen Bai,VN213
+Poultry died and was swept away,Livestock,heads,Thái Nguyên,384022,Thai Nguyen,VN215
+Poultry died and was swept away,Livestock,heads,Phú Thọ,35588,Phu Tho,VN217
+Poultry died and was swept away,Livestock,heads,Bắc Giang,265644,Bac Giang,VN221
+Poultry died and was swept away,Livestock,heads,Lai Châu,NA,Lai Chau,VN301
+Poultry died and was swept away,Livestock,heads,Sơn La,236,Son La,VN303
+Poultry died and was swept away,Livestock,heads,Hòa Bình,12282,Hoa Binh,VN305
+Poultry died and was swept away,Livestock,heads,Hà Nội,615122,Ha Noi,VN101
+Poultry died and was swept away,Livestock,heads,Hải Phòng,1323126,Hai Phong city,VN103
+Poultry died and was swept away,Livestock,heads,Quảng Ninh,388608,Quang Ninh,VN225
+Poultry died and was swept away,Livestock,heads,Hải Dương,1488577,Hai Duong,VN107
+Poultry died and was swept away,Livestock,heads,Hưng Yên,295906,Hung Yen,VN109
+Poultry died and was swept away,Livestock,heads,Vĩnh Phúc,17917,Vinh Phuc,VN104
+Poultry died and was swept away,Livestock,heads,Bắc Ninh,121220,Bac Ninh,VN106
+Poultry died and was swept away,Livestock,heads,Hà Nam,118032,Ha Nam,VN111
+Poultry died and was swept away,Livestock,heads,Ninh Bình,6450,Ninh Binh,VN117
+Poultry died and was swept away,Livestock,heads,Thái Bình,216366,Thai Binh,VN115
+Poultry died and was swept away,Livestock,heads,Nam Định,41278,Nam Dinh,VN113
+Poultry died and was swept away,Livestock,heads,Thanh Hóa,970,Thanh Hoa,VN401
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Phú Thọ,100,Phu Tho,VN217
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Ninh Bình,2750,Ninh Binh,VN117
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Yên Bái,1120,Yen Bai,VN213
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Phú Thọ,470,Phu Tho,VN217
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Hà Nội,9969,Ha Noi,VN101
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Hải Dương,152,Hai Duong,VN107
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Hà Nam,335,Ha Nam,VN111
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Ninh Bình,3200,Ninh Binh,VN117
+"Length of landslide, crack, break (specify the length of breakage)",Irrigation,NA,Thái Bình,5740,Thai Binh,VN115
+Length of landslides and damage,Irrigation,NA,Bắc Kạn,810,Bac Kan,VN207
+Length of landslides and damage,Irrigation,NA,Yên Bái,515,Yen Bai,VN213
+Length of landslides and damage,Irrigation,NA,Phú Thọ,1400,Phu Tho,VN217
+Length of landslides and damage,Irrigation,NA,Hòa Bình,240,Hoa Binh,VN305
+Length of landslides and damage,Irrigation,NA,Hải Dương,35,Hai Duong,VN107
+Length of landslides and damage,Irrigation,NA,Thái Bình,85,Thai Binh,VN115
+Length of landslides and damage,Irrigation,NA,Nam Định,69,Nam Dinh,VN113
+Length,Irrigation,NA,Hà Giang,886,Ha Giang,VN201
+Length,Irrigation,NA,Bắc Kạn,71,Bac Kan,VN207
+Length,Irrigation,NA,Điện Biên,170,Dien Bien,VN302
+Length,Irrigation,NA,Yên Bái,40600,Yen Bai,VN213
+Length,Irrigation,NA,Thái Nguyên,52431,Thai Nguyen,VN215
+Length,Irrigation,NA,Phú Thọ,14954,Phu Tho,VN217
+Length,Irrigation,NA,Bắc Giang,8600,Bac Giang,VN221
+Length,Irrigation,NA,Hòa Bình,4578.7,Hoa Binh,VN305
+Length,Irrigation,NA,Hà Nội,21086,Ha Noi,VN101
+Length,Irrigation,NA,Hải Dương,36560,Hai Duong,VN107
+Length,Irrigation,NA,Hà Nam,1775,Ha Nam,VN111
+Length,Irrigation,NA,Ninh Bình,5500,Ninh Binh,VN117
+Length,Irrigation,NA,Thái Bình,16480,Thai Binh,VN115
+Length,Irrigation,NA,Nam Định,27558,Nam Dinh,VN113
+Length,Irrigation,NA,Thanh Hóa,3190,Thanh Hoa,VN401
+Soil Volume,Irrigation,NA,Thái Bình,10830,Thai Binh,VN115
+Soil Volume,Irrigation,NA,Nam Định,148755,Nam Dinh,VN113
+Volume of stone and concrete,Irrigation,NA,Điện Biên,1000,Dien Bien,VN302
+Volume of stone and concrete,Irrigation,NA,Thái Bình,26,Thai Binh,VN115
+Volume of stone and concrete,Irrigation,NA,Nam Định,22740,Nam Dinh,VN113
+Drain,Irrigation,NA,Phú Thọ,13,Phu Tho,VN217
+Drain,Irrigation,NA,Bắc Giang,47,Bac Giang,VN221
+Drain,Irrigation,NA,Hải Dương,42,Hai Duong,VN107
+Drain,Irrigation,NA,Hà Nam,7,Ha Nam,VN111
+Drain,Irrigation,NA,Ninh Bình,98,Ninh Binh,VN117
+Drain,Irrigation,NA,Thái Bình,76,Thai Binh,VN115
+Drain,Irrigation,NA,Nam Định,109,Nam Dinh,VN113
+Drain,Irrigation,NA,Thanh Hóa,10,Thanh Hoa,VN401
+Damaged drains and bulbs,Irrigation,NA,Phú Thọ,13,Phu Tho,VN217
+Damaged drains and bulbs,Irrigation,NA,Hải Dương,42,Hai Duong,VN107
+Damaged drains and bulbs,Irrigation,NA,Ninh Bình,98,Ninh Binh,VN117
+Damaged drains and bulbs,Irrigation,NA,Thái Bình,66,Thai Binh,VN115
+Damaged drains and bulbs,Irrigation,NA,Nam Định,109,Nam Dinh,VN113
+Drifting puffiness,Irrigation,NA,Thái Bình,5,Thai Binh,VN115
+Drains are washed away,Irrigation,NA,Thái Bình,5,Thai Binh,VN115
+Irrigation Dam,Irrigation,NA,Điện Biên,1,Dien Bien,VN302
+Irrigation Dam,Irrigation,NA,Thái Nguyên,6,Thai Nguyen,VN215
+Irrigation Dam,Irrigation,NA,Phú Thọ,12,Phu Tho,VN217
+Irrigation Dam,Irrigation,NA,Ninh Bình,17,Ninh Binh,VN117
+Dam is damaged by landslides,Irrigation,NA,Phú Thọ,12,Phu Tho,VN217
+Dam is damaged by landslides,Irrigation,NA,Thanh Hóa,5,Thanh Hoa,VN401
+Number of pumping stations,Irrigation,NA,Yên Bái,13,Yen Bai,VN213
+Number of pumping stations,Irrigation,NA,Thái Nguyên,27,Thai Nguyen,VN215
+Number of pumping stations,Irrigation,NA,Bắc Giang,34,Bac Giang,VN221
+Number of pumping stations,Irrigation,NA,Hải Dương,105,Hai Duong,VN107
+Number of pumping stations,Irrigation,NA,Hà Nam,12,Ha Nam,VN111
+Number of pumping stations,Irrigation,NA,Ninh Bình,4,Ninh Binh,VN117
+Number of pumping stations,Irrigation,NA,Thái Bình,13,Thai Binh,VN115
+Number of pumping stations,Irrigation,NA,Nam Định,34,Nam Dinh,VN113
+Damaged fortifications,Irrigation,NA,Yên Bái,13,Yen Bai,VN213
+Damaged fortifications,Irrigation,NA,Phú Thọ,54,Phu Tho,VN217
+Damaged fortifications,Irrigation,NA,Hải Dương,79,Hai Duong,VN107
+Semi-permanent damaged,Irrigation,NA,Hải Dương,26,Hai Duong,VN107
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Hà Giang,16,Ha Giang,VN201
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Cao Bằng,67,Cao Bang,VN203
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Lào Cai,497,Lao Cai,VN205
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Bắc Kạn,110,Bac Kan,VN207
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Lạng Sơn,250,Lang Son,VN209
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Tuyên Quang,4,Tuyen Quang,VN211
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Yên Bái,406,Yen Bai,VN213
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Phú Thọ,177,Phu Tho,VN217
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Lai Châu,2,Lai Chau,VN301
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Hòa Bình,35,Hoa Binh,VN305
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Bắc Ninh,18,Bac Ninh,VN106
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Hà Nam,1,Ha Nam,VN111
+"Other irrigation works are broken, washed away and damaged",Irrigation,NA,Thái Bình,20,Thai Binh,VN115
+"Coasts, riverbanks, streams are eroded",Irrigation,NA,Thanh Hóa,9037,Thanh Hoa,VN401
+Landslide Length,Irrigation,NA,Phú Thọ,23492,Phu Tho,VN217
+Landslide Length,Irrigation,NA,Thái Bình,4600,Thai Binh,VN115
+Lost Area,Irrigation,NA,Thái Bình,6100,Thai Binh,VN115
+Length of landslides and damage,Transportation,NA,Cao Bằng,1360,Cao Bang,VN203
+Length of landslides and damage,Transportation,NA,Lào Cai,2882,Lao Cai,VN205
+Length of landslides and damage,Transportation,NA,Điện Biên,526,Dien Bien,VN302
+Length of landslides and damage,Transportation,NA,Tuyên Quang,378,Tuyen Quang,VN211
+Length of landslides and damage,Transportation,NA,Phú Thọ,4800,Phu Tho,VN217
+Length of landslides and damage,Transportation,NA,Bắc Giang,2400,Bac Giang,VN221
+Length of landslides and damage,Transportation,NA,Hòa Bình,1714,Hoa Binh,VN305
+Length of landslides and damage,Transportation,NA,Hải Dương,150,Hai Duong,VN107
+Length of landslides and damage,Transportation,NA,Thái Bình,40,Thai Binh,VN115
+Length of landslides and damage,Transportation,NA,Thanh Hóa,741,Thanh Hoa,VN401
+Flooded length,Transportation,NA,Yên Bái,9500,Yen Bai,VN213
+Flooded length,Transportation,NA,Hải Dương,1000,Hai Duong,VN107
+Flooded length,Transportation,NA,Hà Nam,500,Ha Nam,VN111
+Flooded length,Transportation,NA,Thái Bình,2500,Thai Binh,VN115
+Soil Volume,Transportation,NA,Yên Bái,77771,Yen Bai,VN213
+Soil Volume,Transportation,NA,Phú Thọ,30000,Phu Tho,VN217
+Soil Volume,Transportation,NA,Thái Bình,350,Thai Binh,VN115
+"Volume of stone, concrete, asphalt",Transportation,NA,Hà Giang,7495,Ha Giang,VN201
+"Volume of stone, concrete, asphalt",Transportation,NA,Cao Bằng,1281500,Cao Bang,VN203
+"Volume of stone, concrete, asphalt",Transportation,NA,Lào Cai,622917,Lao Cai,VN205
+"Volume of stone, concrete, asphalt",Transportation,NA,Bắc Kạn,2690,Bac Kan,VN207
+"Volume of stone, concrete, asphalt",Transportation,NA,Điện Biên,139213,Dien Bien,VN302
+"Volume of stone, concrete, asphalt",Transportation,NA,Tuyên Quang,107000,Tuyen Quang,VN211
+"Volume of stone, concrete, asphalt",Transportation,NA,Lai Châu,21600,Lai Chau,VN301
+"Volume of stone, concrete, asphalt",Transportation,NA,Hòa Bình,20383,Hoa Binh,VN305
+"Volume of stone, concrete, asphalt",Transportation,NA,Thanh Hóa,94109,Thanh Hoa,VN401
+Damaged bridge,Transportation,NA,Lào Cai,568,Lao Cai,VN205
+Damaged bridge,Transportation,NA,Thanh Hóa,2,Thanh Hoa,VN401
+Damaged drains,Transportation,NA,Lào Cai,11,Lao Cai,VN205
+Damaged drains,Transportation,NA,Điện Biên,1,Dien Bien,VN302
+Damaged drains,Transportation,NA,Thanh Hóa,4,Thanh Hoa,VN401
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Cao Bằng,1005,Cao Bang,VN203
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Lào Cai,1080,Lao Cai,VN205
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Bắc Kạn,45,Bac Kan,VN207
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Lạng Sơn,361,Lang Son,VN209
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Tuyên Quang,235,Tuyen Quang,VN211
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Yên Bái,262,Yen Bai,VN213
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Phú Thọ,56,Phu Tho,VN217
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Bắc Giang,116,Bac Giang,VN221
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Thái Bình,30,Thai Binh,VN115
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Thanh Hóa,10,Thanh Hoa,VN401
+Other ancillary works,Transportation,NA,Phú Thọ,4,Phu Tho,VN217
+Length of landslide and damage,Transportation,m,Hà Giang,755,Ha Giang,VN201
+Length of landslide and damage,Transportation,m,Cao Bằng,NA,Cao Bang,VN203
+Length of landslide and damage,Transportation,m,Lào Cai,46782,Lao Cai,VN205
+Length of landslide and damage,Transportation,m,Bắc Kạn,1502,Bac Kan,VN207
+Length of landslide and damage,Transportation,m,Lạng Sơn,NA,Lang Son,VN209
+Length of landslide and damage,Transportation,m,Điện Biên,368,Dien Bien,VN302
+Length of landslide and damage,Transportation,m,Tuyên Quang,1467,Tuyen Quang,VN211
+Length of landslide and damage,Transportation,m,Yên Bái,NA,Yen Bai,VN213
+Length of landslide and damage,Transportation,m,Thái Nguyên,NA,Thai Nguyen,VN215
+Length of landslide and damage,Transportation,m,Phú Thọ,25374,Phu Tho,VN217
+Length of landslide and damage,Transportation,m,Bắc Giang,8400,Bac Giang,VN221
+Length of landslide and damage,Transportation,m,Lai Châu,NA,Lai Chau,VN301
+Length of landslide and damage,Transportation,m,Sơn La,NA,Son La,VN303
+Length of landslide and damage,Transportation,m,Hòa Bình,14317,Hoa Binh,VN305
+Length of landslide and damage,Transportation,m,Hà Nội,6086,Ha Noi,VN101
+Length of landslide and damage,Transportation,m,Hải Phòng,NA,Hai Phong city,VN103
+Length of landslide and damage,Transportation,m,Quảng Ninh,NA,Quang Ninh,VN225
+Length of landslide and damage,Transportation,m,Hải Dương,3367,Hai Duong,VN107
+Length of landslide and damage,Transportation,m,Hưng Yên,NA,Hung Yen,VN109
+Length of landslide and damage,Transportation,m,Vĩnh Phúc,NA,Vinh Phuc,VN104
+Length of landslide and damage,Transportation,m,Bắc Ninh,NA,Bac Ninh,VN106
+Length of landslide and damage,Transportation,m,Hà Nam,1938,Ha Nam,VN111
+Length of landslide and damage,Transportation,m,Ninh Bình,1670,Ninh Binh,VN117
+Length of landslide and damage,Transportation,m,Thái Bình,8504,Thai Binh,VN115
+Length of landslide and damage,Transportation,m,Nam Định,1390,Nam Dinh,VN113
+Length of landslide and damage,Transportation,m,Thanh Hóa,10468,Thanh Hoa,VN401
+Flooded length,Transportation,NA,Phú Thọ,7450,Phu Tho,VN217
+Flooded length,Transportation,NA,Sơn La,3181,Son La,VN303
+Flooded length,Transportation,NA,Hà Nội,423440,Ha Noi,VN101
+Flooded length,Transportation,NA,Hải Dương,450,Hai Duong,VN107
+Flooded length,Transportation,NA,Hà Nam,39100,Ha Nam,VN111
+Flooded length,Transportation,NA,Ninh Bình,34870,Ninh Binh,VN117
+Flooded length,Transportation,NA,Thái Bình,13502,Thai Binh,VN115
+Flooded length,Transportation,NA,Nam Định,35100,Nam Dinh,VN113
+Soil Volume,Transportation,NA,Yên Bái,3512684,Yen Bai,VN213
+Soil Volume,Transportation,NA,Phú Thọ,181750,Phu Tho,VN217
+Soil Volume,Transportation,NA,Thái Bình,678,Thai Binh,VN115
+"Volume of stone, concrete, asphalt",Transportation,NA,Hà Giang,192600,Ha Giang,VN201
+"Volume of stone, concrete, asphalt",Transportation,NA,Cao Bằng,1805198,Cao Bang,VN203
+"Volume of stone, concrete, asphalt",Transportation,NA,Lào Cai,3487677,Lao Cai,VN205
+"Volume of stone, concrete, asphalt",Transportation,NA,Bắc Kạn,257405,Bac Kan,VN207
+"Volume of stone, concrete, asphalt",Transportation,NA,Điện Biên,114316,Dien Bien,VN302
+"Volume of stone, concrete, asphalt",Transportation,NA,Tuyên Quang,81092,Tuyen Quang,VN211
+"Volume of stone, concrete, asphalt",Transportation,NA,Phú Thọ,70,Phu Tho,VN217
+"Volume of stone, concrete, asphalt",Transportation,NA,Lai Châu,8470,Lai Chau,VN301
+"Volume of stone, concrete, asphalt",Transportation,NA,Sơn La,419031,Son La,VN303
+"Volume of stone, concrete, asphalt",Transportation,NA,Hòa Bình,81740,Hoa Binh,VN305
+"Volume of stone, concrete, asphalt",Transportation,NA,Thanh Hóa,25715,Thanh Hoa,VN401
+Damaged bridge,Transportation,NA,Hà Giang,2,Ha Giang,VN201
+Damaged bridge,Transportation,NA,Cao Bằng,20,Cao Bang,VN203
+Damaged bridge,Transportation,NA,Lào Cai,50,Lao Cai,VN205
+Damaged bridge,Transportation,NA,Bắc Kạn,13,Bac Kan,VN207
+Damaged bridge,Transportation,NA,Tuyên Quang,13,Tuyen Quang,VN211
+Damaged bridge,Transportation,NA,Yên Bái,8,Yen Bai,VN213
+Damaged bridge,Transportation,NA,Thái Nguyên,26,Thai Nguyen,VN215
+Damaged bridge,Transportation,NA,Phú Thọ,2,Phu Tho,VN217
+Damaged bridge,Transportation,NA,Bắc Giang,2,Bac Giang,VN221
+Damaged bridge,Transportation,NA,Lai Châu,1,Lai Chau,VN301
+Damaged bridge,Transportation,NA,Hà Nội,188,Ha Noi,VN101
+Damaged bridge,Transportation,NA,Hải Dương,1,Hai Duong,VN107
+Damaged bridge,Transportation,NA,Thái Bình,1,Thai Binh,VN115
+Damaged bridge,Transportation,NA,Thanh Hóa,2,Thanh Hoa,VN401
+Damaged drains,Transportation,NA,Hà Giang,1,Ha Giang,VN201
+Damaged drains,Transportation,NA,Lào Cai,1444,Lao Cai,VN205
+Damaged drains,Transportation,NA,Điện Biên,1,Dien Bien,VN302
+Damaged drains,Transportation,NA,Tuyên Quang,1,Tuyen Quang,VN211
+Damaged drains,Transportation,NA,Yên Bái,14,Yen Bai,VN213
+Damaged drains,Transportation,NA,Phú Thọ,5,Phu Tho,VN217
+Damaged drains,Transportation,NA,Bắc Giang,14,Bac Giang,VN221
+Damaged drains,Transportation,NA,Sơn La,18,Son La,VN303
+Damaged drains,Transportation,NA,Hải Dương,690,Hai Duong,VN107
+Damaged drains,Transportation,NA,Hà Nam,6,Ha Nam,VN111
+Damaged drains,Transportation,NA,Thái Bình,6,Thai Binh,VN115
+Damaged drains,Transportation,NA,Thanh Hóa,14,Thanh Hoa,VN401
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Cao Bằng,557,Cao Bang,VN203
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Lào Cai,5743,Lao Cai,VN205
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Bắc Kạn,647,Bac Kan,VN207
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Lạng Sơn,1142,Lang Son,VN209
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Tuyên Quang,365,Tuyen Quang,VN211
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Yên Bái,2074,Yen Bai,VN213
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Thái Nguyên,783,Thai Nguyen,VN215
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Phú Thọ,203,Phu Tho,VN217
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Bắc Giang,305,Bac Giang,VN221
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Thái Bình,124,Thai Binh,VN115
+Traffic points/roads are subject to landslides and traffic jams,Transportation,NA,Thanh Hóa,116,Thanh Hoa,VN401
+"Ferries, canoes, and water transport ships were damaged",Transportation,NA,Thái Bình,1,Thai Binh,VN115
+"Ferries, canoes, and water transport ships sank",Transportation,NA,Quảng Ninh,182,Quang Ninh,VN225
+DAMAGE TO FISHERIES,Fisheries,NA,Hà Giang,81,Ha Giang,VN201
+DAMAGE TO FISHERIES,Fisheries,NA,Cao Bằng,19.25,Cao Bang,VN203
+DAMAGE TO FISHERIES,Fisheries,NA,Lào Cai,411.41,Lao Cai,VN205
+DAMAGE TO FISHERIES,Fisheries,NA,Bắc Kạn,79.9,Bac Kan,VN207
+DAMAGE TO FISHERIES,Fisheries,NA,Lạng Sơn,0,Lang Son,VN209
+DAMAGE TO FISHERIES,Fisheries,NA,Điện Biên,0.23,Dien Bien,VN302
+DAMAGE TO FISHERIES,Fisheries,NA,Tuyên Quang,660.3,Tuyen Quang,VN211
+DAMAGE TO FISHERIES,Fisheries,NA,Yên Bái,1070,Yen Bai,VN213
+DAMAGE TO FISHERIES,Fisheries,NA,Thái Nguyên,565.93,Thai Nguyen,VN215
+DAMAGE TO FISHERIES,Fisheries,NA,Phú Thọ,956,Phu Tho,VN217
+DAMAGE TO FISHERIES,Fisheries,NA,Bắc Giang,3852.4,Bac Giang,VN221
+DAMAGE TO FISHERIES,Fisheries,NA,Lai Châu,0,Lai Chau,VN301
+DAMAGE TO FISHERIES,Fisheries,NA,Sơn La,32,Son La,VN303
+DAMAGE TO FISHERIES,Fisheries,NA,Hòa Bình,302.65999999999997,Hoa Binh,VN305
+DAMAGE TO FISHERIES,Fisheries,NA,Hà Nội,4401,Ha Noi,VN101
+DAMAGE TO FISHERIES,Fisheries,NA,Hải Phòng,6345,Hai Phong city,VN103
+DAMAGE TO FISHERIES,Fisheries,NA,Quảng Ninh,0,Quang Ninh,VN225
+DAMAGE TO FISHERIES,Fisheries,NA,Hải Dương,4318,Hai Duong,VN107
+DAMAGE TO FISHERIES,Fisheries,NA,Hưng Yên,1400,Hung Yen,VN109
+DAMAGE TO FISHERIES,Fisheries,NA,Vĩnh Phúc,942,Vinh Phuc,VN104
+DAMAGE TO FISHERIES,Fisheries,NA,Bắc Ninh,508.32,Bac Ninh,VN106
+DAMAGE TO FISHERIES,Fisheries,NA,Hà Nam,1493,Ha Nam,VN111
+DAMAGE TO FISHERIES,Fisheries,NA,Ninh Bình,3159,Ninh Binh,VN117
+DAMAGE TO FISHERIES,Fisheries,NA,Thái Bình,3757,Thai Binh,VN115
+DAMAGE TO FISHERIES,Fisheries,NA,Nam Định,1460.8719999999998,Nam Dinh,VN113
+DAMAGE TO FISHERIES,Fisheries,NA,Thanh Hóa,284.59,Thanh Hoa,VN401
+Traditional fish farming area,Fisheries,NA,Hà Giang,81,Ha Giang,VN201
+Traditional fish farming area,Fisheries,NA,Cao Bằng,19.25,Cao Bang,VN203
+Traditional fish farming area,Fisheries,NA,Lào Cai,411.41,Lao Cai,VN205
+Traditional fish farming area,Fisheries,NA,Bắc Kạn,79.9,Bac Kan,VN207
+Traditional fish farming area,Fisheries,NA,Điện Biên,0.23,Dien Bien,VN302
+Traditional fish farming area,Fisheries,NA,Tuyên Quang,660.3,Tuyen Quang,VN211
+Traditional fish farming area,Fisheries,NA,Yên Bái,1070,Yen Bai,VN213
+Traditional fish farming area,Fisheries,NA,Thái Nguyên,565.93,Thai Nguyen,VN215
+Traditional fish farming area,Fisheries,NA,Phú Thọ,945,Phu Tho,VN217
+Traditional fish farming area,Fisheries,NA,Bắc Giang,3852.4,Bac Giang,VN221
+Traditional fish farming area,Fisheries,NA,Sơn La,32,Son La,VN303
+Traditional fish farming area,Fisheries,NA,Hòa Bình,302.65999999999997,Hoa Binh,VN305
+Traditional fish farming area,Fisheries,NA,Hà Nội,4401,Ha Noi,VN101
+Traditional fish farming area,Fisheries,NA,Hải Phòng,6345,Hai Phong city,VN103
+Traditional fish farming area,Fisheries,NA,Hải Dương,4318,Hai Duong,VN107
+Traditional fish farming area,Fisheries,NA,Hưng Yên,1400,Hung Yen,VN109
+Traditional fish farming area,Fisheries,NA,Vĩnh Phúc,942,Vinh Phuc,VN104
+Traditional fish farming area,Fisheries,NA,Bắc Ninh,508.32,Bac Ninh,VN106
+Traditional fish farming area,Fisheries,NA,Hà Nam,1436,Ha Nam,VN111
+Traditional fish farming area,Fisheries,NA,Ninh Bình,3000,Ninh Binh,VN117
+Traditional fish farming area,Fisheries,NA,Thái Bình,3282,Thai Binh,VN115
+Traditional fish farming area,Fisheries,NA,Nam Định,1279.706,Nam Dinh,VN113
+Traditional fish farming area,Fisheries,NA,Thanh Hóa,284.59,Thanh Hoa,VN401
+Catfish farming area,Fisheries,NA,Ninh Bình,26,Ninh Binh,VN117
+Catfish farming area,Fisheries,NA,Thái Bình,1,Thai Binh,VN115
+Catfish farming area,Fisheries,NA,Nam Định,0.8,Nam Dinh,VN113
+Shrimp farming area,Fisheries,NA,Ninh Bình,133,Ninh Binh,VN117
+Shrimp farming area,Fisheries,NA,Thái Bình,107,Thai Binh,VN115
+Shrimp farming area,Fisheries,NA,Nam Định,110.566,Nam Dinh,VN113
+Clam farming area,Fisheries,NA,Thái Bình,13,Thai Binh,VN115
+Clam farming area,Fisheries,NA,Nam Định,66,Nam Dinh,VN113
+Other seafood (*),Fisheries,NA,Phú Thọ,11,Phu Tho,VN217
+Other seafood (*),Fisheries,NA,Hà Nam,57,Ha Nam,VN111
+Other seafood (*),Fisheries,NA,Thái Bình,354,Thai Binh,VN115
+Other seafood (*),Fisheries,NA,Nam Định,3.8,Nam Dinh,VN113
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Cao Bằng,26,Cao Bang,VN203
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Tuyên Quang,466,Tuyen Quang,VN211
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Phú Thọ,380,Phu Tho,VN217
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Lai Châu,7,Lai Chau,VN301
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Quảng Ninh,2637,Quang Ninh,VN225
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Hải Dương,4157,Hai Duong,VN107
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Hưng Yên,250,Hung Yen,VN109
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Bắc Ninh,454,Bac Ninh,VN106
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Hà Nam,466,Ha Nam,VN111
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Thái Bình,2966,Thai Binh,VN115
+"Cages, aquaculture rafts, seafood of all kinds",Fisheries,NA,Nam Định,26,Nam Dinh,VN113
+Means of exploitation of aquatic and seafood,Fisheries,NA,Sơn La,1,Son La,VN303
+Means of exploitation of aquatic and seafood,Fisheries,NA,Hải Phòng,37,Hai Phong city,VN103
+Means of exploitation of aquatic and seafood,Fisheries,NA,Quảng Ninh,116,Quang Ninh,VN225
+Means of exploitation of aquatic and seafood,Fisheries,NA,Hà Nam,1,Ha Nam,VN111
+Means of exploitation of aquatic and seafood,Fisheries,NA,Thái Bình,22,Thai Binh,VN115
+Means of exploitation of aquatic and seafood,Fisheries,NA,Nam Định,15,Nam Dinh,VN113
+Other damage to fisheries (*),Fisheries,NA,Yên Bái,8,Yen Bai,VN213
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Hà Giang,1,Ha Giang,VN201
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Cao Bằng,2,Cao Bang,VN203
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Lào Cai,9,Lao Cai,VN205
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Thái Nguyên,10,Thai Nguyen,VN215
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Bắc Giang,39,Bac Giang,VN221
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Hòa Bình,2,Hoa Binh,VN305
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Hải Dương,11,Hai Duong,VN107
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Bắc Ninh,739,Bac Ninh,VN106
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Hà Nam,3,Ha Nam,VN111
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Thái Bình,1254,Thai Binh,VN115
+Collapsed or broken Antenna Pole (BTS),Communications,NA,Thanh Hóa,1,Thanh Hoa,VN401
+The cable pole fell and broke,Communications,NA,Lào Cai,3109,Lao Cai,VN205
+The cable pole fell and broke,Communications,NA,Thái Nguyên,120,Thai Nguyen,VN215
+The cable pole fell and broke,Communications,NA,Bắc Giang,900,Bac Giang,VN221
+The cable pole fell and broke,Communications,NA,Hòa Bình,157,Hoa Binh,VN305
+The cable pole fell and broke,Communications,NA,Quảng Ninh,739,Quang Ninh,VN225
+The cable pole fell and broke,Communications,NA,Hải Dương,2130,Hai Duong,VN107
+The cable pole fell and broke,Communications,NA,Bắc Ninh,195,Bac Ninh,VN106
+The cable pole fell and broke,Communications,NA,Hà Nam,254,Ha Nam,VN111
+The cable pole fell and broke,Communications,NA,Thái Bình,128,Thai Binh,VN115
+The cable pole fell and broke,Communications,NA,Thanh Hóa,1,Thanh Hoa,VN401
+Station House,Communications,NA,Lào Cai,7,Lao Cai,VN205
+Station House,Communications,NA,Thái Nguyên,5,Thai Nguyen,VN215
+Station House,Communications,NA,Hòa Bình,2,Hoa Binh,VN305
+Station House,Communications,NA,Quảng Ninh,1211,Quang Ninh,VN225
+Station House,Communications,NA,Hải Dương,87,Hai Duong,VN107
+Cable Glands,Communications,NA,Hải Dương,2766,Hai Duong,VN107
+Power Pole,Industry,NA,Hà Giang,28,Ha Giang,VN201
+Power Pole,Industry,NA,Cao Bằng,118,Cao Bang,VN203
+Power Pole,Industry,NA,Lào Cai,466,Lao Cai,VN205
+Power Pole,Industry,NA,Bắc Kạn,42,Bac Kan,VN207
+Power Pole,Industry,NA,Lạng Sơn,150,Lang Son,VN209
+Power Pole,Industry,NA,Điện Biên,17,Dien Bien,VN302
+Power Pole,Industry,NA,Tuyên Quang,346,Tuyen Quang,VN211
+Power Pole,Industry,NA,Yên Bái,283,Yen Bai,VN213
+Power Pole,Industry,NA,Thái Nguyên,286,Thai Nguyen,VN215
+Power Pole,Industry,NA,Phú Thọ,158,Phu Tho,VN217
+Power Pole,Industry,NA,Bắc Giang,1792,Bac Giang,VN221
+Power Pole,Industry,NA,Lai Châu,16,Lai Chau,VN301
+Power Pole,Industry,NA,Sơn La,174,Son La,VN303
+Power Pole,Industry,NA,Hòa Bình,353,Hoa Binh,VN305
+Power Pole,Industry,NA,Hà Nội,1286,Ha Noi,VN101
+Power Pole,Industry,NA,Hải Phòng,10043,Hai Phong city,VN103
+Power Pole,Industry,NA,Quảng Ninh,5509,Quang Ninh,VN225
+Power Pole,Industry,NA,Hải Dương,9653,Hai Duong,VN107
+Power Pole,Industry,NA,Vĩnh Phúc,234,Vinh Phuc,VN104
+Power Pole,Industry,NA,Bắc Ninh,611,Bac Ninh,VN106
+Power Pole,Industry,NA,Hà Nam,33,Ha Nam,VN111
+Power Pole,Industry,NA,Ninh Bình,190,Ninh Binh,VN117
+Power Pole,Industry,NA,Thái Bình,1215,Thai Binh,VN115
+Power Pole,Industry,NA,Nam Định,69,Nam Dinh,VN113
+Power Pole,Industry,NA,Thanh Hóa,286,Thanh Hoa,VN401
+Medium and high voltage,Industry,NA,Yên Bái,29,Yen Bai,VN213
+Medium and high voltage,Industry,NA,Phú Thọ,20,Phu Tho,VN217
+Medium and high voltage,Industry,NA,Bắc Giang,146,Bac Giang,VN221
+Medium and high voltage,Industry,NA,Nam Định,1,Nam Dinh,VN113
+Medium and high voltage,Industry,NA,Thanh Hóa,27,Thanh Hoa,VN401
+Low Voltage,Industry,NA,Yên Bái,254,Yen Bai,VN213
+Low Voltage,Industry,NA,Phú Thọ,138,Phu Tho,VN217
+Low Voltage,Industry,NA,Bắc Giang,1646,Bac Giang,VN221
+Low Voltage,Industry,NA,Nam Định,68,Nam Dinh,VN113
+Low Voltage,Industry,NA,Thanh Hóa,259,Thanh Hoa,VN401
+Broken wires,Industry,NA,Yên Bái,20328,Yen Bai,VN213
+Broken wires,Industry,NA,Thái Nguyên,2341,Thai Nguyen,VN215
+Broken wires,Industry,NA,Phú Thọ,435,Phu Tho,VN217
+Broken wires,Industry,NA,Bắc Giang,29795,Bac Giang,VN221
+Broken wires,Industry,NA,Sơn La,1000,Son La,VN303
+Broken wires,Industry,NA,Hòa Bình,4889,Hoa Binh,VN305
+Broken wires,Industry,NA,Hải Dương,135212,Hai Duong,VN107
+Broken wires,Industry,NA,Bắc Ninh,2121,Bac Ninh,VN106
+Broken wires,Industry,NA,Hà Nam,300,Ha Nam,VN111
+Broken wires,Industry,NA,Ninh Bình,3600,Ninh Binh,VN117
+Broken wires,Industry,NA,Thái Bình,3750,Thai Binh,VN115
+Broken wires,Industry,NA,Nam Định,2530,Nam Dinh,VN113
+Broken wires,Industry,NA,Thanh Hóa,160,Thanh Hoa,VN401
+Medium and high voltage,Industry,NA,Yên Bái,6518,Yen Bai,VN213
+Medium and high voltage,Industry,NA,Phú Thọ,435,Phu Tho,VN217
+Low Voltage,Industry,NA,Yên Bái,13810,Yen Bai,VN213
+Low Voltage,Industry,NA,Nam Định,2530,Nam Dinh,VN113
+Damaged transformer station,Industry,NA,Cao Bằng,3,Cao Bang,VN203
+Damaged transformer station,Industry,NA,Bắc Kạn,1,Bac Kan,VN207
+Damaged transformer station,Industry,NA,Yên Bái,3,Yen Bai,VN213
+Damaged transformer station,Industry,NA,Thái Nguyên,3,Thai Nguyen,VN215
+Damaged transformer station,Industry,NA,Phú Thọ,55,Phu Tho,VN217
+Damaged transformer station,Industry,NA,Bắc Giang,6,Bac Giang,VN221
+Damaged transformer station,Industry,NA,Hòa Bình,3,Hoa Binh,VN305
+Damaged transformer station,Industry,NA,Hải Phòng,67,Hai Phong city,VN103
+Damaged transformer station,Industry,NA,Quảng Ninh,73,Quang Ninh,VN225
+Damaged transformer station,Industry,NA,Hải Dương,51,Hai Duong,VN107
+Damaged transformer station,Industry,NA,Vĩnh Phúc,30,Vinh Phuc,VN104
+Damaged transformer station,Industry,NA,Bắc Ninh,2,Bac Ninh,VN106
+Damaged transformer station,Industry,NA,Hà Nam,15,Ha Nam,VN111
+Damaged transformer station,Industry,NA,Ninh Bình,7,Ninh Binh,VN117
+Damaged transformer station,Industry,NA,Thái Bình,9,Thai Binh,VN115
+Medium and high voltage,Industry,NA,Yên Bái,3,Yen Bai,VN213
+Low Voltage,Industry,NA,Phú Thọ,55,Phu Tho,VN217
+"Factories, factories, industrial works",Industry,NA,Yên Bái,12,Yen Bai,VN213
+"Factories, factories, industrial works",Industry,NA,Hải Phòng,1239,Hai Phong city,VN103
+"Factories, factories, industrial works",Industry,NA,Hải Dương,1829,Hai Duong,VN107
+"Factories, factories, industrial works",Industry,NA,Hà Nam,44,Ha Nam,VN111
+"Factories, factories, industrial works",Industry,NA,Thái Bình,1904,Thai Binh,VN115
+"Factories, factories, industrial works",Industry,NA,Nam Định,1,Nam Dinh,VN113
+Destroyed or damaged machinery and equipment,Industry,NA,Thái Bình,104,Thai Binh,VN115
+Destroyed or damaged machinery and equipment,Industry,NA,Nam Định,5,Nam Dinh,VN113
+Damaged water supply works,Water and sanitation,NA,Lào Cai,212,Lao Cai,VN205
+Damaged water supply works,Water and sanitation,NA,Bắc Kạn,25,Bac Kan,VN207
+Damaged water supply works,Water and sanitation,NA,Điện Biên,9,Dien Bien,VN302
+Damaged water supply works,Water and sanitation,NA,Tuyên Quang,2,Tuyen Quang,VN211
+Damaged water supply works,Water and sanitation,NA,Yên Bái,25,Yen Bai,VN213
+Damaged water supply works,Water and sanitation,NA,Thái Nguyên,26,Thai Nguyen,VN215
+Damaged water supply works,Water and sanitation,NA,Phú Thọ,4,Phu Tho,VN217
+Damaged water supply works,Water and sanitation,NA,Sơn La,9,Son La,VN303
+Damaged water supply works,Water and sanitation,NA,Hòa Bình,390,Hoa Binh,VN305
+Damaged water supply works,Water and sanitation,NA,Hải Dương,9,Hai Duong,VN107
+Damaged water supply works,Water and sanitation,NA,Hà Nam,1,Ha Nam,VN111
+Damaged water supply works,Water and sanitation,NA,Thái Bình,605,Thai Binh,VN115
+Damaged water supply works,Water and sanitation,NA,Thanh Hóa,1,Thanh Hoa,VN401
+Agency Headquarters,Other,NA,Lào Cai,10,Lao Cai,VN205
+Agency Headquarters,Other,NA,Bắc Kạn,10,Bac Kan,VN207
+Agency Headquarters,Other,NA,Tuyên Quang,19,Tuyen Quang,VN211
+Agency Headquarters,Other,NA,Yên Bái,48,Yen Bai,VN213
+Agency Headquarters,Other,NA,Phú Thọ,6,Phu Tho,VN217
+Agency Headquarters,Other,NA,Bắc Giang,52,Bac Giang,VN221
+Agency Headquarters,Other,NA,Lai Châu,2,Lai Chau,VN301
+Agency Headquarters,Other,NA,Hải Phòng,472,Hai Phong city,VN103
+Agency Headquarters,Other,NA,Hải Dương,3379,Hai Duong,VN107
+Agency Headquarters,Other,NA,Bắc Ninh,233,Bac Ninh,VN106
+Agency Headquarters,Other,NA,Hà Nam,9,Ha Nam,VN111
+Agency Headquarters,Other,NA,Thái Bình,505,Thai Binh,VN115
+Agency Headquarters,Other,NA,Nam Định,5,Nam Dinh,VN113
+"Markets, commercial centers",Other,NA,Yên Bái,2,Yen Bai,VN213
+"Markets, commercial centers",Other,NA,Hải Phòng,118,Hai Phong city,VN103
+"Markets, commercial centers",Other,NA,Hải Dương,26,Hai Duong,VN107
+"Markets, commercial centers",Other,NA,Hà Nam,1,Ha Nam,VN111
+"Markets, commercial centers",Other,NA,Thái Bình,472,Thai Binh,VN115
+"Markets, commercial centers",Other,NA,Nam Định,5,Nam Dinh,VN113
+"Warehouses, workshops",Other,NA,Cao Bằng,24,Cao Bang,VN203
+"Warehouses, workshops",Other,NA,Bắc Kạn,2,Bac Kan,VN207
+"Warehouses, workshops",Other,NA,Bắc Giang,3388,Bac Giang,VN221
+"Warehouses, workshops",Other,NA,Thái Bình,2663,Thai Binh,VN115
+"Warehouses, workshops",Other,NA,Thanh Hóa,2,Thanh Hoa,VN401
+National defense and security works and other natural disaster prevention and control works (*),Other,NA,Hải Phòng,64,Hai Phong city,VN103
+National defense and security works and other natural disaster prevention and control works (*),Other,NA,Hải Dương,21,Hai Duong,VN107
+"Fences and gates have collapsed, collapsed, or damaged",Other,NA,Bắc Kạn,64,Bac Kan,VN207
+"Fences and gates have collapsed, collapsed, or damaged",Other,NA,Tuyên Quang,2071,Tuyen Quang,VN211
+"Fences and gates have collapsed, collapsed, or damaged",Other,NA,Hà Nội,40747,Ha Noi,VN101
+"Fences and gates have collapsed, collapsed, or damaged",Other,NA,Bắc Ninh,25707,Bac Ninh,VN106
+"Fences and gates have collapsed, collapsed, or damaged",Other,NA,Hà Nam,960,Ha Nam,VN111
+"Fences and gates have collapsed, collapsed, or damaged",Other,NA,Thanh Hóa,408,Thanh Hoa,VN401
+Monetary damage,Monetary damage,NA,Hà Giang,141689.1,Ha Giang,VN201
+Monetary damage,Monetary damage,NA,Cao Bằng,919782,Cao Bang,VN203
+Monetary damage,Monetary damage,NA,Lào Cai,6806487,Lao Cai,VN205
+Monetary damage,Monetary damage,NA,Bắc Kạn,909500,Bac Kan,VN207
+Monetary damage,Monetary damage,NA,Lạng Sơn,900000,Lang Son,VN209
+Monetary damage,Monetary damage,NA,Điện Biên,44400,Dien Bien,VN302
+Monetary damage,Monetary damage,NA,Tuyên Quang,1350964,Tuyen Quang,VN211
+Monetary damage,Monetary damage,NA,Yên Bái,5738200,Yen Bai,VN213
+Monetary damage,Monetary damage,NA,Thái Nguyên,859026,Thai Nguyen,VN215
+Monetary damage,Monetary damage,NA,Phú Thọ,1588550,Phu Tho,VN217
+Monetary damage,Monetary damage,NA,Bắc Giang,5000000,Bac Giang,VN221
+Monetary damage,Monetary damage,NA,Lai Châu,6300,Lai Chau,VN301
+Monetary damage,Monetary damage,NA,Sơn La,149440,Son La,VN303
+Monetary damage,Monetary damage,NA,Hòa Bình,1065568,Hoa Binh,VN305
+Monetary damage,Monetary damage,NA,Hà Nội,2286538,Ha Noi,VN101
+Monetary damage,Monetary damage,NA,Hải Phòng,12249432,Hai Phong city,VN103
+Monetary damage,Monetary damage,NA,Quảng Ninh,24876000,Quang Ninh,VN225
+Monetary damage,Monetary damage,NA,Hải Dương,7498000,Hai Duong,VN107
+Monetary damage,Monetary damage,NA,Hưng Yên,3637600,Hung Yen,VN109
+Monetary damage,Monetary damage,NA,Vĩnh Phúc,260000,Vinh Phuc,VN104
+Monetary damage,Monetary damage,NA,Bắc Ninh,1194200,Bac Ninh,VN106
+Monetary damage,Monetary damage,NA,Hà Nam,793415,Ha Nam,VN111
+Monetary damage,Monetary damage,NA,Ninh Bình,376590,Ninh Binh,VN117
+Monetary damage,Monetary damage,NA,Thái Bình,1479000,Thai Binh,VN115
+Monetary damage,Monetary damage,NA,Nam Định,1142372,Nam Dinh,VN113
+Monetary damage,Monetary damage,NA,Thanh Hóa,430000,Thanh Hoa,VN401

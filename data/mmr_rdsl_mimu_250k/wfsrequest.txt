@@ -1,0 +1,1 @@
+http://geonode.themimu.info/geoserver/wfs?format_options=charset:UTF-8&typename=geonode:mmr_rdsl_mimu_250k&outputFormat=SHAPE-ZIP&version=1.0.0&service=WFS&request=GetFeature

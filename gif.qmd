@@ -1,0 +1,629 @@
+---
+title: "Gifs working"
+author: "Sean Ng"
+date: "12 July 2024"
+toc: true
+toc-location: left
+toc-depth: 4
+format: 
+  html:
+    page-layout: full
+    code-tools: true
+    self-contained: true
+---
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      fig.width = 9.5)
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(patchwork)
+library(scales)
+library(sf)
+library(broom)
+library(treemapify)
+library(kableExtra)
+library(gganimate)
+library(gifski)
+
+`%out%` <- Negate(`%in%`)
+options(scipen = 100)
+theme_set(theme_light())
+
+show_col(viridis_pal(option = "cividis")(8))
+
+```
+
+
+# Data
+
+```{r data}
+country_list <- c("Australia", "Afghanistan", "Bangladesh", "Bhutan", "Cambodia", 
+                  "China", "Fiji", "Hong Kong", "Japan", "India", "Indonesia", 
+                  "Iran",  "Laos", "Malaysia", "Maldives", "Mongolia", "Myanmar", 
+                  "Nepal", "New Zealand",  "North Korea", "Pakistan", "Papua New Guinea",
+                  "Philippines", "Singapore", "Solomon Islands", "South Korea", 
+                  "Sri Lanka", "Thailand", "Timor-Leste", "Vanuatu", "Vietnam")
+
+
+population <- read_csv(here("data", "wdi_all_countries_population.csv")) |> 
+  janitor::clean_names()  %>%
+  mutate(across(matches("_yr"), ~ as.numeric(.))) |> 
+  pivot_longer(cols = x2000_yr2000:x2023_yr2023, 
+               names_to = "year", 
+               values_to = "population") |>
+  mutate(year = str_sub(year, start = -4, end = -1), 
+         year = as.double(year)) |> 
+  rename(country = country_name) |> 
+  mutate(country = 
+           case_when(str_detect(country, "Korea, Rep.") ~ "South Korea",
+                             str_detect(country, "Korea, Dem. People's Rep.") ~ "North Korea", 
+                             str_detect(country, "Hong Kong SAR, China") ~ "Hong Kong", 
+                             str_detect(country, "Iran, Islamic Rep.") ~ "Iran", 
+                             str_detect(country, "Lao PDR") ~ "Laos", 
+                             country == "Viet Nam" ~ "Vietnam", 
+                             TRUE ~ country), 
+         country_iso = countrycode::countrycode(country,
+                                   origin = "country.name", 
+                                   destination = "iso3c")) |> 
+  filter(!is.na(country) & 
+           country %out% c("Data from database: World Development Indicators", 
+                           "Last Updated: 06/28/2024"))
+
+# population_estimates <- crossing(country = population$country, year = 2000:2023) |> 
+#   left_join(population |> 
+#               select(year, country, population), 
+#             by = c("year", "country")) |> 
+#   group_by(country) %>% 
+#   fill(population, .direction = "updown") 
+
+
+population_estimates <- crossing(country = population$country, year = 2000:2023) |> 
+  left_join(population |> 
+              select(year, country, population), 
+            by = c("year", "country")) |> 
+  group_by(country) %>% 
+  fill(population, .direction = "updown")
+
+
+world_shape <- st_read(here("data", 
+                            "world-administrative-boundaries", 
+                            "world-administrative-boundaries.shp"), 
+                       quiet = TRUE) |> 
+  mutate(country = case_when(
+    name == "Iran (Islamic Republic of)" ~ "Iran", 
+    name == "Republic of Korea" ~ "South Korea", 
+    name == "Democratic People's Republic of Korea" ~ "North Korea", 
+    name == "Lao People's Democratic Republic" ~ "Laos", 
+    TRUE ~ name
+  )) 
+
+asia_pacific_shape <- world_shape  |> 
+  filter(country %in% country_list | 
+           country %in% c("Arunachal Pradesh", "Jammu-Kashmir", "Aksai Chin"))
+
+myanmar_adm1 <- st_read(here("data", 
+                             "mmr_polbnda2_adm1_mimu_250k", 
+                             "mmr_polbnda2_adm1_mimu_250k.shp"), 
+                        quiet = TRUE) |> 
+  rename(state = ST, 
+        admin1_pcode = ST_PCODE) |> st_as_sf()
+
+country_iso3 <- world_shape |> 
+  distinct(name, iso3)
+
+acled_filtered <- readRDS(here("data", "acled_filtered.rds"))
+
+most_events_list <- acled_filtered |> 
+  group_by(country) |> 
+  summarise(events = n()) |> 
+  arrange(desc(events)) |> 
+  pull(country)
+
+most_fatalities_list <- acled_filtered |> 
+  group_by(country) |> 
+  mutate(fatalities = as.numeric(fatalities)) |> 
+  summarise(fatalities = sum(fatalities, na.rm = TRUE)) |> 
+  arrange(desc(fatalities)) |> 
+  pull(country)
+
+actor_codes_acled <- tribble(
+  ~actor_code, ~description, 
+  1, "State Forces", 
+  2, "Rebel Groups", 
+  3, "Political Militias", 
+  4, "Identity Militias", 
+  5, "Rioters",
+  6, "Protesters", 
+  7, "Civilians", 
+  8, "Other Forces"
+)
+
+lebanon <- readRDS(here("data", "lebanon.rds"))
+
+```
+
+
+
+
+
+> New variable for conflict in border areas. 
+> Define buffer radius
+
+For Afghanhistan, basically, create a line approximating the border, then 
+
+
+# Asia-Pacific
+
+
+```{r}
+asia_pacific_event_types <- acled_filtered |>
+  # filter(sub_event_type %out% c("Agreement", 
+  #                               "Change to group/activity", 
+  #                               "Headquarters or base established", 
+  #                               "Non-violent transfer of territory")) |> 
+  mutate(quarter = floor_date(event_date, "quarter")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, quarter, fatalities) %>%
+  mutate(quarter = map(quarter, ~seq.Date(as.Date(.), as.Date("2024-10-29"), by = "quarter"))) |> 
+  unnest(quarter) |> 
+  mutate(quarter = format_ISO8601(quarter, precision = "ym")) %>%
+  ggplot() + 
+  geom_sf(data = asia_pacific_shape, size = .5, colour = "grey", fill = "grey90") + 
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .15) + 
+  
+  coord_sf(xlim = c(44, 180), 
+           ylim = c(-44, 52)) + 
+  scale_colour_manual(values = c(
+      "Battles" = "#9b2226",
+      "Violence against civilians" = "#001219",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) +
+  scale_size_continuous(range = c(.1, 6), breaks = c(0, 10, 50, 100, 150)) +
+  theme_void() +
+  guides(colour = guide_legend(override.aes = list(alpha = 1, size = 3.5)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) +
+  theme(plot.background = element_rect(fill = "grey99", colour = "grey99"), 
+        rect = element_rect(fill = NA, colour = NA), 
+        legend.title = element_text(face = "bold", size = 18),
+        legend.text = element_text(size = 15), 
+        legend.position = c(0.1, 0.2), 
+        legend.box.background = element_blank(),
+        legend.key = element_rect(colour = NA, fill = NA), 
+        plot.caption = element_text(hjust = 0.5), 
+        plot.title = element_text(size = 23)) + 
+  gganimate::transition_manual(quarter) + 
+  labs(title = "Asia-Pacific conflict events in { current_frame }", 
+       caption = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com",
+       colour = "Event type", 
+       size = "Fatalities")
+
+
+gganimate::animate(asia_pacific_event_types, width = 3240, height = 2160, res = 150, duration = 60, 
+                   renderer = gifski_renderer())
+
+
+
+gganimate::anim_save(here("plots", "asia_pacific_event_types_grey.gif"))
+
+
+
+```
+
+```{r}
+geom_sf(data = world_shape |> filter(str_detect(name, "Lebanon")), 
+          size = 2, colour = "goldenrod2", fill = "grey90") + 
+```
+
+
+# Lebanon
+
+
+```{r}
+
+cities <- tribble(~x, ~y, ~name,
+  35.5018, 33.8938, "Beirut", 
+  36.2768, 33.5132, "Damascus", 
+  34.467, 31.5085, "Gaza", 
+  34.7818, 32.0853, "Tel Aviv", 
+  35.2034, 31.9038, "Ramallah",
+  35.8362, 34.4346, "Tripoli",
+  35.2038, 33.2705, "Tyre", 
+  36.7135, 34.7325, "Homs", 
+  35.9106, 31.9544, "Amman"
+  
+) |> 
+  st_as_sf(coords = c("x", "y"), crs = 4326)
+
+lebanon_shape <- world_shape |> filter(iso3 %in% c("ISR", "JOR", "LBN", "PSE", "SYR"))
+
+
+lebanon_event_types <- lebanon |> 
+  filter(country %in% c("Lebanon", "Syria", "Palestine", "Jordan", "Israel")) |> 
+  filter(event_date >= "2023-01-01") |> 
+  mutate(month = floor_date(event_date, "month")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, month, fatalities) %>%
+  mutate(month = map(month, ~seq.Date(as.Date(.), as.Date("2024-09-20"), by = "month"))) |> 
+  unnest(month) |> 
+  mutate(month = format_ISO8601(month, precision = "ym")) |> 
+  ggplot() + 
+  geom_sf(data = lebanon_shape, size = .5, colour = "grey", fill = "grey90", linewidth = .6) + 
+  geom_sf(data = world_shape |> filter(str_detect(name, "Lebanon")), 
+          linewidth = .8, colour = "cornflowerblue", fill = "grey90") + 
+  geom_sf_text(data = cities, aes(geometry = geometry, label = name), 
+          size = 5, alpha = .8) +
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .15) + 
+  coord_sf(xlim = c(34, 43), 
+           ylim = c(29, 37.8)) +
+  scale_colour_manual(values = c(
+      "Battles" = "#9b2226",
+      "Violence against civilians" = "#001219",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) +
+  scale_size_continuous(range = c(1, 10), breaks = c(0, 10, 50, 100, 150)) +
+  theme_void() +
+  guides(colour = guide_legend(override.aes = list(alpha = 1, size = 3)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) +
+  theme(plot.background = element_rect(fill = "grey99", colour = "grey99"), 
+        rect = element_rect(fill = NA, colour = NA), 
+        legend.title = element_text(face = "bold", size = 18),
+        legend.position = c(0.8, 0.2), 
+        legend.box.background = element_blank(),
+        legend.key = element_rect(colour = NA, fill = NA), 
+        legend.text = element_text(size = 16),
+        plot.caption = element_text(hjust = 0.5), 
+        plot.title = element_text(size = 28), 
+        plot.subtitle = element_text(size = 12)) + 
+  gganimate::transition_manual(month) + 
+  labs(title = "Conflict events in Lebanon and neigbouring countries in { current_frame }", 
+       subtitle = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com.",
+       caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.",
+       colour = "Event type", 
+       size = "Fatalities")
+
+
+gganimate::animate(lebanon_event_types, width = 3000, height = 2200, res = 150, duration = 20, 
+                   renderer = gifski_renderer())
+
+
+gganimate::anim_save(here("plots", "lebanon_event_types_grey_months.gif"))
+
+
+```
+
+
+### Static patchwork
+
+```{r}
+make_lebnanon_patchwork <- function(tbl){
+  
+  tbl |> 
+    filter(country %in% c("Lebanon", "Syria", "Palestine", "Jordan", "Israel")) |> 
+    select(event_id_cnty, event_type, longitude, latitude, event_type, fatalities) |> 
+    ggplot() + 
+    geom_sf(data = lebanon_shape, linewidth = .3, colour = "grey", fill = "grey90") + 
+    geom_sf(data = world_shape |> filter(str_detect(name, "Lebanon")), 
+            linewidth = .9, colour = "cornflowerblue", fill = "grey90") + 
+    geom_sf_text(data = cities, aes(geometry = geometry, label = name), 
+            size = 5, alpha = .8) +
+    geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .07) + 
+    coord_sf(xlim = c(34, 43), 
+             ylim = c(29, 37.8)) +
+    scale_colour_manual(values = c(
+        "Battles" = "#9b2226",
+        "Violence against civilians" = "#001219",
+        "Explosions/Remote violence" = "#ee9b00",
+        "Protests" = "#94d2bd",
+        "Strategic developments" = "#e9d8a6",
+        "Riots" = "#005f73"
+      )) +
+    theme_void() +
+    guides(colour = guide_legend(override.aes = list(alpha = 1, size = 5)), 
+           size = guide_legend(override.aes = list(alpha = 1, 
+                                                   colour = "grey"))) +
+    theme(plot.background = element_rect(fill = "grey99", colour = "grey99"), 
+          rect = element_rect(fill = NA, colour = NA), 
+          legend.title = element_text(face = "bold", size = 28),
+          legend.box.background = element_blank(),
+          legend.key = element_rect(colour = NA, fill = NA), 
+          legend.text = element_text(size = 24),
+          legend.box = "vertical",
+          plot.title = element_text(size = 38, hjust = .5), 
+          plot.subtitle = element_text(size = 19, hjust = .5)) + 
+    labs(subtitle = "Data source: acleddata.com.",
+         colour = "Event type", 
+         size = "Fatalities")
+}
+```
+
+
+```{r}
+lebanon_patchwork <- lebanon |> 
+  filter(event_date < "2023-10-07") |> 
+  make_lebnanon_patchwork() + 
+  labs(title = "2023-10-06") + 
+
+lebanon |> 
+  filter(event_date < "2024-02-01") |> 
+  make_lebnanon_patchwork() + 
+  labs(title = "2024-01-31") + 
+  
+lebanon |> 
+  filter(event_date < "2024-06-01") |> 
+  make_lebnanon_patchwork() + 
+  labs(title = "2024-05-31") + 
+  
+lebanon |> 
+  make_lebnanon_patchwork() + 
+  labs(title = "2024-09-20") +
+  
+  
+  plot_annotation(title = "Cumulative conflict incidents in Lebanon and its neighbours, selected dates",
+                  caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.", 
+                  theme = theme(plot.caption = element_text(hjust = 0.5, size = 17),
+                                plot.title = element_text(size = 50))) + 
+  plot_layout(guides = "collect") & 
+  scale_size_continuous(limits = range(c(0, 471)), 
+                        range = c(1, 10)) & 
+  theme(legend.position = c())
+
+ggsave(here("plots", "lebanon_static.png"), width = 84.1, height = 90, units = "cm", dpi = 300)
+
+
+```
+
+
+```{r}
+caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.",
+```
+
+
+Old version lebanon months 
+
+```{r}
+lebanon_event_types <- lebanon |> 
+  filter(country %in% c("Lebanon", "Syria", "Palestine", "Jordan", "Israel")) |> 
+  filter(event_date >= "2023-01-01") |> 
+  mutate(month = floor_date(event_date, "month")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, month, fatalities) %>%
+  mutate(month = map(month, ~seq.Date(as.Date(.), as.Date("2024-09-20"), by = "month"))) |> 
+  unnest(month) |> 
+  mutate(month = format_ISO8601(month, precision = "ym")) |> 
+  ggplot() + 
+  geom_sf(data = lebanon_shape, size = .5, colour = "grey", fill = "grey90") + 
+  geom_sf(data = world_shape |> filter(str_detect(name, "Lebanon")), 
+          size = 3, colour = "cornflowerblue", fill = "grey90") + 
+  geom_sf_text(data = cities, aes(geometry = geometry, label = name), 
+          size = 3, alpha = .8) +
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .15) + 
+  coord_sf(xlim = c(34, 43), 
+           ylim = c(29, 37.8)) +
+  scale_colour_manual(values = c(
+      "Battles" = "#9b2226",
+      "Violence against civilians" = "#bb3e03",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) +
+  scale_size_continuous(range = c(.1, 7), breaks = c(0, 10, 50, 100, 150)) +
+  theme_void() +
+  guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2.7)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) +
+  theme(plot.background = element_rect(fill = "grey99", colour = "grey99"), 
+        rect = element_rect(fill = NA, colour = NA), 
+        legend.title = element_text(face = "bold", size = 16),
+        legend.position = c(0.8, 0.2), 
+        legend.box.background = element_blank(),
+        legend.key = element_rect(colour = NA, fill = NA), 
+        plot.caption = element_text(hjust = 0.5), 
+        plot.title = element_text(size = 23), 
+        plot.subtitle = element_text(size = 9)) + 
+  gganimate::transition_manual(month) + 
+  labs(title = "Conflict events in Lebanon and neigbouring countries in { current_frame }", 
+       subtitle = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com. Map from WFP.",
+       caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.",
+       colour = "Event type", 
+       size = "Fatalities")
+```
+
+
+
+```{r}
+lebanon_quarter <- lebanon |> 
+  filter(country %in% c("Lebanon", "Syria", "Palestine", "Jordan", "Israel")) |> 
+  mutate(quarter = floor_date(event_date, "quarter")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, quarter, fatalities) %>%
+  mutate(quarter = map(quarter, ~seq.Date(as.Date(.), as.Date("2024-09-13"), by = "quarter"))) |> 
+  unnest(quarter) |> 
+  mutate(quarter = format_ISO8601(quarter, precision = "ym")) |> 
+  ggplot() + 
+  geom_sf(data = lebanon_shape, size = .5, colour = "grey", fill = "grey90") + 
+  geom_sf(data = world_shape |> filter(str_detect(name, "Lebanon")), 
+          size = 2, colour = "goldenrod2", fill = "grey90") + 
+  geom_sf_text(data = cities, aes(geometry = geometry, label = name), 
+          size = 3, alpha = .8) +
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .15) + 
+  coord_sf(xlim = c(34, 43), 
+           ylim = c(29, 37.8)) +
+  scale_colour_manual(values = c(
+      "Battles" = "#9b2226",
+      "Violence against civilians" = "#bb3e03",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) +
+  scale_size_continuous(range = c(.1, 6), breaks = c(0, 10, 50, 100, 150)) +
+  theme_void() +
+  guides(colour = guide_legend(override.aes = list(alpha = 1, size = 2.7)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) +
+  theme(plot.background = element_rect(fill = "grey99", colour = "grey99"), 
+        rect = element_rect(fill = NA, colour = NA), 
+        legend.title = element_text(face = "bold", size = 16),
+        legend.position = c(0.8, 0.2), 
+        legend.box.background = element_blank(),
+        legend.key = element_rect(colour = NA, fill = NA), 
+        plot.caption = element_text(hjust = 0.5), 
+        plot.title = element_text(size = 23)) + 
+  gganimate::transition_manual(quarter) + 
+  labs(title = "Conflict events in Lebanon and neigbouring countries in { current_frame }", 
+       caption = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com",
+       colour = "Event type", 
+       size = "Fatalities")
+
+gganimate::animate(lebanon_quarter, width = 3240, height = 2160, res = 150, duration = 50, 
+                   renderer = gifski_renderer())
+
+
+
+gganimate::anim_save(here("plots", "lebanon_event_types_grey_quarter.gif"))
+```
+
+
+
+
+```{r}
+asia_pacific_event_types <- acled_filtered |>  
+  filter(sub_event_type %out% c("Agreement", 
+                                "Change to group/activity", 
+                                "Headquarters or base established", 
+                                "Non-violent transfer of territory")) |> 
+  mutate(quarter = floor_date(event_date, "quarter")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, quarter, fatalities) %>%
+  mutate(quarter = map(quarter, ~seq.Date(as.Date(.), as.Date("2023-12-01"), by = "quarter"))) |> 
+  unnest(quarter) |> 
+  mutate(quarter = format_ISO8601(quarter, precision = "ym")) %>%
+  ggplot() + 
+  geom_sf(data = asia_pacific_shape, size = .5, colour = "grey", fill = "black") +
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .15) + 
+  
+  theme_void() +
+  guides(colour = guide_legend(override.aes = list(alpha = 1)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) +
+  theme(plot.background = element_rect(fill = "black", colour = "black"),
+        rect = element_rect(fill = NA), 
+        legend.text = element_text(colour = "white"), 
+        title = element_text(colour = "white"),
+        legend.title = element_text(face = "bold"),
+        plot.caption = element_text(hjust = 0.2)) + 
+  gganimate::transition_manual(quarter) + 
+  labs(title = "Asia-Pacific conflict events in { current_frame }", 
+       subtitle = "Excludes non-violent strategic developments", 
+       caption = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com",
+       colour = "Event type")
+
+
+gganimate::animate(asia_pacific_event_types, width = 2480, height = 1748, res = 150, duration = 60, renderer = gifski_renderer())
+
+gganimate::anim_save(here("plots", "asia_pacific_event_types.gif"))
+```
+
+```{r}
+world_shape |> 
+  ggplot() + 
+  geom_sf() + 
+  coord_sf(xlim = c(44, 155), 
+           ylim = c(-15, 52))
+
+ggplot() + 
+  geom_sf(data = asia_pacific_shape) + 
+  coord_sf(xlim = c(44, 180), 
+           ylim = c(-44, 52))
+```
+
+
+```{r}
+asia_pacific_event_types <- acled_filtered |>  
+  filter(!is.na(longitude) & !is.na(latitude)) |> 
+  filter(sub_event_type %out% c("Agreement", 
+                                "Change to group/activity", 
+                                "Headquarters or base established", 
+                                "Non-violent transfer of territory")) |> 
+  mutate(quarter = floor_date(event_date, "quarter")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, quarter, fatalities) %>% 
+  mutate(quarter = map(quarter, ~seq.Date(as.Date(.), as.Date("2023-12-01"), by = "quarter"))) |> 
+  unnest(quarter) |> 
+  mutate(quarter = format_ISO8601(quarter, precision = "ym")) %>%
+  ggplot() +
+  geom_sf(data = world_shape, size = .5, colour = "grey30", fill = "black") + 
+  coord_sf(xlim = c(43, 155), 
+           ylim = c(-15, 52)) +
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .05) +
+  scale_size_continuous(range = c(0.1, 4)) +
+  theme(plot.background = element_rect(fill = "black", colour = "black"),
+        rect = element_rect(fill = NA),
+        legend.text = element_text(colour = "white"), 
+        title = element_text(colour = "white"),
+        legend.title = element_text(face = "bold"),
+        plot.caption = element_text(hjust = 0.2)) + 
+  guides(colour = guide_legend(override.aes = list(alpha = 1)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) + 
+  labs(title = "Asia-Pacific conflict events in { current_frame }", 
+       subtitle = "Excludes non-violent strategic developments", 
+       caption = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com",
+       colour = "Event type") + 
+  gganimate::transition_manual(quarter) 
+
+gganimate::animate(asia_pacific_event_types, width = 2480, height = 1748, res = 150, 
+                   duration = 40, 
+                   renderer = gifski_renderer())
+
+gganimate::anim_save(here("plots", "asia_pacific_event_types.gif"))
+```
+
+
+### Interaction codes
+
+
+### Test for aesthetics 
+
+```{r}
+acled_filtered |>  
+  filter(!is.na(longitude) & !is.na(latitude)) |> 
+  filter(sub_event_type %out% c("Agreement", 
+                                "Change to group/activity", 
+                                "Headquarters or base established", 
+                                "Non-violent transfer of territory")) |> 
+  mutate(quarter = floor_date(event_date, "quarter")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, quarter, fatalities) |> 
+  # mutate(quarter = map(quarter, ~seq.Date(as.Date(.), as.Date("2023-12-01"), by = "quarter"))) |> 
+  # unnest(quarter) |> 
+  # mutate(quarter = format_ISO8601(quarter, precision = "ym")) %>%
+  ggplot() +
+  geom_sf(data = world_shape, size = .5, colour = "grey30", fill = "black") + 
+  coord_sf(xlim = c(43, 155), 
+           ylim = c(-15, 52)) +
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .05) +
+  scale_size_continuous(range = c(0.1, 4)) +
+  theme(plot.background = element_rect(fill = "black", colour = "black"),
+        panel.background = element_rect(fill = "black", colour = "black"),
+        rect = element_rect(fill = "NA"),
+        legend.text = element_text(colour = "white"), 
+        title = element_text(colour = "white"),
+        legend.title = element_text(face = "bold"),
+        plot.caption = element_text(hjust = 0.2)) + 
+  guides(colour = guide_legend(override.aes = list(alpha = 1)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) + 
+  theme_void() + 
+  labs(title = "Asia-Pacific conflict events in { current_frame }", 
+       subtitle = "Excludes non-violent strategic developments", 
+       caption = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com",
+       colour = "Event type")
+```
+
