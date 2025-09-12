@@ -657,3 +657,282 @@ genocide_t_test <- bangladesh_summary |>
               names_from = rohingya)  %>%
   t.test(.$post_genocide, .$pre_genocide, data = .) |> 
   broom::tidy()
+
+
+# Macroeconomics and conflict 
+
+```{r}
+wdi |> count(indicator)
+
+wdi |> filter(indicator == "Multidimensional poverty headcount ratio (World Bank) (% of population)")
+```
+
+```{r}
+wdi_wide_events |> 
+  ggplot(aes(x = `Prevalence of underweight, weight for age (% of children under 5)`, 
+             y = `Voice and Accountability: Estimate`)) +
+  
+  geom_point() + 
+  geom_smooth(method = "lm")
+
+
+```
+
+
+```{r}
+wdi_wide_events <- wdi |> 
+  filter(indicator %in% 
+           c("Total debt service (% of GNI)", 
+             "Military expenditure (% of GDP)",
+             "Prevalence of underweight, weight for age (% of children under 5)", 
+             "NEET, total (% of youth population) (modeled ILO estimate)", 
+             "People using at least basic sanitation services (% of population)", 
+             "Multidimensional poverty headcount ratio (World Bank) (% of population)")) |>
+  select(-series_code) |>
+  filter(year >= 2010 & !is.na(value)) |>
+  pivot_wider(names_from = indicator, values_from = value) |> 
+  group_by(country, year) %>% 
+  reframe(across(everything(), ~na.omit(.))) |> 
+  ungroup() |> 
+  left_join(
+    acled_filtered |> filter(year >= 2010 & year < 2024) |>
+      group_by(country, year) |>
+      summarise(events = n_distinct(event_id_cnty),
+                .groups = "drop"), 
+    by = c("country", "year")
+  ) |> 
+  mutate(events = log10(events)) |>  
+  select(-country, -country, -country_iso, -country_code, -year)
+
+set.seed(145)
+
+wdie_split <- initial_split(wdi_wide_events, prop = 0.80)
+wdie_train <- training(wdie_split)
+wdie_test <- testing(wdie_split)
+
+lm(events ~ ., data = (wdie_train)) |> 
+  summary()
+```
+
+The best performing indicators 
+
+```{r}
+wdi_wide_fatalities <- wdi |> 
+  filter(indicator %in% 
+           c("Total debt service (% of GNI)", 
+             "Control of Corruption: Estimate", 
+             "Military expenditure (% of GDP)",
+             "Prevalence of underweight, weight for age (% of children under 5)", 
+             "NEET, total (% of youth population) (modeled ILO estimate)")) |>
+  select(-series_code) |>
+  filter(year >= 2010 & !is.na(value)) |>
+  pivot_wider(names_from = indicator, values_from = value) |> 
+  group_by(country, year) %>% 
+  reframe(across(everything(), ~na.omit(.))) |> 
+  ungroup() |> 
+  left_join(
+    acled_filtered |> filter(year >= 2010 & year < 2024) |>
+      group_by(country, year) |>
+      summarise(fatalities = sum(fatalities, na.rm = TRUE),
+                .groups = "drop"), 
+    by = c("country", "year")
+  ) |> 
+  mutate(fatalities = log10(fatalities)) |> 
+  filter(!is.na(fatalities) & !is.nan(fatalities) & !is.infinite(fatalities)) |> 
+  select(-country, -country, -country_iso, -country_code, -year)
+
+set.seed(135)
+
+wdif_split <- initial_split(wdi_wide_fatalities, prop = 0.80)
+wdif_train <- training(wdif_split)
+wdif_test <- testing(wdif_split)
+
+lm(fatalities ~ ., data = (wdif_train)) |> 
+  summary()
+```
+
+
+```{r}
+set.seed(2021) 
+
+
+rf_model <- 
+  rand_forest(trees = 1000, min_n = 4) |> 
+  set_mode("regression") |> 
+  set_engine("ranger", importance = "impurity")
+
+rf_recipe <- recipe(events ~ ., data = wdi_train)
+
+rf_prep <- prep(rf_recipe)
+
+juiced <- juice(rf_prep)
+
+tune_spec <- rand_forest(
+  mtry = tune(),
+  trees = 1000,
+  min_n = tune()
+) %>%
+  set_mode("regression") %>%
+  set_engine("ranger")
+
+tune_workflow <- 
+  workflow() %>%
+  add_recipe(rf_recipe) %>%
+  add_model(tune_spec)
+
+
+rf_workflow %>%
+  fit(wdi_train) %>% 
+  extract_fit_parsnip() %>% 
+  vip::vip(num_features = 12)
+
+```
+
+```{r}
+set.seed(234)
+trees_folds <- vfold_cv(wdi_train)
+
+
+
+```
+
+```{r}
+set.seed(345)
+tune_res <- tune_grid(
+  tune_workflow,
+  resamples = trees_folds,
+  grid = 20
+)
+
+tune_res %>%
+  collect_metrics() %>%
+  filter(.metric == "rmse") %>%
+  select(mean, min_n, mtry) %>%
+  pivot_longer(min_n:mtry,
+               values_to = "value",
+               names_to = "parameter"
+  ) %>%
+  ggplot(aes(value, mean, color = parameter)) +
+  geom_point(show.legend = FALSE) +
+  facet_wrap(~parameter, scales = "free_x") +
+  labs(x = NULL, y = "RMSE")
+
+rf_grid <- grid_regular(
+  mtry(range = c(10, 30)),
+  min_n(range = c(2, 8)),
+  levels = 5
+)
+
+rf_grid
+
+tune_res %>%
+  collect_metrics() %>%
+  filter(.metric == "rmse") %>%
+  mutate(min_n = factor(min_n)) %>%
+  ggplot(aes(mtry, mean, color = min_n)) +
+  geom_line(alpha = 0.5, size = 1.5) +
+  geom_point() +
+  labs(y = "rmse")
+
+set.seed(456)
+
+regular_res <- tune_grid(
+  tune_workflow,
+  resamples = trees_folds,
+  grid = rf_grid
+)
+
+regular_res %>%
+  collect_metrics() %>%
+  filter(.metric == "rmse") %>%
+  mutate(min_n = factor(min_n)) %>%
+  ggplot(aes(mtry, mean, color = min_n)) +
+  geom_line(alpha = 0.5, size = 1.5) +
+  geom_point() +
+  labs(y = "rmse")
+```
+
+
+```{r}
+
+```
+
+
+
+```{r}
+events_wdi <- wdi |> 
+  filter(indicator %in% 
+           c("Consumer price index (2010 = 100)", 
+             "Inflation, consumer prices (annual %)", 
+             "Total debt service (% of GNI)", 
+             "GDP per capita (current US$)", 
+             "People using at least basic sanitation services (% of population)", 
+             "Voice and Accountability: Estimate")) |>
+  filter(year >= 2010) |> 
+  left_join(
+    acled_filtered |> filter(year >= 2010 & year < 2024) |>
+      group_by(country, year) |>
+      summarise(events = n_distinct(event_id_cnty)), 
+    by = c("country", "year")
+  ) |> filter(!is.na(events) & !is.na(value))
+
+
+nest(-indicator) %>%
+  mutate(model = map(data, ~ lm(.$events ~ .$value))) |> 
+  unnest_legacy(map(model, tidy)) |> 
+  filter(term != "(Intercept)")
+
+
+fatalities_model <- wdi |> 
+  filter(indicator %in% 
+           c("Consumer price index (2010 = 100)", 
+             "Inflation, consumer prices (annual %)", 
+             "Total debt service (% of GNI)", 
+             "GDP per capita (current US$)", 
+             "People using at least basic sanitation services (% of population)", 
+             "Voice and Accountability: Estimate")) |>
+  filter(year >= 2010) |> 
+  left_join(
+    acled_filtered |> filter(year >= 2010 & year < 2024) |>
+      group_by(country, year) |>
+      summarise(events = n_distinct(event_id_cnty), 
+                fatalities = sum(fatalities, na.rm = TRUE)), 
+    by = c("country", "year")
+  ) |> 
+  filter(!is.na(fatalities) & !is.na(value)) |> 
+  nest(-indicator) %>%
+  mutate(model = map(data, ~ lm(.$events ~ .$value))) |> 
+  unnest_legacy(map(model, tidy)) |> 
+  filter(term != "(Intercept)")
+
+
+
+```
+
+
+```{r}
+# Initialize file path
+png(height=1800, width=1800, file=here("plots", "correlation_plot.png"), type = "cairo")
+
+# Your function to plot image goes here
+islands |> 
+  filter(index == "Demographic statistics") |> 
+  filter(indicator_full %out% c("Population density Resident Maldivian Population",
+                                "Median Age Resident Maldivians") & 
+           !str_detect(indicator_full, "International|\\%")) |>
+  select(Atoll, island, concat, indicator_full, value) |> 
+  pivot_wider(names_from = indicator_full, 
+              values_from = value) |> 
+  select(-Atoll, -island, -concat) |>
+  cor(method = c("pearson")) %>%
+  corrplot.mixed(order = "AOE", 
+                 title = "Demographic statistics",
+                 mar = c(0,0,1,0),
+                 number.cex = 5,
+                 number.digits = 2, 
+                 diag = "l", tl.pos = "lt")
+
+# Then
+dev.off()  
+```
+
