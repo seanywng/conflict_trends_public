@@ -936,3 +936,276 @@ islands |>
 dev.off()  
 ```
 
+## Pakistan
+
+Pakistan is party to numerous geopolitical conflicts. It also entered into a massive political crisis following the [ouster](https://www.scmp.com/news/asia/south-asia/article/3217401/pakistan-speeds-towards-full-blown-crisis-imran-khans-foot-accelerator) of Prime Minister Imran Khan, though the situation has since stabilised. However, the Pakistani state remains unstable enough for long-time allies like China to be [very publicly concerned](https://thediplomat.com/2023/05/behind-chinas-friendly-advice-for-pakistan/). Furthermore, state and non-state actors in Pakistan have a history of using [deadly force](https://acleddata.com/2024/02/01/political-repression-and-militant-targeting-set-the-stage-for-pakistans-2024-elections/) against protesters and other civilians, including militia attacks on political parties.
+
+Even as Pakistan reels from its constitutional crisis, its relationship with the Taliban has soured since the US withdrawal. According to [Radio Free Europe](https://www.rferl.org/a/afghanistan-pakistan-taliban-ttp-terrorism/33078685.html), the Taliban has not reined in the terror group Tehrik-e Taliban (TTP), which has killed hundreds of Pakistani soldiers since 2021. Michael Semple, a former UN and EU Advisor, believes that Afghanistan would not likely give up on TTP, given that Pakistan is reaching a "tipping point given the political and economic crises", creating quite the opportunity for Afghanistan.
+
+Pakistan's economic woes
+
+https://acleddata.com/2024/02/14/acled-insight-election-related-violence-in-pakistan/
+
+Pakistan has been often leaning on China for assistance to keep its economy intact. Last year in July, when Islamabad’s foreign exchange reserves were depleting at a massive pace, it asked Beijing to delay extending the maturity of debt for nine power plants built by Chinese companies under the multibillion-dollar Pakistan China Economic Corridor (CPEC). https://www.firstpost.com/world/pakistan-seeks-additional-10-billion-yuan-loan-from-china-13829881.html
+
+https://finance.yahoo.com/news/china-pakistan-economic-ties-could-093000794.html
+
+Ongoing tensions between Khan and the political establishment spilled over in May 2023, when Khan was arrested on corruption charges.16 PTI supporters mobilized across the country, organizing demonstrations in hundreds of locations. Of these, 21% of demonstrations turned violent, with demonstrators attacking government and military properties, including the residences of high-ranking military officers.
+
+https://acleddata.com/2024/02/01/political-repression-and-militant-targeting-set-the-stage-for-pakistans-2024-elections/
+
+Political and economic development can be characterized as the conflict between states' efforts to increase their capabilities and existing social forces that they must accommodate and to which they must be accountable (Acemoglu and Robinson 2019). This conflict is definitional at the frontiers of the formal state. The combination of a law that clearly demarcates the end of the formal state combined with the agriculture transformation precipitated by the Green Revolution makes 20th century Pakistan an ideal setting to study these processes.
+
+We show that the trajectory of state presence within the borders of modern-day Pakistan is consistent with a theoretical framework in which states extend governance to areas where the economic benefits of investing in institutions for taxation and resource extraction outweigh the costs of doing so. Using crop-suitability data from the Food and Agriculture Organization of the United Nations, we demonstrate first that the choice by the British to apply the Frontier Crimes Regulation (FCR) to over half of Pakistan in 1901 was (conditionally) unrelated to crop suitability. We then exploit the fact that the Green Revolution created more fundamental agricultural transformation in areas of low crop suitability to understand Pakistan's selective roll-back of the FCR throughout the 1960s and 1970s. Subdistricts made suitable to agriculture by the Green Revolution were more likely to see the FCR removed.
+
+https://onlinelibrary.wiley.com/doi/10.1111/ecca.12527
+
+Kabul was also disturbed that the US also backed down on its longstanding demand that the Taliban break publicly with al-Qaeda. Instead the Taliban made vague statements about never letting ‘their country’ be used for terrorism against another. That echoes the Taliban’s statements before and after 9/11 that al-Qaeda was not engaged in attacks on American targets despite all the obvious evidence. al-Qaeda fighters are still on the battlefield in Afghanistan fighting with the Taliban.
+
+The Taliban’s Pakistani patrons, the army and the ISI were very pleased with the outcome. They control the lives of the leadership in Pakistan and the lives of the Taliban team in Doha. As the former head of Afghan intelligence, Amrullah Saleh, likes to point out that the Taliban negotiators fly home to Karachi from Doha whenever they want to see their boss or their families. They are not independent players.
+
+https://www.brookings.edu/articles/pakistan-taliban-and-the-afghan-quagmire/
+
+On August 14, Torkham, the main border crossing connecting Pakistan and Afghanistan, remained closed for a third day after a firefight that injured several Taliban fighters and at least three Pakistani soldiers on August 12. The Taliban said three Afghan civilians were killed in the cross fire.
+
+Such clashes are almost a weekly occurrence along their 2,500-kilometer border.
+
+But Michael Semple, a former EU and UN adviser to Afghanistan, told RFE/RL it would be difficult for the Taliban to give up on the TTP's nearly two-decade campaign when it sees a tipping point given the grave political and economic crises engulfing Pakistan.
+
+https://www.rferl.org/a/afghanistan-pakistan-taliban-ttp-terrorism/33078685.html
+
+Even as it is embroiled in a political conflict, Pakistan also remains involved in several regional conflicts -- namely, with India and with Afganistan.
+
+<br>
+  
+  ```{r fig.height=7}
+
+
+afpakind_capitals <- tribble(~x, ~y, ~name, 
+                             77.2088, 28.6139, "New Delhi", 
+                             73.0363, 33.6995, "Islamabad", 
+                             69.2075, 34.5553, "Kabul") |> 
+  st_as_sf(coords = c("x", "y"), crs = 4326)
+
+acled_filtered |> 
+  filter(year > 2015) |> 
+  filter(!is.na(longitude) & !is.na(latitude) & 
+           country %in% c("Pakistan", "India", "Afghanistan")) |> 
+  select(event_id_cnty, event_type, longitude, latitude, event_type, fatalities) |>
+  ggplot() + 
+  geom_sf(data = world_shape, size = 1, colour = "darkblue", fill = "grey85", alpha = .5) +
+  geom_sf_text(data = world_shape, aes(label = name)) + 
+  geom_text(aes(, x = 76, y = 27), label = "India") + 
+  geom_point(data = afpakind_capitals, aes(geometry = geometry), 
+             size = 3, alpha = .8, pch = 15, alpha = .8, stat = "sf_coordinates",
+             colour = "cornflowerblue") + 
+  geom_sf_text(data = afpakind_capitals, aes(geometry = geometry, label = name), 
+               size = 3, alpha = .8) + 
+  geom_sf(data = kash_buffer, colour = "white", fill = "white", alpha = .65) + 
+  geom_sf(data = afpak_buffer, colour = "white", fill = "white", alpha = .65) + 
+  coord_sf(xlim = c(60, 82), ylim = c(23.1, 37)) +
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .05) +
+  scale_colour_manual(values = c(
+    "Battles" = "#9b2226",
+    "Violence against civilians" = "#001219",
+    "Explosions/Remote violence" = "#ee9b00",
+    "Protests" = "#94d2bd",
+    "Strategic developments" = "#e9d8a6",
+    "Riots" = "#005f73"
+  )) +
+  scale_size_continuous(range = c(.1, 5)) + 
+  theme(plot.background = element_rect(fill = NA, colour = NA),
+        panel.background = element_rect(fill = NA, colour = NA),
+        rect = element_rect(fill = NA, colour = NA),
+        legend.title = element_text(face = "bold"),
+        plot.caption = element_text(hjust = 0.2)) + 
+  guides(colour = guide_legend(override.aes = list(alpha = 1)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) + 
+  theme_void() +
+  labs(title = "Political conflict in Pakistan, including border areas with Afghanistan and India",
+       subtitle = "Border areas (within 100km) and Kashmir marked in white. Country capitals are the blue squares.", 
+       colour = "", size = "Fatalities")
+
+
+```
+
+<br>
+  
+  ```{r}
+acled_filtered |> 
+  filter(country == "Pakistan") |> 
+  group_by(event_type, quarter = floor_date(event_date, unit = "quarter")) |> 
+  summarise(Events = n_distinct(event_id_cnty), 
+            Fatalities = sum(fatalities, na.rm = TRUE), 
+            .groups = "drop") |> 
+  pivot_longer(cols = c(Events, Fatalities), 
+               names_to = "type", 
+               values_to = "value") |>
+  ggplot(aes(x = quarter, y = value)) + 
+  geom_vline(aes(xintercept=as.numeric(as.Date(dmy("17/2/2018")))), linetype=4, colour="black", 
+             alpha = .5, size = .5) +
+  geom_vline(aes(xintercept=as.numeric(as.Date(dmy("29/2/2020")))), linetype=4, colour="black", 
+             alpha = .5, size = .5) +
+  geom_area(aes(fill = event_type), 
+            size = .75) + 
+  scale_fill_manual(values = c(
+    "Battles" = "#9b2226",
+    "Violence against civilians" = "#001219",
+    "Explosions/Remote violence" = "#ee9b00",
+    "Protests" = "#94d2bd",
+    "Strategic developments" = "#e9d8a6",
+    "Riots" = "#005f73"
+  )) +
+  facet_wrap(~ type, scales = "free_y", ncol = 1) + 
+  scale_y_continuous(labels = comma) + 
+  scale_x_date(date_breaks = "2 years", date_labels = "%Y") + 
+  theme(strip.background = element_rect(fill = "black"),
+        strip.text = element_text(size = 10), 
+        legend.position = "top") + 
+  labs(x = "", y = "",
+       title = "Conflict events and fatalities in Pakistan, 2010-2024", 
+       fill = "") + 
+  guides(fill = guide_legend(nrow = 1))
+```
+
+Apart from Jammu and Kashmir, the border region between India and Pakistan is sparsely populated. Though, with reference to the graphs below, the number of violent incidents in Kashmir has decreased since 2020, over the time period monitored by ACLED below, there were more battles in Kashmir than the rest of India.
+
+Pakistan's recent increase in conflict will be discussed in the next section.
+
+<br>
+
+```{r}
+
+afpakind_border <- acled_filtered |> 
+  filter(!is.na(longitude) & !is.na(latitude) & 
+             country %in% c("India", "Pakistan", "Afghanistan")) |> 
+  left_join(
+    rbind(acled_filtered |>
+              filter(!is.na(longitude) & !is.na(latitude) &
+                       country %in% c("Afghanistan", "Pakistan")) |>
+              st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+              st_intersection(ind_pak_buffer) |>
+              st_drop_geometry() |>
+              mutate(border = "Afpak border") |>
+              select(event_id_cnty, border), 
+    acled_filtered |>
+      filter(!is.na(longitude) & !is.na(latitude) &
+                       country %in% c("India", "Pakistan")) |>
+              st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
+              st_intersection(ind_pak_buffer) |>
+              st_drop_geometry() |>
+              mutate(border = "Indpak border") |>
+              select(event_id_cnty, border)), 
+            by = "event_id_cnty") |> 
+  mutate(border = case_when(is.na(border) & country == "Pakistan" ~ "other Pakistan", 
+                            is.na(border) & country == "India" ~ "other India"))
+
+```
+
+```{r}
+acled_filtered |> 
+  filter(year < 2024 & year > 2015) |> 
+  filter(country %in% c("India", "Pakistan")) |> 
+  mutate(kashmir = case_when(
+    admin1 %in% c("Azad Jammu and Kashmir", "Jammu and Kashmir", "FATA", "Khyber Pakhtunkhwa") ~ "Kashmir", 
+    country == "Pakistan" & 
+       admin1 %out% c("Azad Jammu and Kashmir", "Jammu and Kashmir", "FATA", "Khyber Pakhtunkhwa") ~ "other Pakistan", 
+    country == "India" & 
+       admin1 %out% c("Azad Jammu and Kashmir", "Jammu and Kashmir", "FATA", "Khyber Pakhtunkhwa") ~ "other India"
+  )) |> 
+  group_by(event_type, year, kashmir) |> 
+  summarise(events = n_distinct(event_id_cnty), .groups = "drop") |> 
+  ggplot(aes(x = year, y = events)) + 
+  geom_line(aes(colour = event_type), lwd = 1) +
+  scale_y_log10(labels = comma) +
+  scale_x_continuous(breaks = c(2013, 2015, 2017, 2019, 2021, 2023)) + 
+  scale_colour_manual(values = c(
+      "Battles" = "#9b2226",
+      "Violence against civilians" = "#001219",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) +
+  facet_wrap(~kashmir) + 
+  theme(strip.background = element_rect(fill = "black")) + 
+  labs(colour = "Event type", 
+       x = "", 
+       y = "Number of political incidents",
+       title = "Political incidents in India and Pakistan, by year and border area (2016-2023)")
+
+```
+
+<br>
+
+```{r}
+acled_filtered |> 
+  filter(country %in% c("India", "Pakistan")) |> 
+  mutate(kashmir = case_when(
+    admin1 %in% c("Azad Jammu and Kashmir", "Jammu and Kashmir") ~ "Kashmir", 
+    country == "Pakistan" ~ "other Pakistan", 
+    country == "India" ~ "other India"
+  )) |> 
+  filter(country == "India") |> 
+  group_by(event_type, kashmir) |> 
+   summarise(events = n_distinct(event_id_cnty),
+             fatalities = sum(fatalities),
+             .groups = "drop") |> 
+  pivot_longer(cols = c(events, fatalities), 
+               names_to = "variable", 
+               values_to = "value") |> 
+  ggplot(aes(x = value, y = fct_rev(event_type), fill = kashmir)) +
+  geom_col(position = position_dodge(width = .9)) + 
+  geom_text(aes(label = comma(value)), 
+            position = position_dodge(width = .9), 
+            hjust = "inward") + 
+  scale_x_continuous(label = comma, trans = "sqrt") + 
+  scale_fill_viridis_d(begin = .3) + 
+  facet_wrap(~ variable, scales = "free_x") + 
+  theme(strip.background = element_rect(fill = "black"), 
+        legend.position = "top",
+        plot.title = element_text(size = 11)) + 
+  labs(x = "", y = "", fill = "", 
+       title = "Conflict events and fatalities in Indian-adminstered Kashmir vs the rest of the country, 2016-01-01 to 2024-05-30")
+
+```
+
+<br>
+
+Fatalities in Kashmir have also decreased since their 2018 highs. Kashmir experiences violence against civilians and riots at a lower rate than the rest of India and Pakistan.
+
+<br>
+
+```{r}
+acled_filtered |> 
+  filter(year < 2024 & year > 2015) |> 
+  filter(country %in% c("India", "Pakistan")) |> 
+  mutate(kashmir = case_when(
+    admin1 %in% c("Azad Jammu and Kashmir", "Jammu and Kashmir") ~ "Kashmir", 
+    country == "Pakistan" ~ "other Pakistan", 
+    country == "India" ~ "other India"
+  )) |> 
+  group_by(event_type, year, kashmir) |> 
+  summarise(fatalities = sum(fatalities), .groups = "drop") |> 
+  ggplot(aes(x = year, y = fatalities)) + 
+  geom_line(aes(colour = event_type), lwd = 1) +
+  scale_colour_manual(values = c(
+      "Battles" = "#9b2226",
+      "Violence against civilians" = "#001219",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) + 
+  scale_y_continuous(labels = comma) +
+  scale_x_continuous(breaks = c(2013, 2015, 2017, 2019, 2021, 2023)) + 
+  facet_wrap(~kashmir) + 
+  theme(strip.background = element_rect(fill = "black")) + 
+  labs(colour = "Event type", 
+       x = "", 
+       y = "Number of conflict fatalities per event type",
+       title = "Political conflict fatalities by year")
+```
+
+<br><br><br>

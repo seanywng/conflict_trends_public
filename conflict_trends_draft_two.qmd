@@ -363,11 +363,8 @@ Furthermore, all have populations who actively participate in the political proc
 
 ACLED does not capture all conflict. The number of fatalities per 100,000 here is for comparison amongst countries within the ACLED dataset. Were we looking for the actual mortality rate, there are [preferred sources](https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/ghe-leading-causes-of-death), which put the mortality rate in Afghanistan from ["collective violence and legal intervention"](https://data.who.int/countries/004) at 122 per 100,000 in 2021. The value for ACLED in Afghanistan in 2021 was 106 per 100,000. The homicide rate in Southeast Asia in four per 100,000, the [road traffic death rate](https://www.who.int/data/gho/data/indicators/indicator-details/GHO/estimated-road-traffic-death-rate-per-100-000-population) is 16.
 
-Over the course of this document, as we explore trends and drivers of conflict in the region, it is important to recall that there is no optimal amount of political conflict. Too little indicates suppression and too much, widespread dissatisfaction and, in some cases, open revolt amongst the populace.
+Over the course of this document, as we explore trends and drivers of conflict in the region, it is important to recall that there is no optimal amount of political conflict. Too little indicates suppression and too much, widespread dissatisfaction and, in some cases, open revolt amongst the populace. But until we identify why and how countries can exit the central tendency, the majority of countries in the region will oscillate between upheavals and crackdowns.
 
-But until we identify why and how countries can exit the central tendency and join the peaceful countries in the bottom-right corner, the majority of countries in the region will oscillate between upheavals and crackdowns, between disarray and abuses of state power.
-
-To paraphrase Martin Luther King, Jr., without justice, there is no peace, only order.
 
 <br><br><br>
 
@@ -593,7 +590,6 @@ Afghanistan, China, Vietnam, Cambodia, Laos, Philippines and the Solomon Islands
 
 However, looking at the dark blue lines, indicating the number of events, it becomes clearer that the remaining countries all experience periodic spikes and troughs in conflict, periods of destabilisation and tightening. Clear examples of this are Iran and Thailand, where the waves of protest movements or elections are immediately visible. As are the effects of the state re-exerting control.
 
-If we were to extrapolate from the example of Iran: the population there seems to be severely dissatisfied with their leaders and are expressing it. There were two clear waves of protests and while numbers might currently be on the downtrend from last year, the next protest movement will likely be even more destabilising than the last.
 
 <br>
 
@@ -688,7 +684,7 @@ event_type_streamgraph <- function(df, column_var) {
 
 ```
 
-To add further context to our exploration of regional conflict trends, let us now consider event types. [ACLED](https://acleddata.com/knowledge-base/codebook/)[^3] categorises conflict events into protests, riots, battles, explosions and remote violence and strategic developments (such as arrests or new legislation). These are further still into 25 sub-types.
+To add further context to our exploration of regional conflict trends, let us now consider event types. [ACLED](https://acleddata.com/knowledge-base/codebook/)[^3] categorises conflict events into protests, riots, battles, explosions and remote violence and strategic developments (such as arrests or new legislation). 
 
 [^3]: The ACLED codebook contains all the documentation, including coding decisions and explanations of all recorded variables
 
@@ -698,9 +694,9 @@ The charts below are streamgraphs, where values over time -- in @fig-eventsstrea
 
 It should be noted that in "stable" countries, the flavour of political conflict consists mainly of protests (which indicate widespread dissatisfaction but also that not all nonviolent means have been exhausted).
 
-The Thai people manifested their dissatisfaction has manifested in 2014 and in 2021. However, the Thai state responded by firmly clamping down on its citizenry in both instances, as can be seen from the swift decrease in events. This approach does not address the core issues behind the protests. Notably, the share of protests compared to violent political incidents seems to be worsening, possibly indicating that more actors (the state included) believe that nonviolent solutions have been exhausted.
+The Thai people manifested their dissatisfaction in 2014 and in 2021. However, the Thai state responded by firmly clamping down on its citizenry in both instances, as can be seen from the swift decrease in events. This approach does not address the core issues behind the protests. Notably, the share of protests compared to violent political incidents seems to be worsening, possibly indicating that more actors (the state included) believe that nonviolent solutions have been exhausted.
 
-Bangladesh seems to have an outsized number of riots. Whilst protests are a natural feature of any democracy, riots are less so, given their disruptive and violent nature. Bangladesh seems to have a higher ratio of riots to protests than any other country except Papua New Guinea. This speaks to the inability of the state to maintain order and the ease of inciting the population to violence (which speaks to the existence of many instances of injustice and hurt to inflame). Political incidents in Bangladesh (as we will explore in later section) had been falling until they increased around 2018, around the time of the first quota reform protests.
+Bangladesh seems to have an outsized number of riots. Whilst protests are a natural feature of any democracy, riots less so, given their disruptive and violent nature. Bangladesh seems to have a higher ratio of riots to protests than any other country except Papua New Guinea. This may speak to the inability of the state to maintain order and the ease of inciting the population to violence (indicating the existence of many instances of injustice and grievances to inflame). Political incidents in Bangladesh (as we will explore in later section) had been falling until they increased around 2018, around the time of the first quota reform protests.
 
 <br>
 
@@ -719,7 +715,7 @@ event_stream_data |>
 
 <br>
 
-Myanmar and Afghanistan bear all the patterns of war. But what is surprising is the extent to which Philippine civil society has deteriorated due to damage from the drug war and the resulting political violence. When compared to other countries, their share of protests is very low, lower even than Cambodia. Even as the drug war operations ceased and killings began to drop off sharply, the flavour of political unrest in the Philippines seems deeply changed, with its participatory democracy suffering massive setbacks. They are, after all, the country of both the EDSA revolution and the dictator Marcos.
+Myanmar and Afghanistan bear all the patterns of war. But what is surprising is the extent to which Philippine civil society has deteriorated due to damage from the drug war and the resulting political violence. When compared to other countries, their share of protests is very low, lower even than Cambodia. Even as the drug war operations ceased and killings began to drop off sharply, the flavour of political unrest in the Philippines seems deeply changed, with its participatory democracy suffering massive setbacks. The country of EDSA is also the country of Marcos.
 
 Let's take a closer look at some countries of interest and narrow down from a ten-year horizon to a five-year one:
 
@@ -748,7 +744,7 @@ event_stream_data |>
 
 <br>
 
-From the dramatic decrease in political activity starting in 2020, it would appear that the Vietnamese state has seized the opportunity to presented by COVID to advance state authority and solidify its hold on the country. China saw a more modest reduction in political incidents, and is undergoing an increase in unrest related to labour and wage issues.
+From the dramatic decrease in political activity starting in 2020, it would appear that the Vietnamese state has seized the opportunity to presented by COVID to advance state authority and solidify its hold on the country. China saw a more modest, but still substantial reduction in political incidents.
 
 Indonesia is has also seen a large increase in political incidents driven by economic woes, increasing state authoritarianism and violations of human rights and environmental and land rights.
 
@@ -760,7 +756,7 @@ With the victory of the Taliban, Afghanistan has seen a 96% reduction on conflic
 
 # Protests {#sec-protests}
 
-The most common form of political conflict is to protest. Protests are a non-violent form of political conflict which manifest when all legal and administrative avenues have been exhausted. Widespread protests indicate a "hole" in governance, given that such protests would only be possible if a significant proportion of the population not only agreed with them but also felt that the issue had gone unaddressed long enough or is egregious to manifest their outrage in public.
+The most common form of political conflict is to protest. Protests are a non-violent form of political conflict which manifest when all legal and administrative avenues have been exhausted. Widespread protests indicate a "hole" in governance, given that such protests would only be possible if a significant proportion of the population not only agreed with them but also felt that the issue had gone unaddressed long enough or is egregious enough to manifest their outrage in public.
 
 <br>
 
@@ -770,7 +766,8 @@ The most common form of political conflict is to protest. Protests are a non-vio
 
 This document does not pretend to speak for the people, however, the charts below do provide a very useful overview of what people in each country are most concerned with. To continue with India, the top end of its chart is dominated by minority rights and rural economic issues, with the incumbent party firmly at the top, given that these protests stemmed from their policies. Instead of focusing of the individual odds of each word, it is better to take the list of words as a whole, in aggregate.
 
-Place names have been largely filtered out, countries below left with many place names in their protest descriptions tend to have experienced widespread protests over singular topics. An example of this is Thailand, where protests seem to revolve around the singular issue of state power. Almost every other word is a place name where protests concerning state power took place. Myanmar's protest descriptors are similar as well, given that they too were preoccupied with their own coup. This is also the same for South Korea, though that may also be due to over-centralisation in Seoul.
+The place names in the lists below are either protest topics or are where the protests took place. 
+
 
 <br>
 
@@ -1037,13 +1034,13 @@ acled_filtered |>
 
 The level of suppression is indicative of both the priorities of the state (how committed it is to free expression) as well as the ability of the state to enforce its authority. The New Zealand and Australian government's responses to protests was swift and forceful, especially during COVID. On the other hand, South Korea and post-COVID Japan both seem to be much more permissive towards protesters. However, this does not mean that the government of Pakistan is more permissive to protesters than that of Australia, more likely, it is that the authority of the state there is too weak to do the same.
 
-Similarly, the number of protests met with violence in Bangladesh decreased from about 10% pre-COVID, to just over 5% post-COVID whilst the number of total protests has doubled: given that the quota reform movement and the resulting government response there began before COVID, the Bangladeshi state was likely unable to intervene in any more protests than it already was doing.
+In the same vein, the number of protests in Bangladesh doubled post-COVID and the proportion of protests met with violence fell from 10% to 5%, indicating that protests there had grown beyond the state's ability to respond to them. 
 
 <br><br><br>
 
 # Country spotlights
 
-This section
+
 
 ## Myanmar {#sec-myanmar}
 
@@ -1065,7 +1062,7 @@ In the northwest, India has closed the border crossing at Tamu (in line with the
 
 The military no longer has the ability to push beyond the positions they already hold. However, the remaining garrisons are entrenched and manned by hardened troops. With reference to the inset line graph of fatalities over time in @fig-myanmarroads, although overall fatalities seem to be decreasing, battles seem to be getting bloodier as the conflict gets more concentrated as spikes in fatalities in 2024 matched the highs set in 2022.
 
-However, should the fall of the Tatmadaw seem imminent, all attempts must be made, through all channels, to prevent a free-for-all. With reference to MIMU ethnolinguistic map of Myanmar (@fig-myanmarcomposite) below, no \[modern\] government has exerted territorial control over the entirety of Myanmar.
+With reference to MIMU ethnolinguistic map of Myanmar (@fig-myanmarcomposite) below, the Tatmadaw has never exerted full territorial control over the entirety of Myanmar.
 
 ::: {#fig-myanmarcomposite}
 [![](./plots/myanmar_composite.png)](https://github.com/UNDP-CREW/conflict-trends-asia-pacific/blob/main/plots/Ethnologue_Map_Main_Spoken_Languages_of_MyanmarNeighbour_MIMU1300v03_7Jan2019_A1.pdf)
@@ -1073,7 +1070,7 @@ However, should the fall of the Tatmadaw seem imminent, all attempts must be mad
 
 Areas predominantly settled by ethnic minorities are strongholds of anti-Tatmadaw forces and have been for decades. Forces in these areas are converging on the yellow area in the middle of the country, populated primarily by the Bamar majority.
 
-Myanmar has many [disparate armed groups](https://mmpeacemonitor.org/1426/armed-ethnic-groups/), and they have proliferted massively since the start of the civil war. Previous attempts at peace and reconciliation, even under the Aung San Suu Kyi administration, were half-hearted and not well-received. It is hoped that the National Unity Government has the mettle to win the loyalties of the oft-discriminated minorities in Myanmar, including the Rohingya.
+Myanmar has many [disparate armed groups](https://mmpeacemonitor.org/1426/armed-ethnic-groups/), and they have proliferted massively since the start of the civil war. Previous attempts at peace and reconciliation  were half-hearted and not well-received.
 
 <br>
 
@@ -1131,9 +1128,9 @@ acled_actors |>
 
 ### "Deadliest" actors
 
-@fig-deadliestactors plots conflict actors by their lethality: on the x-axis is the number of fatalities per event each actor is involved in and on the y-axis is the total number of fatalities from all events each actor was involved in. Actors involved in conflicts outside of their country of origin have their extraterritorial exploits recorded separately (i.e. the Taliban operating in Pakistan is recorded separately from the Taliban operating in Afghanistan).
+@fig-deadliestactors plots conflict actors by their lethality: on the x-axis is the number of fatalities per event each actor is involved in and on the y-axis is the total number of fatalities from all events each actor was involved in. Actors related to or originating from Myanmar are highlighted in red. Whilst the Myanmar civil war has not reached the massive total fatalities associated with Afghanistan, Myanmar actors are some of the bloodiest in the region, being involved in extremely deadly incidents.
 
-Additionally, actors related to or originating from Myanmar are highlighted in red. Whilst the Myanmar civil war has not reached the massive total fatalities associated with Afghanistan, Myanmar actors are some of the bloodiest in the region, being involved in extremely deadly incidents.
+Actors involved in conflicts outside of their country of origin have their extraterritorial exploits recorded separately (i.e. the Taliban operating in Pakistan is recorded separately from the Taliban operating in Afghanistan).
 
 For instance, the Yaw Defense Force, a local militia based in Gangnaw, was associated with more deaths per event than the US military in Afghanistan, and almost as many deaths. The People's Defense Force - Kanbalu Unit has the notoriety of being associated with more deaths per event than any other actor in the region, more than even the Taliban's Red Unit (their special forces unit).
 
@@ -1196,7 +1193,7 @@ actors_conf_int %>%
 
 The widespread nature of protests, riots and violent incursions related to Myanmar. Even though armed conflict in Myanmar is largely contained within its borders, a war of this size is destabilising for the region as a whole.
 
-In addition to the 1 million Rohingya in Bangladesh (that will be discussed shortly), there are also millions of refugees and economic migrants in other parts of the region. The [ILO](https://www.ilo.org/media/558626/download) noted that there were 2.2 million Myanmar migrants in Thailand and Malaysia alone in 2019. It is unclear how much more that number has grown since the start of the civil war but the [Bangkok Post](https://www.bangkokpost.com/opinion/opinion/2866687/solving-the-myanmar-migrant-surge) called it a "surge" that shows "no signs of abating soon", further highlighting: "the irregular migrant situation could become a ticking time bomb for the country".
+In addition to the 1 million Rohingya in Bangladesh (that will be discussed shortly), there are also millions of refugees and economic migrants in other parts of the region. The [ILO](https://www.ilo.org/media/558626/download) noted that there were 2.2 million Myanmar migrants in Thailand and Malaysia alone in 2019. It is unclear how much more that number has grown since the start of the civil war but the [Bangkok Post](https://www.bangkokpost.com/opinion/opinion/2866687/solving-the-myanmar-migrant-surge) has been fearmongering, calling it a "surge" that shows "no signs of abating soon", further highlighting: "the irregular migrant situation could become a ticking time bomb for the country".
 
 <br><br><br>
 
@@ -1206,7 +1203,6 @@ The recent 2024 protests are unique in recent history -- this is apparent from t
 
 In the plots below, the first grey line marks the start of the 2018 quota reform protests, and consequently, movement. The second grey line marks the overturn of the 2018 decision (which was in favour of the protesters) by the Supreme Court.
 
-However, it should be noted that in contrast to before the 2018 protests, Bangladesh used to have a much higher ratio of riots to protests, though deaths from riots and violence against civilians seem to be a prevalent part of its political landscape.
 
 <br>
 
@@ -1387,9 +1383,9 @@ acled_filtered |>
 
 <br>
 
-The flight of 700,000 Rohingya refugees into Bangladesh has been tremendously destabilising for Bangladesh and the rest of the region. With Myanmar as it currently is, there is currently no party to even capable of offering restitution.
+The flight of 700,000 Rohingya refugees into Bangladesh in 2016 has been tremendously destabilising for Bangladesh and the rest of the region. 
 
-Even with anti-govenrment protests embroiling the rest of the country, Cox's Bazar was still one of the most dangerous districts in the whole of Bangladesh, as can be seen from @fig-bangladeshadm2, which compares events and fatalities in the the top four districts with highest conflict fatalities. In Dhaka and Jessore, one may see the spike in fatalities in 2024 in line with the protests and riots to oust Sheikh Hasina.
+Even with anti-government protests embroiling the rest of the country, Cox's Bazar was still one of the most dangerous districts in the whole of Bangladesh, as can be seen from @fig-bangladeshadm2, which compares events and fatalities in the the top four districts with highest conflict fatalities. In Dhaka and Jessore, one may see the spike in fatalities in 2024 in line with the protests and riots to oust Sheikh Hasina.
 
 <br>
 
@@ -1423,10 +1419,10 @@ bangladesh_summary |>
   filter(admin2 %in% c("Dhaka", "Chittagong", "Cox's Bazar", "Jessore")) |> 
   filter(quarter != "2024-10-01") |> 
   ggplot(aes(x = quarter, y = value)) + 
-  geom_vline(aes(xintercept=as.numeric(quarter[c(145)])), linetype=4, colour="red", 
-             alpha = .5, size = .5) +
-  geom_vline(aes(xintercept=as.numeric(quarter[c(165)])), linetype=4, colour="black", 
-             alpha = .5, size = .5) +
+  # geom_vline(aes(xintercept=as.numeric(quarter[c(145)])), linetype=4, colour="red", 
+  #            alpha = .5, size = .5) +
+  # geom_vline(aes(xintercept=as.numeric(quarter[c(165)])), linetype=4, colour="black", 
+  #            alpha = .5, size = .5) +
   geom_line(aes(colour = type), linewidth = .75) + 
   facet_wrap(~admin2, scales = "free_y") + 
   scale_x_date(date_breaks = "2 years", label = date_format("%Y")) + 
@@ -1437,7 +1433,6 @@ bangladesh_summary |>
         strip.background = element_rect(fill = "black"), 
         legend.position = "top") + 
   labs(title = "Top 4 districts (admin2) in Bangladesh in terms of conflict fatalities", 
-       subtitle = "Red line marks Rohingya genocide; black line marks the 2018 quota reform protests", 
        y = "", x = "", 
        colour = "")
 
@@ -1540,7 +1535,7 @@ cxb_actors |>
 
 <br>
 
-The Arakan Rohingya Salvation Army (ARSA), recognised as a terrrorist group in Myanmar, is especially prominent in Cox's Baxar. However, of late, they have been [collaborating with the Tatmadaw](https://thediplomat.com/2024/08/captured-myanmar-soldier-army-joined-hands-with-arsa-against-arakan-army-advance/) as the Arakan Army makes gains in Rakhihne. Major Hlaing Win Tun of the Tatmadaw said that the Arakan Army's gains in Rakhine prompted the military to join hands with ARSA, which eventually led to the forced conscription and training of hundreds of Rohingya youths from the region, including from refugee camps in Bangladesh."
+The Arakan Rohingya Salvation Army (ARSA), recognised as a terrrorist group in Myanmar, is especially prominent in Cox's Baxar. However, of late, they have been [collaborating with the Tatmadaw](https://thediplomat.com/2024/08/captured-myanmar-soldier-army-joined-hands-with-arsa-against-arakan-army-advance/) as the Arakan Army makes gains in Rakhine. Major Hlaing Win Tun of the Tatmadaw said that the Arakan Army's gains in Rakhine prompted the military to join hands with ARSA, which eventually led to the forced conscription and training of hundreds of Rohingya youths from the region, including from refugee camps in Bangladesh."
 
 The Arakan Army was one of the perpetrators of the Rohingya genocide. Their response is also troubling: the term "hostile Rohingya" is now used to cover any Rohingya who opposes them. [Human Rights' Watch](https://www.hrw.org/news/2024/08/12/myanmar-armies-target-ethnic-rohingya-rakhine) elaborates: "Myanmar junta forces and the opposition Arakan Army have committed extrajudicial killings and widespread arson against Rohingya, Rakhine, and other civilians in Myanmar’s western Rakhine State in recent months".
 
@@ -1548,289 +1543,17 @@ In light of this, support for [ARSA grows](https://thediplomat.com/2024/10/rohin
 
 This has extended to Cox's Bazar, where refugees are being recruited, where ARSA and various other militias are competing for territory and unidentified armed groups are going round targeting civilians. Furthermore, the Bangladeshi state is not able or willing to exert its control over Cox's Bazar -- from @tbl-cxbactors, we can see the relatively minor presence of police and non-involvement of the Bangladeshi military.
 
-The Rohingya continue to be one of the most marginalised and vulnerable groups in the world. No party in this conflict seems to be able or interested in treating with the Rohingya in good faith. Refugee crisis actors have always been aware of the risk of radicalisation, though counter-programming (education and livelihoods) was very limited due to governmental restrictions and the difficulties of long-term planning. However, disaffection with their leaders, Bangladeshi state, international actors, the Tatmadaw and the Arakan Army has very understandably, only increased. Actions to stem radicalisation actually require some type of resolution to the genocide and refugee crisis. There was never even an official count of the dead or missing from the genocide.
+The Rohingya continue to be one of the most marginalised and vulnerable groups in the world. No party in this conflict seems to be able or interested in treating with the Rohingya in good faith. Counter-programming (education and livelihoods) was very limited due to governmental restrictions and the difficulties of long-term planning. And disaffection with their leaders, Bangladeshi state, international actors, the Tatmadaw and the Arakan Army has very understandably, only increased. 
 
 <br><br><br>
 
-## Pakistan
-
-Pakistan is party to numerous geopolitical conflicts. It also entered into a massive political crisis following the [ouster](https://www.scmp.com/news/asia/south-asia/article/3217401/pakistan-speeds-towards-full-blown-crisis-imran-khans-foot-accelerator) of Prime Minister Imran Khan, though the situation has since stabilised. However, the Pakistani state remains unstable enough for long-time allies like China to be [very publicly concerned](https://thediplomat.com/2023/05/behind-chinas-friendly-advice-for-pakistan/). Furthermore, state and non-state actors in Pakistan have a history of using [deadly force](https://acleddata.com/2024/02/01/political-repression-and-militant-targeting-set-the-stage-for-pakistans-2024-elections/) against protesters and other civilians, including militia attacks on political parties.
-
-Even as Pakistan reels from its constitutional crisis, its relationship with the Taliban has soured since the US withdrawal. According to [Radio Free Europe](https://www.rferl.org/a/afghanistan-pakistan-taliban-ttp-terrorism/33078685.html), the Taliban has not reined in the terror group Tehrik-e Taliban (TTP), which has killed hundreds of Pakistani soldiers since 2021. Michael Semple, a former UN and EU Advisor, believes that Afghanistan would not likely give up on TTP, given that Pakistan is reaching a "tipping point given the political and economic crises", creating quite the opportunity for Afghanistan.
-
-Pakistan's economic woes
-
-https://acleddata.com/2024/02/14/acled-insight-election-related-violence-in-pakistan/
-
-Pakistan has been often leaning on China for assistance to keep its economy intact. Last year in July, when Islamabad’s foreign exchange reserves were depleting at a massive pace, it asked Beijing to delay extending the maturity of debt for nine power plants built by Chinese companies under the multibillion-dollar Pakistan China Economic Corridor (CPEC). https://www.firstpost.com/world/pakistan-seeks-additional-10-billion-yuan-loan-from-china-13829881.html
-
-https://finance.yahoo.com/news/china-pakistan-economic-ties-could-093000794.html
-
-Ongoing tensions between Khan and the political establishment spilled over in May 2023, when Khan was arrested on corruption charges.16 PTI supporters mobilized across the country, organizing demonstrations in hundreds of locations. Of these, 21% of demonstrations turned violent, with demonstrators attacking government and military properties, including the residences of high-ranking military officers.
-
-https://acleddata.com/2024/02/01/political-repression-and-militant-targeting-set-the-stage-for-pakistans-2024-elections/
-
-Political and economic development can be characterized as the conflict between states' efforts to increase their capabilities and existing social forces that they must accommodate and to which they must be accountable (Acemoglu and Robinson 2019). This conflict is definitional at the frontiers of the formal state. The combination of a law that clearly demarcates the end of the formal state combined with the agriculture transformation precipitated by the Green Revolution makes 20th century Pakistan an ideal setting to study these processes.
-
-We show that the trajectory of state presence within the borders of modern-day Pakistan is consistent with a theoretical framework in which states extend governance to areas where the economic benefits of investing in institutions for taxation and resource extraction outweigh the costs of doing so. Using crop-suitability data from the Food and Agriculture Organization of the United Nations, we demonstrate first that the choice by the British to apply the Frontier Crimes Regulation (FCR) to over half of Pakistan in 1901 was (conditionally) unrelated to crop suitability. We then exploit the fact that the Green Revolution created more fundamental agricultural transformation in areas of low crop suitability to understand Pakistan's selective roll-back of the FCR throughout the 1960s and 1970s. Subdistricts made suitable to agriculture by the Green Revolution were more likely to see the FCR removed.
-
-https://onlinelibrary.wiley.com/doi/10.1111/ecca.12527
-
-Kabul was also disturbed that the US also backed down on its longstanding demand that the Taliban break publicly with al-Qaeda. Instead the Taliban made vague statements about never letting ‘their country’ be used for terrorism against another. That echoes the Taliban’s statements before and after 9/11 that al-Qaeda was not engaged in attacks on American targets despite all the obvious evidence. al-Qaeda fighters are still on the battlefield in Afghanistan fighting with the Taliban.
-
-The Taliban’s Pakistani patrons, the army and the ISI were very pleased with the outcome. They control the lives of the leadership in Pakistan and the lives of the Taliban team in Doha. As the former head of Afghan intelligence, Amrullah Saleh, likes to point out that the Taliban negotiators fly home to Karachi from Doha whenever they want to see their boss or their families. They are not independent players.
-
-https://www.brookings.edu/articles/pakistan-taliban-and-the-afghan-quagmire/
-
-On August 14, Torkham, the main border crossing connecting Pakistan and Afghanistan, remained closed for a third day after a firefight that injured several Taliban fighters and at least three Pakistani soldiers on August 12. The Taliban said three Afghan civilians were killed in the cross fire.
-
-Such clashes are almost a weekly occurrence along their 2,500-kilometer border.
-
-But Michael Semple, a former EU and UN adviser to Afghanistan, told RFE/RL it would be difficult for the Taliban to give up on the TTP's nearly two-decade campaign when it sees a tipping point given the grave political and economic crises engulfing Pakistan.
-
-https://www.rferl.org/a/afghanistan-pakistan-taliban-ttp-terrorism/33078685.html
-
-Even as it is embroiled in a political conflict, Pakistan also remains involved in several regional conflicts -- namely, with India and with Afganistan.
-
-<br>
-
-```{r fig.height=7}
 
 
-afpakind_capitals <- tribble(~x, ~y, ~name, 
-                             77.2088, 28.6139, "New Delhi", 
-                             73.0363, 33.6995, "Islamabad", 
-                             69.2075, 34.5553, "Kabul") |> 
-  st_as_sf(coords = c("x", "y"), crs = 4326)
-
-acled_filtered |> 
-  filter(year > 2015) |> 
-  filter(!is.na(longitude) & !is.na(latitude) & 
-           country %in% c("Pakistan", "India", "Afghanistan")) |> 
-  select(event_id_cnty, event_type, longitude, latitude, event_type, fatalities) |>
-  ggplot() + 
-  geom_sf(data = world_shape, size = 1, colour = "darkblue", fill = "grey85", alpha = .5) +
-  geom_sf_text(data = world_shape, aes(label = name)) + 
-  geom_text(aes(, x = 76, y = 27), label = "India") + 
-  geom_point(data = afpakind_capitals, aes(geometry = geometry), 
-            size = 3, alpha = .8, pch = 15, alpha = .8, stat = "sf_coordinates",
-            colour = "cornflowerblue") + 
-   geom_sf_text(data = afpakind_capitals, aes(geometry = geometry, label = name), 
-            size = 3, alpha = .8) + 
-  geom_sf(data = kash_buffer, colour = "white", fill = "white", alpha = .65) + 
-  geom_sf(data = afpak_buffer, colour = "white", fill = "white", alpha = .65) + 
-  coord_sf(xlim = c(60, 82), ylim = c(23.1, 37)) +
-  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .05) +
-  scale_colour_manual(values = c(
-      "Battles" = "#9b2226",
-      "Violence against civilians" = "#001219",
-      "Explosions/Remote violence" = "#ee9b00",
-      "Protests" = "#94d2bd",
-      "Strategic developments" = "#e9d8a6",
-      "Riots" = "#005f73"
-    )) +
-  scale_size_continuous(range = c(.1, 5)) + 
-  theme(plot.background = element_rect(fill = NA, colour = NA),
-          panel.background = element_rect(fill = NA, colour = NA),
-          rect = element_rect(fill = NA, colour = NA),
-          legend.title = element_text(face = "bold"),
-          plot.caption = element_text(hjust = 0.2)) + 
-    guides(colour = guide_legend(override.aes = list(alpha = 1)), 
-           size = guide_legend(override.aes = list(alpha = 1, 
-                                                   colour = "grey"))) + 
-    theme_void() +
-  labs(title = "Political conflict in Pakistan, including border areas with Afghanistan and India",
-       subtitle = "Border areas (within 100km) and Kashmir marked in white. Country capitals are the blue squares.", 
-       colour = "", size = "Fatalities")
-  
-
-```
-
-<br>
-
-```{r}
-acled_filtered |> 
-  filter(country == "Pakistan") |> 
-  group_by(event_type, quarter = floor_date(event_date, unit = "quarter")) |> 
-  summarise(Events = n_distinct(event_id_cnty), 
-            Fatalities = sum(fatalities, na.rm = TRUE), 
-            .groups = "drop") |> 
-  pivot_longer(cols = c(Events, Fatalities), 
-               names_to = "type", 
-               values_to = "value") |>
-  ggplot(aes(x = quarter, y = value)) + 
-  geom_vline(aes(xintercept=as.numeric(as.Date(dmy("17/2/2018")))), linetype=4, colour="black", 
-             alpha = .5, size = .5) +
-  geom_vline(aes(xintercept=as.numeric(as.Date(dmy("29/2/2020")))), linetype=4, colour="black", 
-             alpha = .5, size = .5) +
-  geom_area(aes(fill = event_type), 
-            size = .75) + 
-  scale_fill_manual(values = c(
-      "Battles" = "#9b2226",
-      "Violence against civilians" = "#001219",
-      "Explosions/Remote violence" = "#ee9b00",
-      "Protests" = "#94d2bd",
-      "Strategic developments" = "#e9d8a6",
-      "Riots" = "#005f73"
-    )) +
-  facet_wrap(~ type, scales = "free_y", ncol = 1) + 
-  scale_y_continuous(labels = comma) + 
-  scale_x_date(date_breaks = "2 years", date_labels = "%Y") + 
-  theme(strip.background = element_rect(fill = "black"),
-        strip.text = element_text(size = 10), 
-        legend.position = "top") + 
-  labs(x = "", y = "",
-       title = "Conflict events and fatalities in Bangladesh, 2010-2024", 
-       fill = "") + 
-  guides(fill = guide_legend(nrow = 1))
-```
-
-Apart from Jammu and Kashmir, the border region between India and Pakistan is sparsely populated. Though, with reference to the graphs below, the number of violent incidents in Kashmir has decreased since 2020, over the time period monitored by ACLED below, there were more battles in Kashmir than the rest of India.
-
-Pakistan's recent increase in conflict will be discussed in the next section.
-
-<br>
-
-```{r}
-
-afpakind_border <- acled_filtered |> 
-  filter(!is.na(longitude) & !is.na(latitude) & 
-             country %in% c("India", "Pakistan", "Afghanistan")) |> 
-  left_join(
-    rbind(acled_filtered |>
-              filter(!is.na(longitude) & !is.na(latitude) &
-                       country %in% c("Afghanistan", "Pakistan")) |>
-              st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
-              st_intersection(ind_pak_buffer) |>
-              st_drop_geometry() |>
-              mutate(border = "Afpak border") |>
-              select(event_id_cnty, border), 
-    acled_filtered |>
-      filter(!is.na(longitude) & !is.na(latitude) &
-                       country %in% c("India", "Pakistan")) |>
-              st_as_sf(coords = c("longitude", "latitude"), crs = 4326) |>
-              st_intersection(ind_pak_buffer) |>
-              st_drop_geometry() |>
-              mutate(border = "Indpak border") |>
-              select(event_id_cnty, border)), 
-            by = "event_id_cnty") |> 
-  mutate(border = case_when(is.na(border) & country == "Pakistan" ~ "other Pakistan", 
-                            is.na(border) & country == "India" ~ "other India"))
-
-```
-
-```{r}
-acled_filtered |> 
-  filter(year < 2024 & year > 2015) |> 
-  filter(country %in% c("India", "Pakistan")) |> 
-  mutate(kashmir = case_when(
-    admin1 %in% c("Azad Jammu and Kashmir", "Jammu and Kashmir", "FATA", "Khyber Pakhtunkhwa") ~ "Kashmir", 
-    country == "Pakistan" & 
-       admin1 %out% c("Azad Jammu and Kashmir", "Jammu and Kashmir", "FATA", "Khyber Pakhtunkhwa") ~ "other Pakistan", 
-    country == "India" & 
-       admin1 %out% c("Azad Jammu and Kashmir", "Jammu and Kashmir", "FATA", "Khyber Pakhtunkhwa") ~ "other India"
-  )) |> 
-  group_by(event_type, year, kashmir) |> 
-  summarise(events = n_distinct(event_id_cnty), .groups = "drop") |> 
-  ggplot(aes(x = year, y = events)) + 
-  geom_line(aes(colour = event_type), lwd = 1) +
-  scale_y_log10(labels = comma) +
-  scale_x_continuous(breaks = c(2013, 2015, 2017, 2019, 2021, 2023)) + 
-  scale_colour_manual(values = c(
-      "Battles" = "#9b2226",
-      "Violence against civilians" = "#001219",
-      "Explosions/Remote violence" = "#ee9b00",
-      "Protests" = "#94d2bd",
-      "Strategic developments" = "#e9d8a6",
-      "Riots" = "#005f73"
-    )) +
-  facet_wrap(~kashmir) + 
-  theme(strip.background = element_rect(fill = "black")) + 
-  labs(colour = "Event type", 
-       x = "", 
-       y = "Number of political incidents",
-       title = "Political incidents in India and Pakistan, by year and border area (2016-2023)")
-
-```
-
-<br>
-
-```{r}
-acled_filtered |> 
-  filter(country %in% c("India", "Pakistan")) |> 
-  mutate(kashmir = case_when(
-    admin1 %in% c("Azad Jammu and Kashmir", "Jammu and Kashmir") ~ "Kashmir", 
-    country == "Pakistan" ~ "other Pakistan", 
-    country == "India" ~ "other India"
-  )) |> 
-  filter(country == "India") |> 
-  group_by(event_type, kashmir) |> 
-   summarise(events = n_distinct(event_id_cnty),
-             fatalities = sum(fatalities),
-             .groups = "drop") |> 
-  pivot_longer(cols = c(events, fatalities), 
-               names_to = "variable", 
-               values_to = "value") |> 
-  ggplot(aes(x = value, y = fct_rev(event_type), fill = kashmir)) +
-  geom_col(position = position_dodge(width = .9)) + 
-  geom_text(aes(label = comma(value)), 
-            position = position_dodge(width = .9), 
-            hjust = "inward") + 
-  scale_x_continuous(label = comma, trans = "sqrt") + 
-  scale_fill_viridis_d(begin = .3) + 
-  facet_wrap(~ variable, scales = "free_x") + 
-  theme(strip.background = element_rect(fill = "black"), 
-        legend.position = "top",
-        plot.title = element_text(size = 11)) + 
-  labs(x = "", y = "", fill = "", 
-       title = "Conflict events and fatalities in Indian-adminstered Kashmir vs the rest of the country, 2016-01-01 to 2024-05-30")
-
-```
-
-<br>
-
-Fatalities in Kashmir have also decreased since their 2018 highs. Kashmir experiences violence against civilians and riots at a lower rate than the rest of India and Pakistan.
-
-<br>
-
-```{r}
-acled_filtered |> 
-  filter(year < 2024 & year > 2015) |> 
-  filter(country %in% c("India", "Pakistan")) |> 
-  mutate(kashmir = case_when(
-    admin1 %in% c("Azad Jammu and Kashmir", "Jammu and Kashmir") ~ "Kashmir", 
-    country == "Pakistan" ~ "other Pakistan", 
-    country == "India" ~ "other India"
-  )) |> 
-  group_by(event_type, year, kashmir) |> 
-  summarise(fatalities = sum(fatalities), .groups = "drop") |> 
-  ggplot(aes(x = year, y = fatalities)) + 
-  geom_line(aes(colour = event_type), lwd = 1) +
-  scale_colour_manual(values = c(
-      "Battles" = "#9b2226",
-      "Violence against civilians" = "#001219",
-      "Explosions/Remote violence" = "#ee9b00",
-      "Protests" = "#94d2bd",
-      "Strategic developments" = "#e9d8a6",
-      "Riots" = "#005f73"
-    )) + 
-  scale_y_continuous(labels = comma) +
-  scale_x_continuous(breaks = c(2013, 2015, 2017, 2019, 2021, 2023)) + 
-  facet_wrap(~kashmir) + 
-  theme(strip.background = element_rect(fill = "black")) + 
-  labs(colour = "Event type", 
-       x = "", 
-       y = "Number of conflict fatalities per event type",
-       title = "Political conflict fatalities by year")
-```
-
-<br><br><br>
-
-## Afghanistan-Pakistan
+### Afghanistan-Pakistan
 
 Even as violence in Kashmir lessens (though upcoming elections in the Indian-administered zone may change that), Pakistan is still facing tremendous cross-border pressure. The plots below show the past 5 years of conflict data in Afghanistan and Pakistan, with the border area between the two marked in a light grey.
 
-The first three years show ultimately successful Taliban insurgency in full swing, with quite a significant amount of spillover into Pakistan, culminating in the US withdrawal in 2021. 2022 shows markedly less conflict, though we can see the beginnings of this "migration" of conflict (we don't know how literal this is yet) from Afghanistan to Pakistan, this is more evident in 2023. This is in also line with the longstanding Taliban policy of disregard for the Durand Line.
+The first three years show ultimately successful Taliban insurgency in full swing, with quite a significant amount of spillover into Pakistan, culminating in the US withdrawal in 2021. 2022 shows markedly less conflict, though we can see the beginnings of this "migration" of conflict (we don't know how literal this is yet) from Afghanistan to Pakistan, this is more evident in 2023. This is in also line with the longstanding Taliban disregard for the Durand Line.
 
 <br>
 
@@ -1872,7 +1595,10 @@ afpak_map <- function(tbl){
 
 ```
 
-::::: {#fig-afpak}
+
+
+::: {#fig-afpak}
+
 ```{r fig.height = 6.5, fig.width=9}
 
 
@@ -1922,6 +1648,7 @@ acled_filtered |>
 
 
 ```
+::: 
 
 <br>
 
@@ -2007,7 +1734,9 @@ acled_afpak |>
        subtitle = "Border area defined as 100km from Afghanistan")
 ```
 
-## Appendices
+
+
+# Appendices
 
 ### Fatalities streamgraph
 
@@ -2042,17 +1771,17 @@ In this section, we explore the concerns of protesters in the Asia-Pacific. Belo
 
 The main topics identified from the graph include (cross-border issues are in bold):
 
--   *Contentious territories:* **Myanmar**, **Palestine**, Korea, Manipur, **Kashmir**, **Fukushima**
+-*Contentious territories:* **Myanmar**, **Palestine**, Korea, Manipur, **Kashmir**, **Fukushima**
 
--   *Legislation and state overreach:* Citizenship amendment, Lese majeste, Oli (Nepal), Arrest, **Money laundering**
+-*Legislation and state overreach:* Citizenship amendment, Lese majeste, Oli (Nepal), Arrest, **Money laundering**
 
--   *Economic concerns and service delivery:* Unions, **Prices**, Arrears, Pensions, Hikes, Load shedding, Farms, Outages
+-*Economic concerns and service delivery:* Unions, **Prices**, Arrears, Pensions, Hikes, Load shedding, Farms, Outages
 
--   **Coronavirus**
+-**Coronavirus**
 
-These can be thought of as the prime destabilising factors for the region: in some cases, they have devolved into open conflict. Peace actors should seek the just resolution of issues and ensure that nonviolent options always remain open to people.
+These can be thought of as the prime destabilising factors for the region: in some cases, they have devolved into open conflict. 
 
-Regional tensions, state overreach and bread and butter issues are the issues that people in the Asia-Pacific protested the most about. Though inflation seems to have been arrested, the poverty rate in these countries should be monitored very carefully.
+Regional tensions, state overreach and bread and butter issues are what people in the Asia-Pacific protested the most about. Though inflation seems to have been arrested, the poverty rate in these countries should be monitored very carefully.
 
 <br>
 
@@ -2109,4 +1838,5 @@ ggsave(here("plots", "protest_network_graph.png"),
 ::: {#fig-protestnetworkasia}
 [![](./plots/protest_network_graph.png)](https://github.com/risk-anticipation-hub/conflict-trends-asia-pacific/raw/main/plots/protest_network_graph.png)
 :::
-:::::
+
+
