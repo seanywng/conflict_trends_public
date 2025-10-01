@@ -114,7 +114,11 @@ world_shape <- st_read(here("data",
   )) 
 
 asia_pacific_shape <- world_shape  |> 
-  filter(country %in% country_list)
+  filter(country %in% country_list |
+           country %in% c("Aksai Chin", 
+                          "Arunachal Pradesh", 
+                          "West Bank", 
+                          "Jammu-Kashmir"))
 
 myanmar_adm1 <- st_read(here("data", 
                              "mmr_polbnda2_adm1_mimu_250k", 
@@ -159,6 +163,7 @@ mmr_idp <- read_csv(here("data", "event_data_mmr.csv")) |>
 
 
 ```
+
 
 
 
@@ -342,6 +347,7 @@ bangladesh <- bangladesh_raw |> acled_cleaning()
 
 
 
+
 ```{r eval=FALSE}
 acled_filtered |> write_rds(here("data", "acled_filtered.rds"), 
                             compress = c("gz"))
@@ -433,14 +439,75 @@ gganimate::anim_save(here("plots", "asia_pacific_event_types_grey.gif"))
 ```
 
 ```{r}
-viridis_pal(option = "magma")(10)
+asia_pacific_event_types <- acled_filtered |>  
+  # filter(sub_event_type %out% c("Agreement", 
+  #                               "Change to group/activity", 
+  #                               "Headquarters or base established", 
+  #                               "Non-violent transfer of territory")) |> 
+  filter(country %out% c("Australia", "New Zealand")) |> 
+  mutate(quarter = floor_date(event_date, "quarter")) %>%
+  select(event_id_cnty, event_type, longitude, latitude, event_type, quarter, fatalities) %>%
+  mutate(quarter = format_ISO8601(quarter, precision = "ym")) %>%
+  ggplot() + 
+  geom_sf(data = asia_pacific_shape |> 
+            filter(country %out% c("Australia", "New Zealand")),
+          size = .5, colour = "#14213d", fill = "#000814") + 
+  geom_point(aes(x = longitude, y = latitude, colour = event_type, size = fatalities), alpha = .2) + 
+  
+  coord_sf(xlim = c(44, 180), 
+           ylim = c(-18, 52)) + 
+ scale_colour_manual(values = c(
+      "Battles" = "#d62828",
+      "Violence against civilians" = "#ffb3c6",
+      "Explosions/Remote violence" = "#ee9b00",
+      "Protests" = "#94d2bd",
+      "Strategic developments" = "#e9d8a6",
+      "Riots" = "#005f73"
+    )) +
+  scale_size_continuous(range = c(.3, 11), breaks = c(0, 10, 50, 100, 150)) +
+  theme_void() +
+  guides(colour = guide_legend(override.aes = list(alpha = 1, size = 3)), 
+         size = guide_legend(override.aes = list(alpha = 1, 
+                                                 colour = "grey"))) +
+  theme(panel.background = element_rect(fill = "#1b263b", colour = "#1b263b"),
+        plot.background = element_rect(fill = "#171718",colour = NA),
+        legend.background = element_rect(colour = NA, fill = NA), 
+        rect = element_rect(fill = NA, colour = NA), 
+        legend.title = element_text(face = "bold", size = 10, colour = "#8ecae6"),
+        legend.text = element_text(size = 10, colour = "#8ecae6"), 
+        plot.title = element_text(colour = "#005f73", size = 35), 
+        plot.subtitle = element_text(colour = "#8ecae6", size = 15), 
+        legend.position = c(0.05, 0.14), 
+        legend.box.background = element_blank(),
+        legend.key = element_rect(colour = NA, fill = NA), 
+        plot.caption = element_text(hjust = 0.5, colour = "#005f73")) + 
+  gganimate::transition_manual(quarter) + 
+  labs(title = "Asia-Pacific conflict events in { current_frame }", 
+       caption = "Data source: Armed Conflict Location & Event Data Project (ACLED); acleddata.com",
+       colour = "Event type", 
+       size = "Fatalities")
+
+
+gganimate::animate(asia_pacific_event_types, width = 3240, height = 1847.5, res = 150, duration = 60, 
+                   renderer = gifski_renderer())
+
+
+
+gganimate::anim_save(here("plots", "asia_pacific_event_types_frames_black_white.gif"))
 ```
 
+
+```{r}
+world_shape |> st_drop_geometry() |> filter(continent == "Asia")
+```
 
 
 ```{r}
 viridis_pal(option = "turbo")(10) |> show_col()
 
+Aksai Chin
+Arunachal Pradesh
+West Bank
 
 ```
 

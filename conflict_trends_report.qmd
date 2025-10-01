@@ -34,6 +34,7 @@ library(ggtext)
 library(widyr)
 library(ggraph)
 library(janitor)
+library(readxl)
 
 `%out%` <- Negate(`%in%`)
 options(scipen = 100)
@@ -170,6 +171,9 @@ indo_adm1_pop <- read_csv(here("data", "idn_admpop_adm1_2020_v2.csv")) |>
   )
 
 ```
+
+
+
 
 ## Introduction
 
@@ -735,7 +739,7 @@ protest_network_graph <- acled_protests |>
                  colour = "goldenrod2") + 
   geom_node_text(aes(label = name), size = 1.5) + 
   theme(legend.position = "none", 
-        plot.caption = element_text(hjust = .5)) + 
+        plot.caption = element_text(hjust = .5)) + <
   labs(title = "Network graph of post-covid protest descriptions", 
        subtitle = "Line thickness indicates number of events involving those words, line transparency indicates the correlation between words. Selected words highlighted.", 
        caption = "Source: www.acleddata.com")
@@ -784,34 +788,39 @@ protest_network_graph_indonesia <- acled_protests |>
   ) |> 
   igraph::graph_from_data_frame() %>% 
   ggraph(layout = "fr") + 
-  geom_edge_link(aes(alpha = correlation, edge_width = n), colour = "lightskyblue2", check_overlap = TRUE) +
+  geom_edge_link(aes(alpha = correlation, edge_width = n), colour = "#457b9d", check_overlap = TRUE) +
   scale_edge_width_continuous(range = c(.1, 2.5), trans = "log10") +
   scale_alpha_continuous(range = c(0.01, 0.08)) +
-  geom_node_point(colour = "lightskyblue2", alpha = 0.2, size = .5) +
+  geom_node_point(colour = "#457b9d", alpha = 0.2, size = .5) +
   geom_node_text(aes(label = ifelse(name %in% 
                                         c("myanmar", "laundering", "coronavirus",
-                                          "citizenship", "union", "load", "farm", 
+                                          "citizenship", "wage", "load", "farm", 
                                           "prices", "arrears", "palestine", "kashmir", 
                                           "pension", "fukushima", "majeste",
-                                          "arrested", "oli", "manipur", "korea", 
-                                          "football", "rights", 
+                                          "arrested", "oli", "manipur", "korea", "rights", 
                                           "incumbent", "drivers", "dispute", 
-                                          "papua", "kpk"),
-                                      str_to_title(name),
+                                          "autonomy", "corruption"),
+                                      str_to_upper(name),
                                       "")), 
-                 size = 4.3, 
-                 alpha = .7, 
-                 colour = "goldenrod2") + 
-  geom_node_text(aes(label = name), size = 1.5) + 
+                 size = 5, 
+                 alpha = .9, 
+                 colour = "#e63946", 
+                 face = "bold") + 
+  geom_node_text(aes(label = name), size = 2.6, alpha = .4, 
+                 colour = "#caf0f8") + 
   theme(legend.position = "none", 
-        plot.caption = element_text(hjust = .5)) + 
+        plot.caption = element_text(hjust = .5, colour = "#219ebc"), 
+        panel.background = element_rect(fill = "#03071e"), 
+        plot.background = element_rect(fill = "#1b263b"), 
+        plot.title = element_text(colour = "#219ebc"), 
+        plot.subtitle = element_text(colour = "#219ebc", size = 10)) + 
   labs(title = "Network graph of protest descriptions in Indonesia 2014-2024", 
-       subtitle = "Line thickness indicates number of events involving those words, line transparency indicates the correlation between words. Selected words highlighted.", 
+       subtitle = "Line thickness indicates number of events involving those words, line transparency indicates the correlation between words. Key topics highlighted.", 
        caption = "Source: www.acleddata.com")
   
 
-ggsave(here("plots", "protest_network_graph_indonesia.png"), 
-       width = 11, height = 7, units = "in", dpi = 300)
+ggsave(here("plots", "protest_network_graph_indonesia_new.png"), 
+       width = 10, height = 6.5, units = "in", dpi = 300)
 
 ```
 

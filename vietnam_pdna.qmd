@@ -92,6 +92,9 @@ yagi_adm1 <- c("VN101", "VN103", "VN104", "VN106", "VN107", "VN109",
 
 yagi_shape <- vn_shape |> filter(adm1_pcode %in% yagi_adm1)
 
+yagi_roads <- st_read(here("data", "vnm_rdsl_2015_osm", "vnm_rdsl_2015_OSM.shp")) |>
+  clean_names()
+
 recovery14 <- c("VN221", "VN207", "VN203", "VN302", "VN201", "VN103", "VN301", 
   "VN209", "VN205", "VN217", "VN225", "VN215", "VN211", "VN213")
 
@@ -106,6 +109,19 @@ population <- read_csv(here("data", "vnm_admpop_adm1_2024.csv")) |>
   clean_names()
 
 ```
+
+```{r}
+yagi_roads |> glimpse()
+
+yagi_new_roads <- yagi_roads |> st_join(
+  yagi_shape, left = TRUE) |> 
+  filter(adm1_pcode %in% yagi_adm1)
+
+yagi_new_roads |> 
+  filter() |> 
+  glimpse()
+```
+
 
 ```{r}
 
@@ -131,6 +147,36 @@ vn_plot <- function(tbl) {
     theme_void()}
 ```
 
+
+```{r}
+damage |> 
+  filter(damage_indicators == "Complete damage (over 70%)") |> 
+```
+
+
+```{r}
+damage |> 
+  filter(damage_indicators == "Complete damage (over 70%)") |> 
+  naniar::replace_with_na(list(value = 0)) |>
+    select(-adm1_vi, -adm1_en) |>
+    right_join(yagi_shape, by = "adm1_pcode") |>
+    st_as_sf() |>
+    ggplot() +
+    geom_sf(size = .1, aes(fill = value), colour = "grey80") +
+    geom_sf(size = .2, colour = "grey80", fill = NA, data = recovery_shape, alpha = .3) +
+  geom_sf(data = yagi_new_roads |> 
+            filter(type %in% c("primary", "secondary")), 
+          size = .1, colour = "#b2f7ef", alpha = .2) +
+    geom_sf_text(aes(label = adm1_vi), size = 2) +
+  scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144"), 
+                         labels = comma) +
+    ggthemes::theme_map() + 
+    theme(plot.caption = element_text(hjust = .5, size = 5)) + 
+    labs(subtitle = "Source: Viet Nam Disaster and Dyke Management Authority (VDDMA).\nProvinces outlined in blue are where recovery interventions are planned.", 
+                  caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the \nSecretariat of the United Nations concerning the legal statusof any country, territory, city or area or of its authorities, or concerning the \ndelimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.")
+```
+
+
 ```{r}
 vn_plot_alt <- function(tbl) {
   tbl |>
@@ -139,13 +185,20 @@ vn_plot_alt <- function(tbl) {
     right_join(yagi_shape, by = "adm1_pcode") |>
     st_as_sf() |>
     ggplot() +
-    geom_sf(size = .1, aes(fill = value), colour = "grey80") +
-    geom_sf(size = .5, colour = "cornflowerblue", fill = NA, data = recovery_shape) +
+    geom_sf(size = .1, aes(fill = value), colour = NA) +
+    geom_sf(size = .1, colour = "grey80", fill = NA, data = recovery_shape, alpha = .3) +
+    geom_sf(data = yagi_new_roads |> 
+            filter(type %in% c("primary", "secondary")), 
+          size = .01, colour = "#b2f7ef", alpha = .2) +
     geom_sf_text(aes(label = adm1_vi), size = 2) +
-    ggthemes::theme_map() + 
-    theme(plot.caption = element_text(hjust = .5, size = 5)) + 
-    labs(subtitle = "Source: Viet Nam Disaster and Dyke Management Authority (VDDMA).\nProvinces outlined in blue are where recovery interventions are planned.", 
-                  caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the \nSecretariat of the United Nations concerning the legal statusof any country, territory, city or area or of its authorities, or concerning the \ndelimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.")}
+    scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144")) +
+    ggthemes::theme_map() +
+    theme(plot.title = element_text(size = 15),
+          plot.background = element_rect(fill = "#f8f9fa", colour = NA), 
+          panel.background = element_rect(fill = "#f8f9fa", colour = NA),
+          legend.background = element_rect(fill = "#f8f9fa", colour = NA))}
+  
+  
 ```
 
 ```{r}
@@ -154,11 +207,12 @@ damage |>
       filter(damage_indicators %in% c(
         "Rice area")) |>    
   vn_plot_alt() + 
-  scale_fill_viridis_c(direction = -1, labels = comma) +
   labs(title = "Rice fields damaged", 
        fill = "Hectares")
 
 ggsave(here("plots", "yagi_rice_fields.png"), width = 7, height = 5)
+
+damage |> count(damage_indicators)
 ```
 
 ### DRR Infrastructure
@@ -206,27 +260,9 @@ vsma |>
 
 
 ```{r}
-damage |> count(sector, damage_indicators)
-```
-
-
-```{r fig.height=8}
-
-
-
-damage |> 
-      filter(damage_indicators %in% c(
-        "Number of deaths", 
-        "Number of people affected", 
-        "Rice area", 
-        "Monetary damage", 
-        "DAMAGE TO FISHERIES"
-      )) 
-   
-  
   damage |> 
       filter(damage_indicators %in% c("Number of deaths")) |>    
-  vn_plot() + 
+  vn_plot_alt() + 
   scale_fill_viridis_c(direction = -1, labels = comma, breaks = c(10, 50, 100, 130)) +
   labs(title = "Number of deaths", 
        fill = "Persons") +
@@ -289,6 +325,85 @@ damage |>
 
  
 ggsave(here("plots", "yagi_impact_small_multiple.png"), width = 10, height = 13, units = "in")
+```
+
+
+
+
+```{r fig.height=8}
+
+
+damage |> 
+      filter(damage_indicators %in% c("Number of deaths")) |>    
+  vn_plot_alt() + 
+  scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144"), 
+                         labels = comma, breaks = c(10, 50, 100, 130)) +
+  labs(title = "Number of deaths", 
+       fill = "Persons") +
+  
+
+damage |> 
+  filter(str_detect(damage_indicators, "Volume") & sector == "Transportation") |>
+      group_by(sector, adm1_en, adm1_vi, adm1_pcode) |>
+      summarise(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+      mutate(damage_indicators = "Total volume displaced", 
+         unit = "m3") |> 
+  vn_plot_alt() + 
+  scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144"), 
+                         labels = comma) +
+  labs(title = "Volume of soil, stone displaced onto road network", 
+       fill = "M3")  +
+
+damage |> 
+  filter(damage_indicators == "Complete damage (over 70%)") |>
+  vn_plot_alt() + 
+  scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144"), 
+                         labels = comma) +
+  labs(title = "Completely-damaged houses", 
+       fill = "Units") +
+
+
+damage |>
+      filter(sector == "Housing" & str_detect(damage_indicators, "\\%")) |>
+      group_by(sector, unit, adm1_en, adm1_vi, adm1_pcode) |>
+      summarise(value = sum(value, na.rm = TRUE), .groups = "drop") |>
+      mutate(damage_indicators = "Damaged houses") |> 
+  vn_plot_alt() + 
+  scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144"), 
+                         labels = comma) +
+  labs(title = "Damaged houses", 
+       fill = "Units") + 
+  
+damage |> 
+      filter(damage_indicators %in% c(
+        "Rice area")) |>    
+  vn_plot_alt() + 
+  scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144"), 
+                         labels = comma) +
+  labs(title = "Rice fields damaged", 
+       fill = "Hectares") +
+  
+
+damage |> 
+      filter(damage_indicators %in% c(
+        "Monetary damage")) |>    
+  vn_plot_alt() + 
+  scale_fill_gradientn(colours = c("#577590", "#90be6d", "#f8961e", "#f94144"), 
+                         labels = comma,
+                       breaks = c(5000000, 10000000, 15000000, 
+                                  20000000, 24000000)) +
+  labs(title = "Monetary damage", 
+       fill = "Million VND") + 
+  
+  plot_layout(nrow = 2) + 
+  plot_annotation(title = "Impact of typhoon Yagi plotted over road network, selected indicators", 
+                  subtitle = "Source: Viet Nam Disaster and Dyke Management Authority (VDDMA). Road network in blue. Provinces outlined in grey.", 
+                  caption = "The designations employed and the presentation of the material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations concerning the legal status\nof any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. This map is provided without any warranty of any kind whatsoever, either express or implied.") + 
+  theme(plot.caption = element_text(hjust = 1 +30/40, size = 5), 
+        plot.title = element_text(size = 17))
+
+ 
+ggsave(here("plots", "yagi_impact_small_multiple_colour.png"), width = 17, height = 10, units = "in")
 ```
 
 

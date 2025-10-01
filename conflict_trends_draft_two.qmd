@@ -1840,3 +1840,48 @@ ggsave(here("plots", "protest_network_graph.png"),
 :::
 
 
+```{r}
+protest_riot_network_graph_indonesia <- bng_protests |>
+  filter(str_detect(event_id_cnty, "IDN")) |> 
+  # filter(covid == "post-covid") |> 
+  distinct(event_id_cnty, word) |> 
+  add_count(word) |> 
+  filter(n >= 100) |> 
+  pairwise_cor(word, event_id_cnty, sort = TRUE) |> 
+  filter(correlation >= .15) |> 
+  left_join(
+    acled_protests |> 
+      distinct(event_id_cnty, word) |> 
+      add_count(word) |> 
+      filter(n >= 100) |> 
+      pairwise_count(word, event_id_cnty, sort = TRUE), 
+    by = c("item1", "item2")
+  ) |> 
+  igraph::graph_from_data_frame() %>% 
+  ggraph(layout = "fr") + 
+  geom_edge_link(aes(alpha = correlation, edge_width = n), colour = "lightskyblue2", check_overlap = TRUE) +
+  scale_edge_width_continuous(range = c(.1, 2.5), trans = "log10") +
+  scale_alpha_continuous(range = c(0.01, 0.08)) +
+  geom_node_point(colour = "lightskyblue2", alpha = 0.2, size = .5) +
+  geom_node_text(aes(label = ifelse(name %in% 
+                                      c("myanmar", "laundering", "coronavirus",
+                                        "citizenship", "union", "load", "farm", 
+                                        "prices", "arrears", "palestine", "kashmir", 
+                                        "pension", "fukushima", "majeste",
+                                        "arrested", "oli", "manipur", "korea", 
+                                        "football", "rights", 
+                                        "incumbent", "drivers", "dispute", 
+                                        "papua", "kpk"),
+                                    str_to_title(name),
+                                    "")), 
+                 size = 4.3, 
+                 alpha = .7, 
+                 colour = "goldenrod2") + 
+  geom_node_text(aes(label = name), size = 1.5) + 
+  theme(legend.position = "none", 
+        plot.caption = element_text(hjust = .5)) + 
+  labs(title = "Network graph of protest descriptions in Indonesia 2014-2024", 
+       subtitle = "Line thickness indicates number of events involving those words, line transparency indicates the correlation between words. Selected words highlighted.", 
+       caption = "Source: www.acleddata.com")
+```
+
