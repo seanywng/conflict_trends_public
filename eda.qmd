@@ -35,6 +35,7 @@ library(widyr)
 library(ggraph)
 library(gifski)
 library(gganimate)
+library(janitor)
 
 `%out%` <- Negate(`%in%`)
 options(scipen = 100)
@@ -2509,6 +2510,11 @@ myanmar_adm1 <- st_read(here("data",
 
 ```
 
+```{r}
+roads_conflict_data |> glimpse()
+
+myanmar <- readRDS("./data/myanmar.rds")
+```
 
 
 
@@ -2841,10 +2847,90 @@ mmr_idp_points <- mmr_idp |>
   mutate(figure = as.numeric(figure)) |> 
   group_by(y = latitude, x = longitude) |> 
   summarise(IDPs = sum(figure)) |> 
+  rename(`Internally Dislaced Persons` = IDPs) |> 
   st_as_sf(coords = c("x", "y"), crs = 4326)
 
 
 ```
+
+```{r}
+roads_conflict_black_grey <- myanmar |> 
+  filter(event_date > "2021-01-31") |> 
+  ggplot() +
+  geom_sf(size = .1, colour = "grey60", fill = "grey90", data = myanmar_adm1) + 
+  geom_sf(data = road_shape |> filter(Road_Type %out% c("Main")), 
+          linewidth = .12, colour = "blue", alpha = .9) +
+  geom_sf(data = road_shape |> filter(Road_Type %in% c("Main")), 
+          linewidth = .8, colour = "blue", alpha = .6) +
+  geom_sf_text(data = mmr_garrisons, aes(geometry = geometry, label = name), 
+            size = 6.5, alpha = .8) + 
+  geom_point(data = mmr_garrisons, aes(geometry = geometry, label = name), 
+            size = 7, alpha = .8, pch = 15, alpha = .8, stat = "sf_coordinates",
+            colour = "goldenrod2") + 
+  geom_sf_text(data = mmr_borders, aes(geometry = geometry, label = name), 
+            size = 6.5, alpha = .8) + 
+  geom_point(data = mmr_borders, aes(geometry = geometry, label = name), 
+            size = 7, alpha = .8, pch = 18, alpha = .8, stat = "sf_coordinates",
+            colour = "cornflowerblue") +
+  # Lashio
+  geom_point(aes(x = 97.7525, y = 22.9665), size = 7,
+             colour = "goldenrod2", pch = 15, alpha = .8) +
+  geom_text(aes(x = 97.7525, y = 22.9665), size = 6.5, label = "Lashio", colour = "seagreen") +
+  # Myawaddy
+  geom_point(aes(x = 98.4797285, y = 16.6952072), size = 7, 
+             colour = "cornflowerblue", pch = 15, alpha = .8) +
+  geom_text(aes(x = 98.4797285, y = 16.6952072), size = 6.5, label = "Myawaddy", colour = "seagreen") + 
+  geom_text(aes(x = 97.2114, y = 19.6740), size = 6.5, label = "Loikaw", colour = "seagreen") +
+    # cities and border crossing legends
+  geom_point(aes(x = 100.6, y = 29.3), size = 4, 
+             colour = "goldenrod2", pch = 15, alpha = .8) +
+  geom_point(aes(x = 100.6, y = 29.15), size = 4, 
+             colour = "cornflowerblue", pch = 15, alpha = .8) +
+  geom_text(aes(x = 100.6, y = 29), size = 4, label = "A",
+             colour = "seagreen", pch = 15, alpha = .8) +
+  geom_text(aes(x = 101.1, y = 29.3), size = 4, 
+             colour = "grey30", label = "Military command") +
+  geom_text(aes(x = 101.066, y = 29.15), size = 4, 
+             colour = "grey30", label = "Border crossing") +
+  geom_text(aes(x = 101.09, y = 29), size = 4,colour = "grey30", label = "Rebel-controlled") +
+  scale_size_continuous(range = c(.1, 20), breaks = c(0, 1000, 10000, 50000, 100000, 200000), labels = comma) +
+  geom_point(data = mmr_idp_points, aes(geometry = geometry, size = `Internally Dislaced Persons`), 
+             alpha = .8, stat = "sf_coordinates",
+            colour = "lightblue") + 
+  geom_sf_text(data = mmr_idp_points, aes(geometry = geometry, label = comma(`Internally Dislaced Persons`)), 
+               size = 2, colour = "grey20", stat = "sf_coordinates", alpha = .7) + 
+  # plotting the actual data
+  new_scale('size') +
+  geom_point(aes(x = longitude, y = latitude , size = fatalities, alpha = year), 
+             colour = "red", alpha = .15) + 
+  scale_size(range = c(.1, 10), breaks = c(0, 10, 50, 100, 150)) +
+  labs(size = "Fatalities",  
+       title = "Violent conflict in Myanmar since the 1 February 2021 coup, plotted over road network",
+       subtitle = "From 2021-02-01 to 2024-10-04. Road network in blue. Sources: acleddata.com, UN MIMU\nFighting, once more dispersed throughout the road network, is now concentrated in and around major cities and garrisons.\nThe main front in Sagaing and Mandalay is where rebels are trying to break through to Naypyitaw.", 
+       alpha = "Year") +
+  theme_void() + 
+  theme(plot.background = element_rect(fill = "white", colour = NA),
+        legend.position = c(0.03, 0.90), 
+        plot.title = element_text(size = 30, colour = "grey30"), 
+        plot.subtitle = element_text(size = 20, colour = "grey30"), 
+        strip.text = element_blank(), 
+        legend.text = element_text(size = 12, colour = "grey30"), 
+        legend.title = element_text(size = 15, colour = "grey30"), 
+        legend.key.width = unit(1, "cm"),
+        legend.key.height = unit(.8, "cm"), 
+        axis.title.x = element_blank(), 
+        axis.title.y = element_blank(), 
+        plot.margin = unit(c(5, 3, 0, 3), "cm")) + 
+  guides(
+    
+    alpha = guide_legend(order = 3),
+    size = guide_legend(override.aes = list(alpha = 1, colour = "red")) 
+  ) 
+
+ggsave(here("plots", "roads_conflict_grey_red_alt.png"), dpi = 300, width = 23.4, 
+       height = 35.8268, units = "in")
+```
+
 
 ```{r warning=FALSE}
 
